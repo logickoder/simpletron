@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+group = 'com.jeffreyorazulike'
+
+mainClassName = 'com.jeffreyorazulike.simpletron.Launch'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+run{
+    standardInput = System.in
+}
+
+dependencies {
+    //def version = '5.7.0'
+    //testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: version
+    //testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: version
+}
+
