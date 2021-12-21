@@ -1,0 +1,11 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+description = 'core'
+
+project(':core'){}
+
+dependencies {
+    implementation 'org.reflections:reflections:0.10.2'
+}
