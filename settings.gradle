@@ -1,0 +1,5 @@
+rootProject.name = 'Simpletron'
+
+include ':impl'
+include ':core'
+include ':cmd_app'
