@@ -1,5 +1,8 @@
 package com.jeffreyorazulike.simpletron.core.components
 
+import kotlin.math.log10
+import kotlin.math.pow
+
 /**
  *
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
@@ -90,3 +93,5 @@ private class MemoryImpl: Memory {
         return memory[address].toInt()
     }
 }
+
+fun Memory.separator() = 10.0.pow(log10(maxWord.toDouble()).toInt() - 1).toInt()

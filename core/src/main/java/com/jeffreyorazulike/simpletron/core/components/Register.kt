@@ -12,4 +12,9 @@ interface Register {
      * The value of the register
      * */
     var value: Int
+
+    /**
+     * The name of the register
+     * */
+    val name: String
 }

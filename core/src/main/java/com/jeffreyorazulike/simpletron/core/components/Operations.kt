@@ -10,7 +10,7 @@ private fun Display.overflow() = show("Memory Overflow\n")
 /**
  * Outputs a new line on Simpletron
  */
-class NewLine : Operation {
+class NewLine : Operation() {
     override val code = 1
 
     override fun execute(params: ComponentParam) {
@@ -21,7 +21,7 @@ class NewLine : Operation {
 /**
  * Read a word from the keyboard into a specific location in memory.
  */
-class Read : Operation {
+class Read : Operation() {
     override val code = 10
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -33,7 +33,7 @@ class Read : Operation {
 /**
  * Write a word from a specific location in memory to the screen.
  */
-class Write : Operation {
+class Write : Operation() {
     override val code = 11
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -44,7 +44,7 @@ class Write : Operation {
 /**
  * Read a string from the keyboard and store it in memory.
  */
-class ReadString : Operation {
+class ReadString : Operation() {
     override val code = 12
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -61,7 +61,7 @@ class ReadString : Operation {
 /**
  * Write a string from a specific location in memory to the screen.
  */
-class WriteString : Operation {
+class WriteString : Operation() {
     override val code = 13
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -78,7 +78,7 @@ class WriteString : Operation {
 /**
  * Load a word from a specific location in memory into the accumulator.
  */
-class Load : Operation {
+class Load : Operation() {
     override val code = 20
 
     override fun execute(params: ComponentParam) {
@@ -89,7 +89,7 @@ class Load : Operation {
 /**
  * Store a word from the accumulator into a specific location in memory.
  */
-class Store : Operation {
+class Store : Operation() {
     override val code = 21
 
     override fun execute(params: ComponentParam) {
@@ -101,7 +101,7 @@ class Store : Operation {
  * Adds a word from a specific location in memory to the word in the
  * accumulator
  */
-class Add : Operation {
+class Add : Operation() {
     override val code = 30
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -118,7 +118,7 @@ class Add : Operation {
  * Subtract a word from a specific location in memory from the word in the
  * accumulator
  */
-class Subtract : Operation {
+class Subtract : Operation() {
     override val code = 31
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -135,7 +135,7 @@ class Subtract : Operation {
  * Divide a word from a specific location in memory from the word in the
  * accumulator
  */
-class Divide : Operation {
+class Divide : Operation() {
     override val code = 32
 
     override fun execute(params: ComponentParam)  = with(params) {
@@ -156,7 +156,7 @@ class Divide : Operation {
  * Multiply a word from a specific location in memory by the word in the
  * accumulator
  */
-class Multiply : Operation {
+class Multiply : Operation() {
     override val code = 33
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -172,7 +172,7 @@ class Multiply : Operation {
 /**
  * Finds the remainder when dividing the value in the accumulator by a word
  */
-class Remainder : Operation {
+class Remainder : Operation() {
     override val code = 34
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -193,7 +193,7 @@ class Remainder : Operation {
  * Finds the accumulator raised to the power of the word in the specific
  * location
  */
-class Exponent : Operation {
+class Exponent : Operation() {
     override val code = 35
 
     override fun execute(params: ComponentParam) = with(params) {
@@ -209,7 +209,7 @@ class Exponent : Operation {
 /**
  * Branch to a specific location in memory
  */
-class Branch : Operation {
+class Branch : Operation() {
     override val code = 40
 
     override fun execute(params: ComponentParam) {
@@ -220,7 +220,7 @@ class Branch : Operation {
 /**
  * Branch to a specific location in memory if the accumulator is negative
  */
-class BranchNeg : Operation {
+class BranchNeg : Operation() {
     override val code = 41
 
     override fun execute(params: ComponentParam) {
@@ -231,7 +231,7 @@ class BranchNeg : Operation {
 /**
  * Branch to a specific location in memory if the accumulator is zero
  */
-class BranchZero : Operation {
+class BranchZero : Operation() {
     override val code = 42
 
     override fun execute(params: ComponentParam) {
@@ -242,7 +242,7 @@ class BranchZero : Operation {
 /**
  * Halt. The program has completed its task
  */
-class Halt : Operation {
+class Halt : Operation() {
     override val code = 43
 
     override fun execute(params: ComponentParam) {

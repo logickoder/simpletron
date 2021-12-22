@@ -9,7 +9,12 @@ import org.reflections.Reflections
  * Created on 21 at 3:30 AM
  *
  */
-interface CPU {
+abstract class CPU {
+
+    init {
+        // clear the value of the registers anytime an instance is created
+        Registers.values().forEach { it.value = 0 }
+    }
 
     /**
      * Executes the next instruction
@@ -18,7 +23,7 @@ interface CPU {
      *
      * @return the operation that was executed
      */
-    fun execute(memory: Memory): Operation?
+    abstract fun execute(memory: Memory): Operation?
 
     /**
      * Any implementation of this method should always return the default
@@ -26,7 +31,7 @@ interface CPU {
      *
      * @return a list of registers that this CPU contains
      */
-    fun getRegisters(): List<Register> {
+    open fun getRegisters(): List<Register> {
         // retrieve any register defined in the package of any class that implements this interface
         val additionalRegisters = Reflections(this::class.java.packageName).getSubTypesOf(Register::class.java).apply {
             removeIf { it.name == "${CPU::class.java.packageName}.Registers" }
@@ -44,7 +49,7 @@ interface CPU {
      *
      * @return a list of the operations that this CPU handle
      */
-    fun getOperations(): List<Operation> {
+    open fun getOperations(): List<Operation> {
         // retrieve all the operations defined in this package, which are the default operations
         val defaultOperations = Reflections(CPU::class.java.packageName).getSubTypesOf(Operation::class.java)
         // retrieve any operation defined in the package of any class that implements this interface
@@ -69,7 +74,7 @@ interface CPU {
  * Created on 21 at 3:45 AM
  *
  */
-private class CPUImpl: CPU {
+private class CPUImpl: CPU() {
 
     private val _operations by lazy { getOperations() }
 
@@ -79,9 +84,9 @@ private class CPUImpl: CPU {
         // update the instruction counter
         InstructionCounter.value = InstructionCounter.value + 1
         // store the operation code
-        OperationCode.value = InstructionRegister.value / memory.size
+        OperationCode.value = InstructionRegister.value / memory.separator()
         // store the operand
-        Operand.value = InstructionRegister.value % memory.size
+        Operand.value = InstructionRegister.value % memory.separator()
         // return the operation code
         return _operations.find{ op -> op.code == OperationCode.value }
     }
