@@ -8,7 +8,7 @@ import com.jeffreyorazulike.simpletron.core.components.ComponentParam
  * Created on 21 at 5:40 PM
  *
  */
-interface Simpletron {
+abstract class Simpletron {
 
     /**
      * This is where all initializations and starting of components should take
@@ -19,9 +19,9 @@ interface Simpletron {
      * @throws IllegalStateException if the system is already booted up
      */
     @Throws(IllegalStateException::class)
-    fun boot(params: ComponentParam)
+    abstract fun boot(params: ComponentParam)
 
-    fun enterCommands()
+    abstract fun enterCommands()
 
     /**
      * This is where all components started in the boot method should be stopped
@@ -29,5 +29,5 @@ interface Simpletron {
      * @throws IllegalStateException if the system is already shutdown
      */
     @Throws(IllegalStateException::class)
-    fun shutdown()
+    abstract fun shutdown()
 }

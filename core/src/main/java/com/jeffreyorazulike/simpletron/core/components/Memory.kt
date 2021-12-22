@@ -8,26 +8,26 @@ import kotlin.math.pow
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
  * Created on 21 at 3:54 AM
  *
- * An interface defining the way
+ * The base class defining the way
  * [com.jeffreyorazulike.simpletron.core.Simpletron] communicates with the
  * memory
  */
-interface Memory {
+abstract class Memory {
 
     /**
      * @return the max word a memory location can contain
      */
-    val maxWord: Int
+    abstract val maxWord: Int
 
     /**
      * @return the min word a memory location can contain
      */
-    val minWord: Int
+    abstract val minWord: Int
 
     /**
      * @return the size of this memory
      */
-    val size: Int
+    abstract val size: Int
 
     /**
      *
@@ -41,7 +41,7 @@ interface Memory {
      * greater than or equal to the size of the memory
      */
     @Throws(IllegalArgumentException::class, ArrayIndexOutOfBoundsException::class)
-    operator fun set(address: Int, value: Int)
+    abstract operator fun set(address: Int, value: Int)
 
     /**
      *
@@ -53,7 +53,7 @@ interface Memory {
      * greater than or equal to the size of the memory
      */
     @Throws(ArrayIndexOutOfBoundsException::class)
-    operator fun get(address: Int): Int
+    abstract operator fun get(address: Int): Int
 
     companion object {
         /**
@@ -71,7 +71,7 @@ interface Memory {
  *
  * A concrete implementation of the [Memory] having 1000 blocks of memory
  */
-private class MemoryImpl: Memory {
+private class MemoryImpl: Memory() {
     override val maxWord: Int = 9999
     override val minWord: Int = maxWord * -1
     override val size: Int = 1000

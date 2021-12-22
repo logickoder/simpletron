@@ -1,6 +1,8 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -23,27 +25,27 @@ class CPUTest {
     @Test
     fun checkThatTheDefaultOperationsAre17InNumber(){
         val operations = cpu.getOperations()
-        assert(operations.size == 17)
+        assertEquals("Checking for the amount of default operations in the CPU",17, operations.size)
     }
 
     @Test
     fun checkThatImplementingTheCPUInterfaceInAnotherPackageShowsTheOperationsInThatPackage(){
         val operations = stubCpu.getOperations()
-        assert(operations.size == 18)
-        assert(operations.find { it.code == TEST_VALUE } != null)
+        assertEquals("Expected 18 operations",18, operations.size)
+        assertNotEquals("Expected null",null, operations.find { it.code == TEST_VALUE })
     }
 
     @Test
     fun checkThatTheDefaultRegistersAre5InNumber(){
         val registers = cpu.getRegisters()
-        assert(registers.size == 5)
+        assertEquals("Checking for the amount of default registers in the CPU",5, registers.size)
     }
 
     @Test
     fun checkThatImplementingTheCPUInterfaceInAnotherPackageShowsTheRegistersInThatPackage(){
         val registers = stubCpu.getRegisters()
-        assert(registers.size == 6)
-        assert(registers.find { it.value == TEST_VALUE } != null)
+        assertEquals("Expected 6 registers",6, registers.size)
+        assertNotEquals("Expected null",null, registers.find { it.value == TEST_VALUE })
     }
 
     @Test
@@ -54,7 +56,7 @@ class CPUTest {
             memory[index] = operation.code * memory.separator()
         }
         operations.forEach {
-            assert(cpu.execute(memory) == it)
+            assertEquals("Expected ${it.javaClass.simpleName} operation", it, cpu.execute(memory))
         }
     }
 
@@ -63,15 +65,17 @@ class CPUTest {
         val memory = Memory.create()
         memory[0] = -99 * 100
         val result = cpu.execute(memory)
-        assert(result == null)
+        assertEquals("Expected the operation from execute to be null",null, result)
     }
 
     class StubOp : Operation() {
         override val code = TEST_VALUE
         override fun execute(params: ComponentParam) {}
     }
-    class StubRegister : Register {
-        override var value = TEST_VALUE
+    class StubRegister : Register() {
+        init {
+            value = TEST_VALUE
+        }
         override val name = "Stub"
     }
     class StubCPU : CPU() {

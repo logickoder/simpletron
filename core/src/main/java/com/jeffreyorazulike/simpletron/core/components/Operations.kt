@@ -1,6 +1,5 @@
 package com.jeffreyorazulike.simpletron.core.components
 
-import com.jeffreyorazulike.simpletron.core.components.Registers.*
 import kotlin.math.pow
 
 

@@ -7,14 +7,14 @@ package com.jeffreyorazulike.simpletron.core.components
  *
  * The component for receiving input from users
  */
-interface Input: AutoCloseable {
+abstract class Input: AutoCloseable {
     /**
      *
      * @return the next line from the input source
      * @throws IllegalStateException if the input has been closed
      */
     @Throws(IllegalStateException::class)
-    fun read(): String
+    abstract fun read(): String
 
     companion object {
         const val CLOSED = "Input has been turned off"

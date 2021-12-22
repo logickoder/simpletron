@@ -1,6 +1,5 @@
 package com.jeffreyorazulike.simpletron.core.components
 
-import com.jeffreyorazulike.simpletron.core.components.Registers.*
 import org.reflections.Reflections
 
 /**
@@ -13,7 +12,7 @@ abstract class CPU {
 
     init {
         // clear the value of the registers anytime an instance is created
-        Registers.values().forEach { it.value = 0 }
+        defaultRegisters().forEach { it.value = 0 }
     }
 
     /**
@@ -32,13 +31,13 @@ abstract class CPU {
      * @return a list of registers that this CPU contains
      */
     open fun getRegisters(): List<Register> {
-        // retrieve any register defined in the package of any class that implements this interface
-        val additionalRegisters = Reflections(this::class.java.packageName).getSubTypesOf(Register::class.java).apply {
-            removeIf { it.name == "${CPU::class.java.packageName}.Registers" }
-        }
+        // retrieve all the registers defined in this package, which are the default registers
+        val defaultRegisters = Reflections(CPU::class.java.packageName).getSubTypesOf(Register::class.java)
+        // retrieve any operation defined in the package of any class that implements this interface
+        val additionalRegisters = Reflections(this::class.java.packageName).getSubTypesOf(Register::class.java)
         // merge both of them and return the registers
-        return additionalRegisters.map { it.getDeclaredConstructor().newInstance() }.toMutableList().apply {
-            addAll(Registers.values())
+        return defaultRegisters.union(additionalRegisters).map {
+            it.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()
         }
     }
 

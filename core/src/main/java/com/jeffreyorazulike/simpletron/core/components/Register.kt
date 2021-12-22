@@ -7,14 +7,14 @@ package com.jeffreyorazulike.simpletron.core.components
  *
  * Defines a register in the [CPU]
  */
-interface Register {
+abstract class Register {
     /**
      * The value of the register
      * */
-    var value: Int
+    var value: Int = 0
 
     /**
      * The name of the register
      * */
-    val name: String
+    abstract val name: String
 }
