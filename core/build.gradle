@@ -8,4 +8,7 @@ project(':core'){}
 
 dependencies {
     implementation 'org.reflections:reflections:0.10.2'
+
+    // For Unit Testing
+    testImplementation 'junit:junit:4.13.2'
 }
