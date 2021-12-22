@@ -3,6 +3,7 @@ package com.jeffreyorazulike.simpletron.core.components
 import com.jeffreyorazulike.simpletron.core.components.Registers.*
 import kotlin.math.pow
 
+
 private fun Memory.overflow(value: Int) = value < minWord || value > maxWord
 private fun Display.overflow() = show("Memory Overflow\n")
 
