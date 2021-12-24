@@ -4,9 +4,11 @@ plugins {
 
 description = 'impl'
 
-project(':impl'){}
+project(':impl'){
+    dependencies {
+        implementation project(':core')
 
-dependencies {
-    // For Unit Testing
-    testImplementation 'junit:junit:4.13.2'
+        // For Unit Testing
+        testImplementation 'junit:junit:4.13.2'
+    }
 }
