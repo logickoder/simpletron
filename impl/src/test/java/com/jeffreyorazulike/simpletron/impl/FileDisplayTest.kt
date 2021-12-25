@@ -1,10 +1,11 @@
 package com.jeffreyorazulike.simpletron.impl
 
 import com.jeffreyorazulike.simpletron.core.components.Display
-import org.junit.After
+import org.junit.AfterClass
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
@@ -15,19 +16,10 @@ import java.nio.file.Files
  * Created on 22 at 10:00 PM
  */
 class FileDisplayTest {
-    private lateinit var display: Display
-    private lateinit var file: File
 
     @Before
-    fun setUp() {
-        file = File(FileDisplayTest::class.java.simpleName)
+    fun setup(){
         display = FileDisplay(file.path)
-    }
-
-    @After
-    fun tearDown(){
-        display.close()
-        file.delete()
     }
 
     @Test
@@ -60,6 +52,24 @@ class FileDisplayTest {
     }
 
     companion object {
+        private lateinit var display: Display
+        private lateinit var file: File
         const val TEST_MESSAGE = "This is a file display test"
+
+        @BeforeClass
+        @JvmStatic fun createFile() {
+            file = File(FileDisplayTest::class.java.simpleName)
+        }
+
+        @AfterClass
+        @JvmStatic fun deleteFile(){
+            try{
+                display.close()
+            }catch (_: IllegalStateException){}
+            finally {
+                //TODO: Find a way to delete this file later [File.deleteOnExit] doesn't work too
+                file.delete()
+            }
+        }
     }
 }
