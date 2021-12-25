@@ -5,6 +5,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 
 /**
  *
@@ -18,59 +20,60 @@ class CPUTest {
 
     @Before
     fun init(){
-        cpu = CPU.create()
+        cpu = CPU.create(Memory.create(), mock{}, mockInput())
         stubCpu = StubCPU()
     }
 
     @Test
-    fun checkThatTheDefaultOperationsAre17InNumber(){
-        val operations = cpu.getOperations()
-        assertEquals("Checking for the amount of default operations in the CPU",17, operations.size)
+    fun checkThatTheDefaultInstructionsAre17InNumber(){
+        assertEquals(17, cpu.instructions.size)
     }
 
     @Test
-    fun checkThatImplementingTheCPUInterfaceInAnotherPackageShowsTheOperationsInThatPackage(){
-        val operations = stubCpu.getOperations()
-        assertEquals("Expected 18 operations",18, operations.size)
-        assertNotEquals("Expected null",null, operations.find { it.code == TEST_VALUE })
+    fun checkThatImplementingTheCPUInterfaceInAnotherPackageShowsTheInstructionsInThatPackage(){
+        assertEquals(18, stubCpu.instructions.size)
+        assertNotEquals(null, stubCpu.instructions.find { it.code == TEST_VALUE })
     }
 
     @Test
     fun checkThatTheDefaultRegistersAre5InNumber(){
-        val registers = cpu.getRegisters()
-        assertEquals("Checking for the amount of default registers in the CPU",5, registers.size)
+        assertEquals(5, cpu.registers.size)
     }
 
     @Test
     fun checkThatImplementingTheCPUInterfaceInAnotherPackageShowsTheRegistersInThatPackage(){
-        val registers = stubCpu.getRegisters()
-        assertEquals("Expected 6 registers",6, registers.size)
-        assertNotEquals("Expected null",null, registers.find { it.value == TEST_VALUE })
+        assertEquals(6, stubCpu.registers.size)
+        assertNotEquals(null, stubCpu.registers.find { it.value == TEST_VALUE })
     }
 
     @Test
-    fun checkThatTheCorrectOperationIsReturnedAfterExecution(){
-        val memory = Memory.create()
-        val operations = cpu.getOperations()
-        operations.forEachIndexed { index, operation ->
-            memory[index] = operation.code * memory.separator()
+    fun checkThatAllInstructionsAreExecuted(){
+        val instructions = cpu.instructions.toMutableList().run {
+            // remove all branch instructions
+            removeIf { it.code in 40..49 }
+            toSortedSet(Comparator.comparing { it.code })
+        }.apply{
+            forEachIndexed { index, operation ->
+                cpu.controlUnit.memory[index] = operation.code * cpu.controlUnit.memory.separator()
+            }
         }
-        operations.forEach {
-            assertEquals("Expected ${it.javaClass.simpleName} operation", it, cpu.execute(memory))
-        }
+        val executedInstructions = mutableSetOf<Instruction>()
+        do {
+            cpu.execute()?.let { executedInstructions.add(it) }
+        }while (instructions.size != executedInstructions.size)
+        assertEquals(instructions.size, executedInstructions.size)
     }
 
     @Test
-    fun checkThatNullIsReturnedIfTheOperationDoesNotExist(){
-        val memory = Memory.create()
-        memory[0] = -99 * 100
-        val result = cpu.execute(memory)
-        assertEquals("Expected the operation from execute to be null",null, result)
+    fun checkThatNullIsReturnedIfTheInstructionDoesNotExist(){
+        cpu.controlUnit.memory[0] = -99 * 100
+        val result = cpu.execute()
+        assertEquals(null, result)
     }
 
-    class StubOp : Operation() {
+    class StubOp : Instruction() {
         override val code = TEST_VALUE
-        override fun execute(params: ComponentParam) {}
+        override fun execute(controlUnit: CPU.ControlUnit) {}
     }
     class StubRegister : Register() {
         init {
@@ -78,11 +81,15 @@ class CPUTest {
         }
         override val name = "Stub"
     }
-    class StubCPU : CPU() {
-        override fun execute(memory: Memory): Operation? = null
+    class StubCPU : CPU(Memory.create(), mock {  }, mockInput()) {
+        override fun execute(): Instruction? = null
     }
 
     companion object {
         private const val TEST_VALUE = -99999
+
+        private fun mockInput() = mock<Input>{
+            on { read() } doReturn ""
+        }
     }
 }

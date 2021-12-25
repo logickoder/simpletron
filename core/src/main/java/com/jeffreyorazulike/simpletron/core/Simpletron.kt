@@ -1,27 +1,27 @@
 package com.jeffreyorazulike.simpletron.core
 
-import com.jeffreyorazulike.simpletron.core.components.ComponentParam
+import com.jeffreyorazulike.simpletron.core.components.CPU
 
 /**
  *
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
  * Created on 21 at 5:40 PM
  *
+ * The simpletron machine
+ *
+ * @property isRunning true if the machine is running
  */
-abstract class Simpletron {
+abstract class Simpletron(val cpu: CPU) {
+    abstract val isRunning: Boolean
 
     /**
      * This is where all initializations and starting of components should take
      * place
      *
-     * @param params the components to use
-     *
-     * @throws IllegalStateException if the system is already booted up
+     * @throws IllegalStateException if the system is already running
      */
     @Throws(IllegalStateException::class)
-    abstract fun boot(params: ComponentParam)
-
-    abstract fun enterCommands()
+    abstract fun run()
 
     /**
      * This is where all components started in the boot method should be stopped

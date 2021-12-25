@@ -1,5 +1,6 @@
 package com.jeffreyorazulike.simpletron.core.components
 
+import com.jeffreyorazulike.simpletron.core.components.CPU.ControlUnit
 import org.reflections.Reflections
 
 /**
@@ -7,63 +8,61 @@ import org.reflections.Reflections
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
  * Created on 21 at 3:30 AM
  *
+ * The core part of simpletron that handles execution of instruction
+ *
+ * @property registers a list of registers that this [CPU] contains
+ * @property instructions a list of the instructions that this [CPU] handle
+ * @property controlUnit the [ControlUnit] of this [CPU]
  */
-abstract class CPU {
+abstract class CPU(memory: Memory, display: Display, input: Input) {
 
     init {
         // clear the value of the registers anytime an instance is created
         defaultRegisters().forEach { it.value = 0 }
     }
 
-    /**
-     * Executes the next instruction
-     *
-     * @param memory A reference to the memory
-     *
-     * @return the operation that was executed
-     */
-    abstract fun execute(memory: Memory): Operation?
-
-    /**
-     * Any implementation of this method should always return the default
-     * registers in addition to newly defined registers in the system
-     *
-     * @return a list of registers that this CPU contains
-     */
-    open fun getRegisters(): List<Register> {
+    open val registers: List<Register> by lazy {
         // retrieve all the registers defined in this package, which are the default registers
         val defaultRegisters = Reflections(CPU::class.java.packageName).getSubTypesOf(Register::class.java)
         // retrieve any operation defined in the package of any class that implements this interface
         val additionalRegisters = Reflections(this::class.java.packageName).getSubTypesOf(Register::class.java)
         // merge both of them and return the registers
-        return defaultRegisters.union(additionalRegisters).map {
+        defaultRegisters.union(additionalRegisters).map {
             it.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()
         }
     }
 
-    /**
-     * Any implementation of this method should always return the default
-     * operations in addition to newly defined operations that the system can
-     * handle
-     *
-     * @return a list of the operations that this CPU handle
-     */
-    open fun getOperations(): List<Operation> {
-        // retrieve all the operations defined in this package, which are the default operations
-        val defaultOperations = Reflections(CPU::class.java.packageName).getSubTypesOf(Operation::class.java)
-        // retrieve any operation defined in the package of any class that implements this interface
-        val additionalOperations = Reflections(this::class.java.packageName).getSubTypesOf(Operation::class.java)
-        // merge both of them and return the operations
-        return defaultOperations.union(additionalOperations).map { it.getDeclaredConstructor().newInstance() }
+    open val instructions: List<Instruction> by lazy {
+        // retrieve all the instructions defined in this package, which are the default instructions
+        val defaultInstructions = Reflections(CPU::class.java.packageName).getSubTypesOf(Instruction::class.java)
+        // retrieve any instruction defined in the package of any class that implements this interface
+        val additionalInstructions = Reflections(this::class.java.packageName).getSubTypesOf(Instruction::class.java)
+        // merge both of them and return the instructions
+        defaultInstructions.union(additionalInstructions).map {
+            it.getDeclaredConstructor().newInstance()
+        }
     }
 
-    
+    open val controlUnit = ControlUnit(memory, display, input)
+
+    /**
+     * Executes the next instruction
+     *
+     * @return the instruction that was executed if it exists
+     */
+    abstract fun execute(): Instruction?
+
+    /**
+     * Gives [Instruction]s access to core components for them to execute correctly
+     */
+    class ControlUnit(val memory: Memory, val display: Display, val input: Input)
+
     companion object {
         /**
          *
          * @return the default implementation of the CPU
          */
-        fun create(): CPU = CPUImpl()
+        fun create(memory: Memory, display: Display, input: Input): CPU = CPUImpl(memory, display, input)
     }
 }
 
@@ -73,11 +72,9 @@ abstract class CPU {
  * Created on 21 at 3:45 AM
  *
  */
-private class CPUImpl: CPU() {
+private class CPUImpl(memory: Memory, display: Display, input: Input) : CPU(memory, display, input) {
 
-    private val _operations by lazy { getOperations() }
-
-    override fun execute(memory: Memory): Operation? {
+    override fun execute(): Instruction?  = with(controlUnit){
         // store the value from the current memory address to the instruction register
         InstructionRegister.value = memory[InstructionCounter.value]
         // update the instruction counter
@@ -86,7 +83,10 @@ private class CPUImpl: CPU() {
         OperationCode.value = InstructionRegister.value / memory.separator()
         // store the operand
         Operand.value = InstructionRegister.value % memory.separator()
-        // return the operation code
-        return _operations.find{ op -> op.code == OperationCode.value }
+        // execute and return the instruction
+        val instruction = instructions.find{ op -> op.code == OperationCode.value }?.apply {
+            execute(controlUnit)
+        }
+        return instruction
     }
 }

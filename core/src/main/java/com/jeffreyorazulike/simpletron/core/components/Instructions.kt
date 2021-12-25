@@ -9,33 +9,34 @@ private fun Display.overflow() = show("Memory Overflow\n")
 /**
  * Outputs a new line on Simpletron
  */
-class NewLine : Operation() {
+class NewLine : Instruction() {
     override val code = 1
 
-    override fun execute(params: ComponentParam) {
-        params.display.show("\n")
+    override fun execute(controlUnit: CPU.ControlUnit) {
+        controlUnit.display.show("\n")
     }
 }
 
 /**
  * Read a word from the keyboard into a specific location in memory.
  */
-class Read : Operation() {
+class Read : Instruction() {
     override val code = 10
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         display.show("Enter an integer ? ")
-        memory[OperationCode.value] = input.read().toInt()
+        val value = input.read()
+        memory[Operand.value] = if (value.isBlank()) 0 else value.toInt()
     }
 }
 
 /**
  * Write a word from a specific location in memory to the screen.
  */
-class Write : Operation() {
+class Write : Instruction() {
     override val code = 11
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         display.show(memory[Operand.value].toString())
     }
 }
@@ -43,10 +44,10 @@ class Write : Operation() {
 /**
  * Read a string from the keyboard and store it in memory.
  */
-class ReadString : Operation() {
+class ReadString : Instruction() {
     override val code = 12
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         display.show("Enter a string ? ")
         val input = input.read()
         var address = Operand.value
@@ -60,10 +61,10 @@ class ReadString : Operation() {
 /**
  * Write a string from a specific location in memory to the screen.
  */
-class WriteString : Operation() {
+class WriteString : Instruction() {
     override val code = 13
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         var address = Operand.value
         val addressValue = memory[address]
         val output = StringBuilder(addressValue)
@@ -77,22 +78,22 @@ class WriteString : Operation() {
 /**
  * Load a word from a specific location in memory into the accumulator.
  */
-class Load : Operation() {
+class Load : Instruction() {
     override val code = 20
 
-    override fun execute(params: ComponentParam) {
-        Accumulator.value = params.memory[Operand.value]
+    override fun execute(controlUnit: CPU.ControlUnit) {
+        Accumulator.value = controlUnit.memory[Operand.value]
     }
 }
 
 /**
  * Store a word from the accumulator into a specific location in memory.
  */
-class Store : Operation() {
+class Store : Instruction() {
     override val code = 21
 
-    override fun execute(params: ComponentParam) {
-        params.memory[Operand.value] = Accumulator.value
+    override fun execute(controlUnit: CPU.ControlUnit) {
+        controlUnit.memory[Operand.value] = Accumulator.value
     }
 }
 
@@ -100,10 +101,10 @@ class Store : Operation() {
  * Adds a word from a specific location in memory to the word in the
  * accumulator
  */
-class Add : Operation() {
+class Add : Instruction() {
     override val code = 30
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         val result = Accumulator.value + memory[Operand.value]
 
         if(memory.overflow(result))
@@ -117,10 +118,10 @@ class Add : Operation() {
  * Subtract a word from a specific location in memory from the word in the
  * accumulator
  */
-class Subtract : Operation() {
+class Subtract : Instruction() {
     override val code = 31
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         val result = Accumulator.value - memory[Operand.value]
 
         if(memory.overflow(result))
@@ -134,10 +135,10 @@ class Subtract : Operation() {
  * Divide a word from a specific location in memory from the word in the
  * accumulator
  */
-class Divide : Operation() {
+class Divide : Instruction() {
     override val code = 32
 
-    override fun execute(params: ComponentParam)  = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit)  = with(controlUnit) {
         if(memory[Operand.value] == 0)
             display.show("Attempt to divide by zero\n")
         else {
@@ -155,10 +156,10 @@ class Divide : Operation() {
  * Multiply a word from a specific location in memory by the word in the
  * accumulator
  */
-class Multiply : Operation() {
+class Multiply : Instruction() {
     override val code = 33
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         val result = Accumulator.value * memory[Operand.value]
 
         if(memory.overflow(result))
@@ -171,10 +172,10 @@ class Multiply : Operation() {
 /**
  * Finds the remainder when dividing the value in the accumulator by a word
  */
-class Remainder : Operation() {
+class Remainder : Instruction() {
     override val code = 34
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         if(memory[Operand.value] == 0)
             display.show("Attempt to divide by zero\n")
         else {
@@ -192,10 +193,10 @@ class Remainder : Operation() {
  * Finds the accumulator raised to the power of the word in the specific
  * location
  */
-class Exponent : Operation() {
+class Exponent : Instruction() {
     override val code = 35
 
-    override fun execute(params: ComponentParam) = with(params) {
+    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         val result = memory[Operand.value].toDouble().pow(Accumulator.value).toInt()
 
         if(memory.overflow(result))
@@ -208,10 +209,10 @@ class Exponent : Operation() {
 /**
  * Branch to a specific location in memory
  */
-class Branch : Operation() {
+class Branch : Instruction() {
     override val code = 40
 
-    override fun execute(params: ComponentParam) {
+    override fun execute(controlUnit: CPU.ControlUnit) {
         InstructionCounter.value = Operand.value
     }
 }
@@ -219,10 +220,10 @@ class Branch : Operation() {
 /**
  * Branch to a specific location in memory if the accumulator is negative
  */
-class BranchNeg : Operation() {
+class BranchNeg : Instruction() {
     override val code = 41
 
-    override fun execute(params: ComponentParam) {
+    override fun execute(controlUnit: CPU.ControlUnit) {
         if(Accumulator.value < 0) InstructionCounter.value = Operand.value
     }
 }
@@ -230,10 +231,10 @@ class BranchNeg : Operation() {
 /**
  * Branch to a specific location in memory if the accumulator is zero
  */
-class BranchZero : Operation() {
+class BranchZero : Instruction() {
     override val code = 42
 
-    override fun execute(params: ComponentParam) {
+    override fun execute(controlUnit: CPU.ControlUnit) {
         if(Accumulator.value == 0) InstructionCounter.value = Operand.value
     }
 }
@@ -241,11 +242,11 @@ class BranchZero : Operation() {
 /**
  * Halt. The program has completed its task
  */
-class Halt : Operation() {
+class Halt : Instruction() {
     override val code = 43
 
-    override fun execute(params: ComponentParam) {
-        params.display.show("Simpletron execution terminated\n")
+    override fun execute(controlUnit: CPU.ControlUnit) {
+        controlUnit.display.show("Simpletron execution terminated\n")
         // TODO: Display dump
     }
 }
