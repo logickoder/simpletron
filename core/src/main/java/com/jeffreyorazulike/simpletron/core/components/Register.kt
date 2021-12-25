@@ -5,16 +5,15 @@ package com.jeffreyorazulike.simpletron.core.components
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
  * Created on 21 at 4:03 AM
  *
- * Defines a register in the [CPU]
+ * A component in the [CPU] that stores values from the [Memory]
+ * and execution of [Instruction]s so that they can be easily accessed by the [CPU]
+ *
+ * @property value the current word the register holds
+ * @property name the name of the register
  */
 abstract class Register {
-    /**
-     * The value of the register
-     * */
+
     var value: Int = 0
 
-    /**
-     * The name of the register
-     * */
-    abstract val name: String
+    open val name: String = this::class.simpleName.toString()
 }
