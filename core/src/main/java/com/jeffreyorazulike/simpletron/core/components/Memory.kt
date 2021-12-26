@@ -77,9 +77,10 @@ private class MemoryImpl: Memory() {
 
     @Throws(ArrayIndexOutOfBoundsException::class, IllegalArgumentException::class)
     override fun set(address: Int, value: Int) {
-        require(value in minWord..maxWord){
-            "$value is not in the range of $minWord to $maxWord"
-        }
+        if (value != stopValue())
+            require(value in minWord..maxWord){
+                "$value is not in the range of $minWord to $maxWord"
+            }
         memory[address] = value.toShort()
     }
 
