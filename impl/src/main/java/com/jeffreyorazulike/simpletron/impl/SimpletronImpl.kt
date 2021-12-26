@@ -11,7 +11,7 @@ import com.jeffreyorazulike.simpletron.core.components.stopValue
  * Created on 22 at 8:15 PM
  *
  */
-class Simpletron(cpu: CPU) : Simpletron(cpu) {
+class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
     override var isRunning: Boolean = false
 
     @Throws(IllegalStateException::class)
