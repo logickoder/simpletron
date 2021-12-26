@@ -3,3 +3,4 @@
 /.gradle/
 /core/build/
 /impl/build/
+/cmd_app/build/
