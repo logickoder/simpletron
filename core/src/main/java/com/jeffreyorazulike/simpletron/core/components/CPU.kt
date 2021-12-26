@@ -43,7 +43,7 @@ abstract class CPU(memory: Memory, display: Display, input: Input) {
         }
     }
 
-    open val controlUnit = ControlUnit(memory, display, input)
+    var controlUnit = ControlUnit(memory, display, input)
 
     /**
      * Executes the next instruction

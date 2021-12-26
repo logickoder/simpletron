@@ -4,6 +4,8 @@ import com.jeffreyorazulike.simpletron.core.Simpletron
 import com.jeffreyorazulike.simpletron.core.components.CPU
 import com.jeffreyorazulike.simpletron.core.components.Halt
 import com.jeffreyorazulike.simpletron.core.components.stopValue
+import com.jeffreyorazulike.simpletron.core.contracts.Contract
+import com.jeffreyorazulike.simpletron.core.contracts.ProgramLoadingCompleted
 
 /**
  *
@@ -13,6 +15,7 @@ import com.jeffreyorazulike.simpletron.core.components.stopValue
  */
 class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
     override var isRunning: Boolean = false
+    override val contracts = mutableSetOf<Contract>()
 
     @Throws(IllegalStateException::class)
     override fun run(): Unit = with(cpu.controlUnit) {
@@ -26,10 +29,8 @@ class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
             userInput = input.read()
             memory[address++] = userInput.toInt()
         } while (userInput != stopValue)
-        display.show("""
-                *** Program loading completed ***
-                *** Program execution begins  ***
-                """.trimIndent())
+        // execute the contract after program loading completed
+        contracts.filterIsInstance<ProgramLoadingCompleted>().firstOrNull()?.execute(cpu)
         // keep executing executions till you reach a halt instruction
         while(cpu.execute() !is Halt){}
     }

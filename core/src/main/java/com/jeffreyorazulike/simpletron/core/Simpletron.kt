@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.CPU
+import com.jeffreyorazulike.simpletron.core.contracts.Contractor
 
 /**
  *
@@ -11,7 +12,7 @@ import com.jeffreyorazulike.simpletron.core.components.CPU
  *
  * @property isRunning true if the machine is running
  */
-abstract class Simpletron(val cpu: CPU) {
+abstract class Simpletron(val cpu: CPU) : Contractor{
     abstract val isRunning: Boolean
 
     /**
