@@ -1,5 +1,5 @@
 // read a series of numbers and determine and display the largest, the first input indicates how many numbers to expect
-// make sure to remove all other things from this file except the instructions, each instruction must be on a seperate line and -99999 should end each file
+// make sure to remove all other things from this file except the instructions, each instruction must be on a separate line and -99999 should end each file
 00 - 0001 // store the subtractor
 01 - 1099 // read the counter
 02 - 2099 // load counter to the accumulator

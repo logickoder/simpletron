@@ -1,5 +1,5 @@
 // write a sentinel controlled loop to read 10 positive numbers, the sentinel must also be positive
-// make sure to remove all other things from this file except the instructions, each instruction must be on a seperate line and -99999 should end each file
+// make sure to remove all other things from this file except the instructions, each instruction must be on a separate line and -99999 should end each file
 00 - 1099 // read the sentinel
 01 - 1098 // read the users input
 02 - 2098 // load users input to accumulator

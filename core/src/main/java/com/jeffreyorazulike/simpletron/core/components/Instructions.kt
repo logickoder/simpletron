@@ -71,7 +71,7 @@ class WriteString : Instruction() {
         for (i in 0 until addressValue) {
             output.append(memory[--address].toChar())
         }
-        display.show("$output\n")
+        display.show("$output")
     }
 }
 

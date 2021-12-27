@@ -1,5 +1,5 @@
 // use a counter controlled loop to read 7 numbers, compute and display their average
-// make sure to remove all other things from this file except the instructions, each instruction must be on a seperate line and -99999 should end each file
+// make sure to remove all other things from this file except the instructions, each instruction must be on a separate line and -99999 should end each file
 00 - 0001 // the subtractor
 01 - 1099 // read the counter
 02 - 2099 // load counter to the accumulator
