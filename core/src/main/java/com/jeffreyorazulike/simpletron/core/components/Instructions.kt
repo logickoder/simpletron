@@ -53,7 +53,7 @@ class ReadString : Instruction() {
         var address = Operand.value
         memory[address] = input.length
         for (i in input.indices) {
-            memory[--address] = input[i].code
+            memory[++address] = input[i].code
         }
     }
 }
@@ -69,7 +69,7 @@ class WriteString : Instruction() {
         val addressValue = memory[address]
         val output = StringBuilder(addressValue)
         for (i in 0 until addressValue) {
-            output.append(memory[--address].toChar())
+            output.append(memory[++address].toChar())
         }
         display.show("$output")
     }
