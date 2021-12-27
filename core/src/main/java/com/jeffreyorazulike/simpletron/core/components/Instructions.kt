@@ -7,6 +7,19 @@ private fun Memory.overflow(value: Int) = value < minWord || value > maxWord
 private fun Display.overflow() = show("Memory Overflow\n")
 
 /**
+ *
+ * @param address the operand of the instruction
+ *
+ * Returns the correct instruction code, given the [Instruction] and address
+ *
+ * For example calling this function on [Write] with a [Memory] of 1,000 blocks
+ * and an address 35 will give you 11035, on a 100 block [Memory] you get 1135
+ * */
+fun Instruction.code(memory: Memory, address: Int): Int {
+    return code * memory.separator() + address
+}
+
+/**
  * Outputs a new line on Simpletron
  */
 class NewLine : Instruction() {
@@ -66,9 +79,9 @@ class WriteString : Instruction() {
 
     override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         var address = Operand.value
-        val addressValue = memory[address]
-        val output = StringBuilder(addressValue)
-        for (i in 0 until addressValue) {
+        val length = memory[address]
+        val output = StringBuilder(length)
+        for (i in 0 until length) {
             output.append(memory[++address].toChar())
         }
         display.show("$output")
