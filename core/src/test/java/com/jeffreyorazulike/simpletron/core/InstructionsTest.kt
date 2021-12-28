@@ -150,7 +150,7 @@ class InstructionsTest {
             assertEquals(first, Accumulator.value)
         }
         check(5895, 589)
-        check2(9000,2000)
+        check2(90000,20000)
     }
 
     @Test
@@ -170,7 +170,7 @@ class InstructionsTest {
             assertEquals(first, Accumulator.value)
         }
         check(5895, 589)
-        check2(-20000,-3000)
+        check2(-200000,-3000)
     }
 
 
@@ -212,7 +212,7 @@ class InstructionsTest {
             assertEquals(first, Accumulator.value)
         }
         check(90, 100)
-        check2(-20,-3000)
+        check2(-200,-3000)
     }
 
     @Test
@@ -253,7 +253,7 @@ class InstructionsTest {
             assertEquals(second, Accumulator.value)
         }
         check(22, 2)
-        check2(22,3)
+        check2(222,3)
     }
 
     @Test

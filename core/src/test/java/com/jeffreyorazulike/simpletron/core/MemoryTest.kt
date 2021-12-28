@@ -24,29 +24,29 @@ class MemoryTest {
     fun setUp() {
         memory = Memory.create()
         mockMemory1 = mock {
-            on { maxWord } doReturn 999
-            on { minWord } doReturn -999
+            on { maxWord } doReturn 9999
+            on { minWord } doReturn -9999
             on { size } doReturn 100
         }
         mockMemory2 = mock {
-            on { maxWord } doReturn 99
-            on { minWord } doReturn -99
+            on { maxWord } doReturn 999
+            on { minWord } doReturn -999
             on { size } doReturn 10
         }
     }
 
     @Test
     fun checkThatTheStopValueIsOneValueLargerThanTheMinWordAndItsAll9s(){
-        assertEquals(-99999, memory.stopValue())
-        assertEquals(-9999, mockMemory1.stopValue())
-        assertEquals(-999, mockMemory2.stopValue())
+        assertEquals(-999999, memory.stopValue())
+        assertEquals(-99999, mockMemory1.stopValue())
+        assertEquals(-9999, mockMemory2.stopValue())
     }
 
     @Test
-    fun checkThatTheSeparatorWillCorrectlySeparateTheOperationCodeAndOperand(){
-        assertEquals(100, memory.separator())
-        assertEquals(10, mockMemory1.separator())
-        assertEquals(1, mockMemory2.separator())
+    fun checkThatTheSeparatorWillCorrectlySeparateTheInstructionCodeAndOperand(){
+        assertEquals(1000, memory.separator())
+        assertEquals(100, mockMemory1.separator())
+        assertEquals(10, mockMemory2.separator())
     }
 
     @Test

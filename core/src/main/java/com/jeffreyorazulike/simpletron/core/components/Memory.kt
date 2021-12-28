@@ -66,14 +66,15 @@ abstract class Memory {
  * A concrete implementation of the [Memory] having 1000 blocks of memory
  */
 private class MemoryImpl: Memory() {
-    override val maxWord: Int = 9999
-    override val minWord: Int = maxWord * -1
+
     override val size: Int = 1000
+    override val maxWord: Int = 10.0.pow(log10(size.toDouble()).toInt() + 2).toInt() - 1
+    override val minWord: Int = maxWord * -1
 
     /**
      * Represents the memory
      */
-    private val memory = ShortArray(size)
+    private val memory = IntArray(size)
 
     @Throws(ArrayIndexOutOfBoundsException::class, IllegalArgumentException::class)
     override fun set(address: Int, value: Int) {
@@ -81,12 +82,12 @@ private class MemoryImpl: Memory() {
             require(value in minWord..maxWord){
                 "$value is not in the range of $minWord to $maxWord"
             }
-        memory[address] = value.toShort()
+        memory[address] = value
     }
 
     @Throws(ArrayIndexOutOfBoundsException::class)
     override fun get(address: Int): Int {
-        return memory[address].toInt()
+        return memory[address]
     }
 }
 
