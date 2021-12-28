@@ -27,7 +27,7 @@ class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
         do {
             display.show(String.format("%03d ? ", address))
             userInput = input.read()
-            memory[address++] = userInput.toInt()
+            memory.set(address++, userInput.toInt())
         } while (userInput != stopValue)
         // execute the contract after program loading completed
         contracts.filterIsInstance<ProgramLoadingCompleted>().firstOrNull()?.execute(cpu)

@@ -75,10 +75,8 @@ class CPUTest {
         override val code = TEST_VALUE
         override fun execute(controlUnit: CPU.ControlUnit) {}
     }
-    class StubRegister : Register() {
-        init {
-            value = TEST_VALUE
-        }
+    class StubRegister : Register<Int>() {
+        override var value = TEST_VALUE
         override val name = "Stub"
     }
     class StubCPU : CPU(Memory.create(), mock {  }, mockInput()) {

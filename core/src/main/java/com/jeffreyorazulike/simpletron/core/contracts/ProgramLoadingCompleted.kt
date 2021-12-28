@@ -12,7 +12,7 @@ import com.jeffreyorazulike.simpletron.core.components.CPU
 interface ProgramLoadingCompleted: Contract {
 
     override fun execute(cpu: CPU) = with(cpu.controlUnit) {
-        display.show(   "*** Program loading completed ***\n" +
+        display.show(   "\n*** Program loading completed ***\n" +
                         "*** Program execution begins  ***\n")
         super.execute(cpu)
     }

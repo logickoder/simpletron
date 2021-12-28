@@ -17,9 +17,9 @@ import kotlin.math.pow
  */
 abstract class Memory {
 
-    abstract val maxWord: Int
+    abstract val maxWord: Float
 
-    abstract val minWord: Int
+    abstract val minWord: Float
 
     abstract val size: Int
 
@@ -35,7 +35,7 @@ abstract class Memory {
      * greater than or equal to the size of the memory
      */
     @Throws(IllegalArgumentException::class, ArrayIndexOutOfBoundsException::class)
-    abstract operator fun set(address: Int, value: Int)
+    abstract operator fun set(address: Number, value: Number)
 
     /**
      *
@@ -47,7 +47,7 @@ abstract class Memory {
      * greater than or equal to the size of the memory
      */
     @Throws(ArrayIndexOutOfBoundsException::class)
-    abstract operator fun get(address: Int): Int
+    abstract operator fun get(address: Number): Float
 
     companion object {
         /**
@@ -68,26 +68,27 @@ abstract class Memory {
 private class MemoryImpl: Memory() {
 
     override val size: Int = 1000
-    override val maxWord: Int = 10.0.pow(log10(size.toDouble()).toInt() + 2).toInt() - 1
-    override val minWord: Int = maxWord * -1
+    override val maxWord = 10.0.pow(log10(size.toDouble()).toInt() + 2).toFloat() - 1
+    override val minWord = maxWord * -1
 
     /**
      * Represents the memory
      */
-    private val memory = IntArray(size)
+    private val memory = FloatArray(size)
 
     @Throws(ArrayIndexOutOfBoundsException::class, IllegalArgumentException::class)
-    override fun set(address: Int, value: Int) {
+    override fun set(address: Number, value: Number) {
+        val value = value.toFloat()
         if (value != stopValue())
             require(value in minWord..maxWord){
                 "$value is not in the range of $minWord to $maxWord"
             }
-        memory[address] = value
+        memory[address.toInt()] = value
     }
 
     @Throws(ArrayIndexOutOfBoundsException::class)
-    override fun get(address: Int): Int {
-        return memory[address]
+    override fun get(address: Number): Float {
+        return memory[address.toInt()]
     }
 }
 
@@ -100,4 +101,4 @@ fun Memory.separator() = 10.0.pow(log10(maxWord.toDouble()).toInt() - 1).toInt()
 /**
  * returns the value that should be used to cancel [Input] when received as an [Instruction]
  * */
-fun Memory.stopValue() = Math.negateExact(10.0.pow(log10(minWord.absoluteValue.toDouble()).toInt() + 2).toInt() - 1)
+fun Memory.stopValue() = Math.negateExact(10.0.pow(log10(minWord.absoluteValue.toDouble()).toInt() + 2).toInt() - 1).toFloat()

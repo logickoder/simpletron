@@ -11,9 +11,9 @@ package com.jeffreyorazulike.simpletron.core.components
  * @property value the current word the register holds
  * @property name the name of the register
  */
-abstract class Register {
+abstract class Register<T: Number> {
 
-    var value: Int = 0
+    abstract var value: T
 
     open val name: String = this::class.simpleName.toString()
 }

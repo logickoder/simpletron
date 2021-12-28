@@ -3,7 +3,7 @@ package com.jeffreyorazulike.simpletron.core.components
 import kotlin.math.pow
 
 
-private fun Memory.overflow(value: Int) = value < minWord || value > maxWord
+private fun Memory.overflow(value: Float) = value < minWord || value > maxWord
 private fun Display.overflow() = show("Memory Overflow\n")
 
 /**
@@ -39,7 +39,7 @@ class Read : Instruction() {
     override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         display.show("Enter an integer ? ")
         val value = input.read()
-        memory[Operand.value] = if (value.isBlank()) 0 else value.toInt()
+        memory[Operand.value] = if (value.isBlank()) 0f else value.toFloat()
     }
 }
 
@@ -79,10 +79,10 @@ class WriteString : Instruction() {
 
     override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
         var address = Operand.value
-        val length = memory[address]
+        val length = memory[address].toInt()
         val output = StringBuilder(length)
         for (i in 0 until length) {
-            output.append(memory[++address].toChar())
+            output.append(memory[++address].toInt().toChar())
         }
         display.show("$output")
     }
@@ -152,7 +152,7 @@ class Divide : Instruction() {
     override val code = 32
 
     override fun execute(controlUnit: CPU.ControlUnit)  = with(controlUnit) {
-        if(memory[Operand.value] == 0)
+        if(memory[Operand.value] == 0f)
             display.show("Attempt to divide by zero\n")
         else {
             val result = Accumulator.value / memory[Operand.value]
@@ -189,7 +189,7 @@ class Remainder : Instruction() {
     override val code = 34
 
     override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        if(memory[Operand.value] == 0)
+        if(memory[Operand.value] == 0f)
             display.show("Attempt to divide by zero\n")
         else {
             val result = Accumulator.value % memory[Operand.value]
@@ -210,7 +210,7 @@ class Exponent : Instruction() {
     override val code = 35
 
     override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        val result = memory[Operand.value].toDouble().pow(Accumulator.value).toInt()
+        val result = memory[Operand.value].toDouble().pow(Accumulator.value.toInt()).toFloat()
 
         if(memory.overflow(result))
             display.overflow()
@@ -248,7 +248,7 @@ class BranchZero : Instruction() {
     override val code = 42
 
     override fun execute(controlUnit: CPU.ControlUnit) {
-        if(Accumulator.value == 0) InstructionCounter.value = Operand.value
+        if(Accumulator.value == 0f) InstructionCounter.value = Operand.value
     }
 }
 

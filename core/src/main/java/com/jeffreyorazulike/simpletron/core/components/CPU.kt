@@ -16,12 +16,9 @@ import org.reflections.Reflections
  */
 abstract class CPU(memory: Memory, display: Display, input: Input) {
 
-    init {
-        // clear the value of the registers anytime an instance is created
-        defaultRegisters().forEach { it.value = 0 }
-    }
+    init { resetDefaultRegisters() }
 
-    open val registers: List<Register> by lazy {
+    open val registers: List<Register<*>> by lazy {
         // retrieve all the registers defined in this package, which are the default registers
         val defaultRegisters = Reflections(CPU::class.java.packageName).getSubTypesOf(Register::class.java)
         // retrieve any operation defined in the package of any class that implements this interface
@@ -80,9 +77,9 @@ private class CPUImpl(memory: Memory, display: Display, input: Input) : CPU(memo
         // update the instruction counter
         InstructionCounter.value = InstructionCounter.value + 1
         // store the operation code
-        OperationCode.value = InstructionRegister.value / memory.separator()
+        OperationCode.value = (InstructionRegister.value / memory.separator()).toInt()
         // store the operand
-        Operand.value = InstructionRegister.value % memory.separator()
+        Operand.value = (InstructionRegister.value % memory.separator()).toInt()
         // execute and return the instruction
         val instruction = instructions.find{ op -> op.code == OperationCode.value }?.apply {
             execute(controlUnit)

@@ -8,7 +8,7 @@ import com.jeffreyorazulike.simpletron.impl.SimpletronImpl
 
 fun main(){
     val memory = Memory.create()
-    val display: Display = CommandlineDisplay(memory.stopValue())
+    val display: Display = CommandlineDisplay(memory.stopValue().toInt())
     val input: Input = CommandlineInput()
     val cpu = CPU.create(memory, display, input)
     val simpletron: Simpletron = SimpletronImpl(cpu)

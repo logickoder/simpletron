@@ -24,22 +24,22 @@ class MemoryTest {
     fun setUp() {
         memory = Memory.create()
         mockMemory1 = mock {
-            on { maxWord } doReturn 9999
-            on { minWord } doReturn -9999
+            on { maxWord } doReturn 9999f
+            on { minWord } doReturn -9999f
             on { size } doReturn 100
         }
         mockMemory2 = mock {
-            on { maxWord } doReturn 999
-            on { minWord } doReturn -999
+            on { maxWord } doReturn 999f
+            on { minWord } doReturn -999f
             on { size } doReturn 10
         }
     }
 
     @Test
     fun checkThatTheStopValueIsOneValueLargerThanTheMinWordAndItsAll9s(){
-        assertEquals(-999999, memory.stopValue())
-        assertEquals(-99999, mockMemory1.stopValue())
-        assertEquals(-9999, mockMemory2.stopValue())
+        assertEquals(-999999f, memory.stopValue())
+        assertEquals(-99999f, mockMemory1.stopValue())
+        assertEquals(-9999f, mockMemory2.stopValue())
     }
 
     @Test
@@ -52,7 +52,7 @@ class MemoryTest {
     @Test
     fun checkThatCallingSetOnMemoryStoresTheValueInThatAddress(){
         memory[100] = 99
-        assertEquals(99, memory[100])
+        assertEquals(99f, memory[100])
     }
 
     @Test
@@ -62,7 +62,7 @@ class MemoryTest {
 
     @Test
     fun throwsAnExceptionWhenAssigningAValueToAnAddressThatIsLowerThan0(){
-        assertThrows(ArrayIndexOutOfBoundsException::class.java){ memory[-1] = -1 }
+        assertThrows(ArrayIndexOutOfBoundsException::class.java){ memory.set(-1, -1) }
     }
 
     @Test
@@ -72,20 +72,20 @@ class MemoryTest {
 
     @Test
     fun throwsAnExceptionWhenAssigningAValueToAnAddressThatIsEqualToOrLargerThanTheSizeOfTheMemory(){
-        assertThrows(ArrayIndexOutOfBoundsException::class.java){ memory[memory.size] = -1 }
+        assertThrows(ArrayIndexOutOfBoundsException::class.java){ memory.set(memory.size, -1) }
     }
 
     @Test
     fun throwsAnExceptionWhenStoringAValueLessThanMinWord(){
         assertThrows(IllegalArgumentException::class.java){
-            memory[1] = memory.minWord - 1
+            memory.set(1, memory.minWord - 1)
         }
     }
 
     @Test
     fun throwsAnExceptionWhenStoringAValueGreaterThanMaxWord(){
         assertThrows(IllegalArgumentException::class.java){
-            memory[1] = memory.maxWord + 1
+            memory.set(1, memory.maxWord + 1)
         }
     }
 }
