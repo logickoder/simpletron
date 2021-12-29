@@ -20,22 +20,34 @@ The core part of simpletron contains the building blocks of simpletron that make
 - Instruction Register
 
 #### The default instructions are:
-    NEWLINE                01 xx..
-	READ                   10 xx..
-	WRITE                  11 xx..
-    READ STRING            12 xx..
-    WRITE STRING           13 xx..
-	LOAD                   20 xx..
-	STORE                  21 xx..
-	ADD                    30 xx..
-	SUBTRACT               31 xx..
-	DIVIDE                 32 xx..
-	MULTIPY                33 xx..
-	MODULUS                34 xx..
-	EXPONENT               35 xx..
-	BRANCH                 40 xx..
-	BRANCH NEG             41 xx..
-	BRANCH ZERO            42 xx..
-	HALT                   43 xx..
+    NEWLINE                01xx..
+	READ                   10xx..
+	WRITE                  11xx..
+    READ STRING            12xx..
+    WRITE STRING           13xx..
+	LOAD                   20xx..
+	STORE                  21xx..
+	ADD                    30xx..
+	SUBTRACT               31xx..
+	DIVIDE                 32xx..
+	MULTIPY                33xx..
+	MODULUS                34xx..
+	EXPONENT               35xx..
+	BRANCH                 40xx..
+	BRANCH NEG             41xx..
+	BRANCH ZERO            42xx..
+	HALT                   43xx..
 
-xx.. is the address of the value to operate on. The math operations use the directed value on whatever is in the accumulator.
+    xx.. is the address of the value to operate on. The math operations use the directed value on whatever is in the accumulator.
+    Example: 10099 // Read a word into the memory location 099
+
+When providing instructions, you can separate the opcode and operand,
+this will help best for when the amount of blocks the memory installed changes,
+internally, it will still be resolved to the complete instruction
+
+For Example: `30 99` will be resolved to `3099` on a 100 block memory, 
+`30099` on a 1,000 block memory and `300099` on a 10,000 block memory.
+
+This is best practice because it saves the stress of editing your machine code on 
+different memory simpletron instances.
+
