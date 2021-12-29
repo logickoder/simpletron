@@ -1,4 +1,4 @@
-rootProject.name = 'Simpletron'
+rootProject.name = 'simpletron_core'
 
 include ':impl'
 include ':core'
