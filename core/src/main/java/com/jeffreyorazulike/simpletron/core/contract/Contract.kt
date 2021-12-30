@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.core.contract
 
 import com.jeffreyorazulike.simpletron.core.components.CPU
+import java.util.*
 
 /**
  *
@@ -21,4 +22,8 @@ abstract class Contract {
      * Executes this contract
      * */
     abstract fun execute(controlUnit: CPU.ControlUnit)
+
+    override fun equals(other: Any?) = other is Contract && other.name == name
+
+    override fun hashCode() = Objects.hash(name)
 }

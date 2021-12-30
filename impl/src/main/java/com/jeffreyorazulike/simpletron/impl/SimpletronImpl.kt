@@ -25,7 +25,7 @@ class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
     override fun run(): Unit = with(cpu.controlUnit) {
         check(!isRunning) { "Simpletron is already started" }
         isRunning = true
-        contracts.forEach { it.execute(this) }
+        contracts.distinctBy { it.name }.forEach { it.execute(this) }
     }
 
     @Throws(IllegalStateException::class)
