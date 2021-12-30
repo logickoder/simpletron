@@ -39,15 +39,7 @@ The core part of simpletron contains the building blocks of simpletron that make
 	HALT                   43xx..
 
     xx.. is the address of the value to operate on. The math operations use the directed value on whatever is in the accumulator.
-    Example: 10099 // Read a word into the memory location 099
+    Example: 1099 // Read a word into the memory location 099
 
-When providing instructions, you can separate the opcode and operand,
-this will help best for when the amount of blocks the memory installed changes,
-internally, it will still be resolved to the complete instruction
-
-For Example: `30 99` will be resolved to `3099` on a 100 block memory, 
-`30099` on a 1,000 block memory and `300099` on a 10,000 block memory.
-
-This is best practice because it saves the stress of editing your machine code on 
-different memory simpletron instances.
-
+## Contract
+Contracts are the base of simpletron execution, contracts tell simpletron the sequence to follow during execution. 
