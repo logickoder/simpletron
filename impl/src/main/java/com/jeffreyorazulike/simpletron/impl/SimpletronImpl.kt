@@ -15,7 +15,7 @@ import com.jeffreyorazulike.simpletron.core.contract.ProgramLoadedContract
 class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
     override var isRunning: Boolean = false
 
-    override val contracts = listOf(
+    override var contracts = listOf(
         InputInstructionsContract(),
         ProgramLoadedContract(),
         ExecuteInstructionsContract(cpu)

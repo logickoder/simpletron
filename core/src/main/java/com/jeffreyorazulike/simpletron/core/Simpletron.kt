@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.CPU
+import com.jeffreyorazulike.simpletron.core.contract.Contract
 import com.jeffreyorazulike.simpletron.core.contract.Contractor
 
 /**
@@ -9,11 +10,10 @@ import com.jeffreyorazulike.simpletron.core.contract.Contractor
  * Created on 21 at 5:40 PM
  *
  * The simpletron machine
- *
- * @property isRunning true if the machine is running
  */
-abstract class Simpletron(val cpu: CPU) : Contractor{
-    abstract val isRunning: Boolean
+abstract class Simpletron(val cpu: CPU) : Contractor {
+
+    abstract override var contracts: List<Contract>
 
     /**
      * This is where all initializations and starting of components should take
