@@ -1,7 +1,7 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.CPU
-import com.jeffreyorazulike.simpletron.core.contracts.Contractor
+import com.jeffreyorazulike.simpletron.core.contract.Contractor
 
 /**
  *

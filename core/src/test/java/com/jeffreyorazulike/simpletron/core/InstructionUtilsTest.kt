@@ -1,7 +1,7 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.Memory
-import com.jeffreyorazulike.simpletron.core.utils.instruction
+import com.jeffreyorazulike.simpletron.core.utils.toInstruction
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -24,35 +24,35 @@ class InstructionUtilsTest {
 
     @Test
     fun invalidStringConvertsToZero() {
-        assertEquals(0, "j ju ".instruction(memory))
-        assertEquals(0, "-x".instruction(memory))
+        assertEquals(0, "j ju ".toInstruction(memory))
+        assertEquals(0, "-x".toInstruction(memory))
     }
 
     @Test
     fun singleIntegerStringConvertsToTheValidInteger() {
-        assertEquals(1099, "01099".instruction(memory))
-        assertEquals(1099, "0199".instruction(memory))
-        assertEquals(13099, "13099".instruction(memory))
-        assertEquals(13099, "1399".instruction(memory))
-        assertEquals(13149, "131499".instruction(memory))
+        assertEquals(1099, "01099".toInstruction(memory))
+        assertEquals(1099, "0199".toInstruction(memory))
+        assertEquals(13099, "13099".toInstruction(memory))
+        assertEquals(13099, "1399".toInstruction(memory))
+        assertEquals(13149, "131499".toInstruction(memory))
     }
 
     @Test
     fun twoIntegerSeparatedByCharactersConvertsToASingleInteger() {
-        assertEquals(1099, "01 099".instruction(memory))
-        assertEquals(1099, "01 99".instruction(memory))
-        assertEquals(13099, "13 099".instruction(memory))
-        assertEquals(13099, "13 -99".instruction(memory))
-        assertEquals(13001, "13  1".instruction(memory))
+        assertEquals(1099, "01 099".toInstruction(memory))
+        assertEquals(1099, "01 99".toInstruction(memory))
+        assertEquals(13099, "13 099".toInstruction(memory))
+        assertEquals(13099, "13 -99".toInstruction(memory))
+        assertEquals(13001, "13  1".toInstruction(memory))
         memory = memory(10_000)
-        assertEquals(130499, "13_499".instruction(memory))
+        assertEquals(130499, "13_499".toInstruction(memory))
     }
 
     @Test
     fun multipleIntegersSeparatedByCharactersConvertsToASingleIntegerWithTheRightLength() {
-        assertEquals(13099, "13 099 -023".instruction(memory))
-        assertEquals(13099, "13 -99 a".instruction(memory))
-        assertEquals(13143, "13  1 436".instruction(memory))
+        assertEquals(13099, "13 099 -023".toInstruction(memory))
+        assertEquals(13099, "13 -99 a".toInstruction(memory))
+        assertEquals(13143, "13  1 436".toInstruction(memory))
     }
 
     companion object {

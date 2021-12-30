@@ -40,7 +40,21 @@ abstract class CPU(memory: Memory, display: Display, input: Input) {
         }
     }
 
-    var controlUnit = ControlUnit(memory, display, input)
+    private var _controlUnit = ControlUnit(memory, display, input)
+
+    val controlUnit: ControlUnit get() = _controlUnit
+
+    /**
+     * Changes the components this CPU is connected to
+     * */
+    open fun changeComponent(display: Display? = null, input: Input? = null) {
+        _controlUnit = ControlUnit(
+            memory = _controlUnit.memory,
+            display = display ?: _controlUnit.display,
+            input = input ?: _controlUnit.input
+        )
+    }
+
 
     /**
      * Executes the next instruction

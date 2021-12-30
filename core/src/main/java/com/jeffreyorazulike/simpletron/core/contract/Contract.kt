@@ -1,4 +1,4 @@
-package com.jeffreyorazulike.simpletron.core.contracts
+package com.jeffreyorazulike.simpletron.core.contract
 
 import com.jeffreyorazulike.simpletron.core.components.CPU
 

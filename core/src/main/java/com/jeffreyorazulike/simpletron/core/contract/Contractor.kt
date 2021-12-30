@@ -1,4 +1,4 @@
-package com.jeffreyorazulike.simpletron.core.contracts
+package com.jeffreyorazulike.simpletron.core.contract
 
 /**
  *

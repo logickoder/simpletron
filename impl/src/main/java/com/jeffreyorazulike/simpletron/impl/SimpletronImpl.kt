@@ -4,8 +4,8 @@ import com.jeffreyorazulike.simpletron.core.Simpletron
 import com.jeffreyorazulike.simpletron.core.components.CPU
 import com.jeffreyorazulike.simpletron.core.components.Halt
 import com.jeffreyorazulike.simpletron.core.components.stopValue
-import com.jeffreyorazulike.simpletron.core.contracts.Contract
-import com.jeffreyorazulike.simpletron.core.contracts.ProgramLoadingCompleted
+import com.jeffreyorazulike.simpletron.core.contract.Contract
+import com.jeffreyorazulike.simpletron.core.contract.contracts.ProgramLoadingCompleted
 
 /**
  *

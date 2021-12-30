@@ -11,7 +11,7 @@ import kotlin.math.log10
  *
  * Converts a valid string to an instruction
  * */
-fun String.instruction(memory: Memory): Int {
+fun String.toInstruction(memory: Memory): Int {
     val operandLength = log10(memory.size.toDouble()).toInt()
     // remove all non digits from the string
     return split(Pattern.compile("\\D+")).reduce { acc: String, s: String -> "$acc$s" }.run {
