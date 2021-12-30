@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.*
+import com.jeffreyorazulike.simpletron.core.utils.code
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
