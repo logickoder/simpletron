@@ -2,7 +2,6 @@ package com.jeffreyorazulike.simpletron.impl
 
 import com.jeffreyorazulike.simpletron.core.components.Input
 import java.util.*
-import javax.management.remote.JMXConnectionNotification
 
 /**
  *
@@ -21,8 +20,7 @@ class CommandlineInput: Input() {
 
     override fun close() {
         // throws illegal state exception if the component is already closed
-        check(!isClosed) { JMXConnectionNotification.CLOSED }
-        scanner.close()
+        check(!isClosed) { closedMessage }
         isClosed = true
     }
 }

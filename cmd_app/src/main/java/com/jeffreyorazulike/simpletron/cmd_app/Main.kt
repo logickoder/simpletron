@@ -1,22 +1,37 @@
 package com.jeffreyorazulike.simpletron.cmd_app
 
-import com.jeffreyorazulike.simpletron.core.Simpletron
-import com.jeffreyorazulike.simpletron.core.components.*
+import com.jeffreyorazulike.simpletron.core.components.CPU
+import com.jeffreyorazulike.simpletron.core.components.Memory
+import com.jeffreyorazulike.simpletron.core.components.stopValue
+import com.jeffreyorazulike.simpletron.core.contract.Contract
+import com.jeffreyorazulike.simpletron.core.contract.ExecuteInstructionsContract
+import com.jeffreyorazulike.simpletron.core.contract.InputInstructionsContract
+import com.jeffreyorazulike.simpletron.core.contract.ProgramLoadedContract
 import com.jeffreyorazulike.simpletron.impl.CommandlineDisplay
 import com.jeffreyorazulike.simpletron.impl.CommandlineInput
+import com.jeffreyorazulike.simpletron.impl.FileInput
 import com.jeffreyorazulike.simpletron.impl.SimpletronImpl
 
-fun main(){
+fun main() {
     val memory = Memory.create()
-    val display: Display = CommandlineDisplay(memory.stopValue().toInt())
-    val input: Input = CommandlineInput()
-    val cpu = CPU.create(memory, display, input)
-    val simpletron: Simpletron = SimpletronImpl(cpu)
-//    simpletron.contracts += object : ProgramLoadingCompleted {
-//        override val contract: (CPU) -> Unit = {
-//            // change the input to commandline after loading the program from file
-////            it.controlUnit = CPU.ControlUnit(memory, display, CommandlineInput())
-//        }
-//    }
-    simpletron.run()
+    SimpletronImpl(
+        CPU.create(
+            memory = memory,
+            display = CommandlineDisplay(memory.stopValue().toInt()),
+            input = FileInput("example programs\\sml\\test.sml")
+        )
+    ).apply {
+        contracts = listOf(
+            InputInstructionsContract(),
+            ProgramLoadedContract(),
+            ChangeInputContract(cpu),
+            ExecuteInstructionsContract(cpu)
+        )
+    }.run()
+}
+
+class ChangeInputContract(private val cpu: CPU) : Contract() {
+    override fun execute(controlUnit: CPU.ControlUnit) {
+        cpu.changeComponent(input = CommandlineInput())
+    }
 }

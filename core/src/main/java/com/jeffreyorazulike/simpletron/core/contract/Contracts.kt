@@ -13,8 +13,8 @@ import kotlin.math.log10
 class InputInstructionsContract : Contract() {
 
     override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        val stopValue = memory.stopValue().toString()
-        val padding = log10(memory.size.toDouble())
+        val stopValue = memory.stopValue().toInt().toString()
+        val padding = log10(memory.size.toDouble()).toInt()
         var address = 0
         var userInput: String
         do {
@@ -32,8 +32,8 @@ class ProgramLoadedContract : Contract() {
 
     override fun execute(controlUnit: CPU.ControlUnit) {
         controlUnit.display.show(
-            "\n*** Program loading completed ***\n" +
-                    "*** Program execution begins  ***\n"
+            "\n*** Program loading completed ***" +
+                    "\n*** Program execution begins  ***\n"
         )
     }
 }
