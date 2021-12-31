@@ -1,8 +1,8 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.Memory
-import com.jeffreyorazulike.simpletron.core.components.separator
-import com.jeffreyorazulike.simpletron.core.components.stopValue
+import com.jeffreyorazulike.simpletron.core.utils.separator
+import com.jeffreyorazulike.simpletron.core.utils.stopValue
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Before

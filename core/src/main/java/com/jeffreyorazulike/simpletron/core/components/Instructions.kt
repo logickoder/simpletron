@@ -1,10 +1,7 @@
 package com.jeffreyorazulike.simpletron.core.components
 
+import com.jeffreyorazulike.simpletron.core.utils.overflow
 import kotlin.math.pow
-
-
-private fun Memory.overflow(value: Float) = value < minWord || value > maxWord
-private fun Display.overflow() = show("Memory Overflow\n")
 
 /**
  * Outputs a new line on Simpletron
@@ -104,13 +101,10 @@ class Store : Instruction() {
 class Add : Instruction() {
     override val code = 30
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        val result = Accumulator.value + memory[Operand.value]
-
-        if(memory.overflow(result))
-            display.overflow()
-        else
-            Accumulator.value = result
+    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
+        overflow(Accumulator.value + memory[Operand.value]) {
+            Accumulator.value = it.toFloat()
+        }
     }
 }
 
@@ -121,13 +115,10 @@ class Add : Instruction() {
 class Subtract : Instruction() {
     override val code = 31
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        val result = Accumulator.value - memory[Operand.value]
-
-        if(memory.overflow(result))
-            display.overflow()
-        else
-            Accumulator.value = result
+    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
+        overflow(Accumulator.value - memory[Operand.value]) {
+            Accumulator.value = it.toFloat()
+        }
     }
 }
 
@@ -138,17 +129,13 @@ class Subtract : Instruction() {
 class Divide : Instruction() {
     override val code = 32
 
-    override fun execute(controlUnit: CPU.ControlUnit)  = with(controlUnit) {
-        if(memory[Operand.value] == 0f)
+    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
+        if (memory[Operand.value] == 0f)
             display.show("Attempt to divide by zero\n")
-        else {
-            val result = Accumulator.value / memory[Operand.value]
-
-            if(memory.overflow(result))
-                display.overflow()
-            else
-                Accumulator.value = result
-        }
+        else
+            overflow(Accumulator.value / memory[Operand.value]) {
+                Accumulator.value = it.toFloat()
+            }
     }
 }
 
@@ -159,13 +146,10 @@ class Divide : Instruction() {
 class Multiply : Instruction() {
     override val code = 33
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        val result = Accumulator.value * memory[Operand.value]
-
-        if(memory.overflow(result))
-            display.overflow()
-        else
-            Accumulator.value = result
+    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
+        overflow(Accumulator.value * memory[Operand.value]) {
+            Accumulator.value = it.toFloat()
+        }
     }
 }
 
@@ -175,16 +159,13 @@ class Multiply : Instruction() {
 class Remainder : Instruction() {
     override val code = 34
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        if(memory[Operand.value] == 0f)
+    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
+        if (memory[Operand.value] == 0f)
             display.show("Attempt to divide by zero\n")
         else {
-            val result = Accumulator.value % memory[Operand.value]
-
-            if(memory.overflow(result))
-                display.overflow()
-            else
-                Accumulator.value = result
+            overflow(Accumulator.value % memory[Operand.value]) {
+                Accumulator.value = it.toFloat()
+            }
         }
     }
 }
@@ -196,13 +177,10 @@ class Remainder : Instruction() {
 class Exponent : Instruction() {
     override val code = 35
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        val result = memory[Operand.value].toDouble().pow(Accumulator.value.toInt()).toFloat()
-
-        if(memory.overflow(result))
-            display.overflow()
-        else
-            Accumulator.value = result
+    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
+        overflow(memory[Operand.value].toDouble().pow(Accumulator.value.toInt())) {
+            Accumulator.value = it.toFloat()
+        }
     }
 }
 

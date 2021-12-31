@@ -1,6 +1,6 @@
 package com.jeffreyorazulike.simpletron.core.components
 
-import kotlin.math.absoluteValue
+import com.jeffreyorazulike.simpletron.core.utils.stopValue
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -77,13 +77,12 @@ private class MemoryImpl: Memory() {
     private val memory = FloatArray(size)
 
     @Throws(ArrayIndexOutOfBoundsException::class, IllegalArgumentException::class)
-    override fun set(address: Number, value: Number) {
-        val value = value.toFloat()
-        if (value != stopValue())
-            require(value in minWord..maxWord){
-                "$value is not in the range of $minWord to $maxWord"
+    override fun set(address: Number, value: Number) = with(value.toFloat()) {
+        if (this != stopValue())
+            require(this in minWord..maxWord) {
+                "$this is not in the range of $minWord to $maxWord"
             }
-        memory[address.toInt()] = value
+        memory[address.toInt()] = this
     }
 
     @Throws(ArrayIndexOutOfBoundsException::class)
@@ -91,14 +90,3 @@ private class MemoryImpl: Memory() {
         return memory[address.toInt()]
     }
 }
-
-/**
- * returns a number in the power of tens that can be used to get the
- * [OperationCode] and [Operand]
- * */
-fun Memory.separator() = 10.0.pow(log10(maxWord.toDouble()).toInt() - 1).toInt()
-
-/**
- * returns the value that should be used to cancel [Input] when received as an [Instruction]
- * */
-fun Memory.stopValue() = Math.negateExact(10.0.pow(log10(minWord.absoluteValue.toDouble()).toInt() + 2).toInt() - 1).toFloat()

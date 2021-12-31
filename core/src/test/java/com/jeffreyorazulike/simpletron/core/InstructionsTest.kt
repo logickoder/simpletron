@@ -47,7 +47,7 @@ class InstructionsTest {
     @Test
     fun checkThatReadProducesIntegers() = with(cpu.controlUnit){
         fun check(value: Int){
-            cpu.controlUnit = CPU.ControlUnit(memory, display, mockInput("$value"))
+            cpu.changeComponent(input = mockInput("$value"))
             instruction<Read>(cpu, memoryLocation++)
             assertEquals(value.toFloat(), memory[Operand.value])
         }
@@ -59,7 +59,7 @@ class InstructionsTest {
     @Test
     fun checkThatReadCanHandleFloats() = with(cpu.controlUnit){
         fun check(value: Float){
-            cpu.controlUnit = CPU.ControlUnit(memory, display, mockInput("$value"))
+            cpu.changeComponent(input = mockInput("$value"))
             instruction<Read>(cpu, memoryLocation++)
             assertEquals(value, memory[Operand.value])
         }
@@ -83,7 +83,7 @@ class InstructionsTest {
     @Test
     fun checkThatReadStringWorks() = with(cpu.controlUnit){
         fun check(string: String, operand: Int){
-            cpu.controlUnit = CPU.ControlUnit(memory, display, mockInput(string))
+            cpu.changeComponent(input = mockInput(string))
             instruction<ReadString>(cpu, memoryLocation++, operand)
             for(i in string.indices){
                 assertEquals(string[i].code.toFloat(), memory[Operand.value + i + 1])

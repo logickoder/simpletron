@@ -3,7 +3,6 @@ package com.jeffreyorazulike.simpletron.core.utils
 import com.jeffreyorazulike.simpletron.core.components.Instruction
 import com.jeffreyorazulike.simpletron.core.components.Memory
 import com.jeffreyorazulike.simpletron.core.components.Write
-import com.jeffreyorazulike.simpletron.core.components.separator
 import java.util.regex.Pattern
 import kotlin.math.log10
 

@@ -2,7 +2,7 @@ package com.jeffreyorazulike.simpletron.core.contract
 
 import com.jeffreyorazulike.simpletron.core.components.CPU
 import com.jeffreyorazulike.simpletron.core.components.Halt
-import com.jeffreyorazulike.simpletron.core.components.stopValue
+import com.jeffreyorazulike.simpletron.core.utils.stopValue
 import com.jeffreyorazulike.simpletron.core.utils.toInstruction
 import kotlin.math.log10
 

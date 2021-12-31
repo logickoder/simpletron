@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.core.components
 
 import com.jeffreyorazulike.simpletron.core.components.CPU.ControlUnit
+import com.jeffreyorazulike.simpletron.core.utils.separator
 import org.reflections.Reflections
 
 /**
