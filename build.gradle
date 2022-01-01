@@ -2,15 +2,51 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 }
 
-group 'com.jeffreyorazulike'
-version '1.0-SNAPSHOT'
-
+// instructions for all projects
 allprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+
+    group 'com.jeffreyorazulike'
+    version '1.0-SNAPSHOT'
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
     repositories {
         mavenCentral()
     }
 }
 
+// instructions for each sub project
+subprojects {
+
+    // common dependencies
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        // For Unit Testing
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    }
+}
+
+// single library jar containing all sub projects and dependencies
+configurations {
+    childJars
+}
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    subprojects.forEach {
+        childJars project(it.path)
+    }
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    dependsOn configurations.childJars
+    from {
+        configurations.childJars.collect {
+            zipTree(it)
+        }
+    }
 }

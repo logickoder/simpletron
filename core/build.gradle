@@ -1,17 +1,8 @@
-plugins {
-    id 'org.jetbrains.kotlin.jvm'
-}
-
 description = 'core'
 
 project(':core'){
     dependencies {
         implementation 'org.reflections:reflections:0.10.2'
-
         implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
-
-        // For Unit Testing
-        testImplementation 'junit:junit:4.13.2'
-        testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
     }
 }

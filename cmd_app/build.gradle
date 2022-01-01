@@ -1,17 +1,10 @@
-plugins {
-    id 'org.jetbrains.kotlin.jvm'
-}
-
 description = 'cmd_app'
 
-project(':cmd_app'){
+project(':cmd_app') {
     dependencies {
         // core module dependency
         implementation project(':core')
         // default impl module dependency
         implementation project(':impl')
-
-        // For Unit Testing
-        testImplementation 'junit:junit:4.13.2'
     }
 }

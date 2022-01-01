@@ -1,14 +1,7 @@
-plugins {
-    id 'org.jetbrains.kotlin.jvm'
-}
-
 description = 'impl'
 
-project(':impl'){
+project(':impl') {
     dependencies {
         implementation project(':core')
-
-        // For Unit Testing
-        testImplementation 'junit:junit:4.13.2'
     }
 }
