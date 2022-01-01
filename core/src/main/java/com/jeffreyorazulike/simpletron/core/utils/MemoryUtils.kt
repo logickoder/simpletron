@@ -18,6 +18,32 @@ fun Memory.separator() = 10.0.pow(log10(maxWord.toDouble()).toInt() - 1).toInt()
 fun Memory.stopValue() =
     Math.negateExact(10.0.pow(log10(minWord.absoluteValue.toDouble()).toInt() + 2).toInt() - 1).toFloat()
 
-fun Memory.dump(display: Display) {
+/**
+ * Displays the memory dump in hex
+ * */
+fun Memory.dump(display: Display) = with(display) {
 
+    // the length of the hexadecimal representation of a floating-point value
+    val valueLength = 8
+    val rowHeaderSpace = log10(size.toDouble()).toInt()
+    val horizontalStop = 10
+
+    fun showAddress(value: Float) {
+        val bits = java.lang.Float.floatToIntBits(value)
+        show(" 0x%0${valueLength}x".format(bits))
+    }
+
+    show("Memory:\n%${rowHeaderSpace}s".format(" "))
+
+    // show the table column headers
+    val columnHeaderSpace = valueLength + 3
+    for (i in 0 until horizontalStop) {
+        display.show("%${columnHeaderSpace}d".format(i))
+    }
+
+    for (i in 0 until size) {
+        if (i % horizontalStop == 0) show("\n%${rowHeaderSpace}d".format(i))
+        showAddress(this@dump[i])
+    }
+    show("\n")
 }
