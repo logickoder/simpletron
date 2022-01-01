@@ -1,8 +1,8 @@
 package com.jeffreyorazulike.simpletron.core.components
 
 import com.jeffreyorazulike.simpletron.core.components.CPU.ControlUnit
+import com.jeffreyorazulike.simpletron.core.utils.classInstances
 import com.jeffreyorazulike.simpletron.core.utils.separator
-import org.reflections.Reflections
 
 /**
  *
@@ -19,26 +19,15 @@ abstract class CPU(memory: Memory, display: Display, input: Input) {
 
     init { resetDefaultRegisters() }
 
-    open val registers: List<Register<*>> by lazy {
-        // retrieve all the registers defined in this package, which are the default registers
-        val defaultRegisters = Reflections(CPU::class.java.packageName).getSubTypesOf(Register::class.java)
-        // retrieve any operation defined in the package of any class that implements this interface
-        val additionalRegisters = Reflections(this::class.java.packageName).getSubTypesOf(Register::class.java)
-        // merge both of them and return the registers
-        defaultRegisters.union(additionalRegisters).map {
-            it.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()
-        }
-    }
+    open val registers: List<Register<*>> by lazy { classInstances(setOf<Class<*>>(CPU::class.java, this::class.java)) }
 
     open val instructions: List<Instruction> by lazy {
-        // retrieve all the instructions defined in this package, which are the default instructions
-        val defaultInstructions = Reflections(CPU::class.java.packageName).getSubTypesOf(Instruction::class.java)
-        // retrieve any instruction defined in the package of any class that implements this interface
-        val additionalInstructions = Reflections(this::class.java.packageName).getSubTypesOf(Instruction::class.java)
-        // merge both of them and return the instructions
-        defaultInstructions.union(additionalInstructions).map {
-            it.getDeclaredConstructor().newInstance()
-        }
+        classInstances(
+            setOf<Class<*>>(
+                CPU::class.java,
+                this::class.java
+            )
+        )
     }
 
     private var _controlUnit = ControlUnit(memory, display, input)
