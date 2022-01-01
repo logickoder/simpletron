@@ -4,8 +4,6 @@ import com.jeffreyorazulike.simpletron.core.components.*
 import kotlin.math.absoluteValue
 import kotlin.math.log10
 import kotlin.math.pow
-
-
 /**
  * returns a number in the power of tens that can be used to get the
  * [OperationCode] and [Operand]
@@ -33,7 +31,7 @@ fun Memory.dump(display: Display) = with(display) {
         show(" 0x%0${valueLength}x".format(bits))
     }
 
-    show("Memory:\n%${rowHeaderSpace}s".format(" "))
+    show("Memory:${newline()}%${rowHeaderSpace}s".format(" "))
 
     // show the table column headers
     val columnHeaderSpace = valueLength + 3
@@ -42,8 +40,8 @@ fun Memory.dump(display: Display) = with(display) {
     }
 
     for (i in 0 until size) {
-        if (i % horizontalStop == 0) show("\n%${rowHeaderSpace}d".format(i))
+        if (i % horizontalStop == 0) show("${newline()}%${rowHeaderSpace}d".format(i))
         showAddress(this@dump[i])
     }
-    show("\n")
+    show(newline())
 }

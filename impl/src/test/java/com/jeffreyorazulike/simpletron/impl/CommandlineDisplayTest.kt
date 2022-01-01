@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.impl
 
 import com.jeffreyorazulike.simpletron.core.components.Display
+import com.jeffreyorazulike.simpletron.core.utils.newline
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -35,11 +36,11 @@ class CommandlineDisplayTest {
     }
 
     @Test
-    fun writesAMessageToTheCommandline(){
+    fun writesAMessageToTheCommandline() {
         display.show(TEST_MESSAGE)
         assertEquals(TEST_MESSAGE, out.toString())
-        display.show("$TEST_MESSAGE\n$TEST_MESSAGE")
-        assertEquals("$TEST_MESSAGE$TEST_MESSAGE\n$TEST_MESSAGE", out.toString())
+        display.show("$TEST_MESSAGE${newline()}$TEST_MESSAGE")
+        assertEquals("$TEST_MESSAGE$TEST_MESSAGE${newline()}$TEST_MESSAGE", out.toString())
     }
 
     @Test
