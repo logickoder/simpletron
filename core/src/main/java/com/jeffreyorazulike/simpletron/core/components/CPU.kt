@@ -2,6 +2,7 @@ package com.jeffreyorazulike.simpletron.core.components
 
 import com.jeffreyorazulike.simpletron.core.components.CPU.ControlUnit
 import com.jeffreyorazulike.simpletron.core.utils.classInstances
+import com.jeffreyorazulike.simpletron.core.utils.findRegister
 import com.jeffreyorazulike.simpletron.core.utils.separator
 
 /**
@@ -16,8 +17,6 @@ import com.jeffreyorazulike.simpletron.core.utils.separator
  * @property controlUnit the [ControlUnit] of this [CPU]
  */
 abstract class CPU(memory: Memory, display: Display, input: Input) {
-
-    init { resetDefaultRegisters() }
 
     open val registers: List<Register<*>> by lazy { classInstances(setOf<Class<*>>(CPU::class.java, this::class.java)) }
 
@@ -75,18 +74,23 @@ abstract class CPU(memory: Memory, display: Display, input: Input) {
  */
 private class CPUImpl(memory: Memory, display: Display, input: Input) : CPU(memory, display, input) {
 
-    override fun execute(): Instruction?  = with(controlUnit){
+    private val instructionRegister: InstructionRegister by lazy { registers.findRegister() }
+    private val instructionCounter: InstructionCounter by lazy { registers.findRegister() }
+    private val operationCode: OperationCode by lazy { registers.findRegister() }
+    private val operand: Operand by lazy { registers.findRegister() }
+
+    override fun execute(): Instruction? = with(controlUnit) {
         // store the value from the current memory address to the instruction register
-        InstructionRegister.value = memory[InstructionCounter.value]
+        instructionRegister.value = memory[instructionCounter.value]
         // update the instruction counter
-        InstructionCounter.value = InstructionCounter.value + 1
+        instructionCounter.value = instructionCounter.value + 1
         // store the operation code
-        OperationCode.value = (InstructionRegister.value / memory.separator()).toInt()
+        operationCode.value = (instructionRegister.value / memory.separator()).toInt()
         // store the operand
-        Operand.value = (InstructionRegister.value % memory.separator()).toInt()
+        operand.value = (instructionRegister.value % memory.separator()).toInt()
         // execute and return the instruction
-        val instruction = instructions.find{ op -> op.code == OperationCode.value }?.apply {
-            execute(controlUnit)
+        val instruction = instructions.find { op -> op.code == operationCode.value }?.apply {
+            execute(this@CPUImpl)
         }
         return instruction
     }

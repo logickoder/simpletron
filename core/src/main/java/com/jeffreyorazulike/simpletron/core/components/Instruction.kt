@@ -18,7 +18,7 @@ abstract class Instruction {
     /**
      * Executes this operation
      */
-    abstract fun execute(controlUnit: CPU.ControlUnit)
+    abstract fun execute(cpu: CPU)
 
     override fun equals(other: Any?) = other is Instruction && other.code == code
     override fun hashCode() = Objects.hash(code)

@@ -74,7 +74,7 @@ class CPUTest {
 
     class StubOp : Instruction() {
         override val code = TEST_VALUE
-        override fun execute(controlUnit: CPU.ControlUnit) {}
+        override fun execute(cpu: CPU) {}
     }
     class StubRegister : Register<Int>() {
         override var value = TEST_VALUE

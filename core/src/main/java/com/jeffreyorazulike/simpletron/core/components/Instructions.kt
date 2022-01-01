@@ -1,5 +1,6 @@
 package com.jeffreyorazulike.simpletron.core.components
 
+import com.jeffreyorazulike.simpletron.core.utils.findRegister
 import com.jeffreyorazulike.simpletron.core.utils.newline
 import com.jeffreyorazulike.simpletron.core.utils.overflow
 import kotlin.math.pow
@@ -10,8 +11,8 @@ import kotlin.math.pow
 class NewLine : Instruction() {
     override val code = 1
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        controlUnit.display.show(newline())
+    override fun execute(cpu: CPU) {
+        cpu.controlUnit.display.show(newline())
     }
 }
 
@@ -21,10 +22,11 @@ class NewLine : Instruction() {
 class Read : Instruction() {
     override val code = 10
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
+    override fun execute(cpu: CPU) = with(cpu.controlUnit) {
         display.show("Enter an integer ? ")
         val value = input.read()
-        memory[Operand.value] = if (value.isBlank()) 0f else value.toFloat()
+        val operand: Operand = cpu.registers.findRegister()
+        memory[operand.value] = if (value.isBlank()) 0f else value.toFloat()
     }
 }
 
@@ -34,8 +36,9 @@ class Read : Instruction() {
 class Write : Instruction() {
     override val code = 11
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        display.show(memory[Operand.value].toString())
+    override fun execute(cpu: CPU) = with(cpu.controlUnit) {
+        val operand: Operand = cpu.registers.findRegister()
+        display.show(memory[operand.value].toString())
     }
 }
 
@@ -45,10 +48,10 @@ class Write : Instruction() {
 class ReadString : Instruction() {
     override val code = 12
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
+    override fun execute(cpu: CPU) = with(cpu.controlUnit) {
         display.show("Enter a string ? ")
         val input = input.read()
-        var address = Operand.value
+        var address = cpu.registers.findRegister<Operand>().value
         memory[address] = input.length
         for (i in input.indices) {
             memory[++address] = input[i].code
@@ -62,8 +65,8 @@ class ReadString : Instruction() {
 class WriteString : Instruction() {
     override val code = 13
 
-    override fun execute(controlUnit: CPU.ControlUnit) = with(controlUnit) {
-        var address = Operand.value
+    override fun execute(cpu: CPU) = with(cpu.controlUnit) {
+        var address = cpu.registers.findRegister<Operand>().value
         val length = memory[address].toInt()
         val output = StringBuilder(length)
         for (i in 0 until length) {
@@ -79,8 +82,11 @@ class WriteString : Instruction() {
 class Load : Instruction() {
     override val code = 20
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        Accumulator.value = controlUnit.memory[Operand.value]
+    override fun execute(cpu: CPU) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        accumulator.value = cpu.controlUnit.memory[operand.value]
     }
 }
 
@@ -90,8 +96,11 @@ class Load : Instruction() {
 class Store : Instruction() {
     override val code = 21
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        controlUnit.memory[Operand.value] = Accumulator.value
+    override fun execute(cpu: CPU) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        cpu.controlUnit.memory[operand.value] = accumulator.value
     }
 }
 
@@ -102,9 +111,12 @@ class Store : Instruction() {
 class Add : Instruction() {
     override val code = 30
 
-    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
-        overflow(Accumulator.value + memory[Operand.value]) {
-            Accumulator.value = it.toFloat()
+    override fun execute(cpu: CPU): Unit = with(cpu) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        overflow(accumulator.value + controlUnit.memory[operand.value]) {
+            accumulator.value = it.toFloat()
         }
     }
 }
@@ -116,9 +128,12 @@ class Add : Instruction() {
 class Subtract : Instruction() {
     override val code = 31
 
-    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
-        overflow(Accumulator.value - memory[Operand.value]) {
-            Accumulator.value = it.toFloat()
+    override fun execute(cpu: CPU): Unit = with(cpu) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        overflow(accumulator.value - controlUnit.memory[operand.value]) {
+            accumulator.value = it.toFloat()
         }
     }
 }
@@ -130,13 +145,15 @@ class Subtract : Instruction() {
 class Divide : Instruction() {
     override val code = 32
 
-    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
-        if (memory[Operand.value] == 0f)
-            display.show("Attempt to divide by zero${newline()}")
-        else
-            overflow(Accumulator.value / memory[Operand.value]) {
-                Accumulator.value = it.toFloat()
-            }
+    override fun execute(cpu: CPU): Unit = with(cpu) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        if (controlUnit.memory[operand.value] == 0f)
+            controlUnit.display.show("Attempt to divide by zero${newline()}")
+        else overflow(accumulator.value / controlUnit.memory[operand.value]) {
+            accumulator.value = it.toFloat()
+        }
     }
 }
 
@@ -147,9 +164,12 @@ class Divide : Instruction() {
 class Multiply : Instruction() {
     override val code = 33
 
-    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
-        overflow(Accumulator.value * memory[Operand.value]) {
-            Accumulator.value = it.toFloat()
+    override fun execute(cpu: CPU): Unit = with(cpu) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        overflow(accumulator.value * controlUnit.memory[operand.value]) {
+            accumulator.value = it.toFloat()
         }
     }
 }
@@ -160,12 +180,15 @@ class Multiply : Instruction() {
 class Remainder : Instruction() {
     override val code = 34
 
-    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
-        if (memory[Operand.value] == 0f)
-            display.show("Attempt to divide by zero${newline()}")
+    override fun execute(cpu: CPU): Unit = with(cpu) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        if (controlUnit.memory[operand.value] == 0f)
+            controlUnit.display.show("Attempt to divide by zero${newline()}")
         else {
-            overflow(Accumulator.value % memory[Operand.value]) {
-                Accumulator.value = it.toFloat()
+            overflow(accumulator.value % controlUnit.memory[operand.value]) {
+                accumulator.value = it.toFloat()
             }
         }
     }
@@ -178,9 +201,12 @@ class Remainder : Instruction() {
 class Exponent : Instruction() {
     override val code = 35
 
-    override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
-        overflow(memory[Operand.value].toDouble().pow(Accumulator.value.toInt())) {
-            Accumulator.value = it.toFloat()
+    override fun execute(cpu: CPU): Unit = with(cpu) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+
+        overflow(controlUnit.memory[operand.value].toDouble().pow(accumulator.value.toInt())) {
+            accumulator.value = it.toFloat()
         }
     }
 }
@@ -191,8 +217,11 @@ class Exponent : Instruction() {
 class Branch : Instruction() {
     override val code = 40
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        InstructionCounter.value = Operand.value
+    override fun execute(cpu: CPU) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val instructionCounter = cpu.registers.findRegister<InstructionCounter>()
+
+        instructionCounter.value = operand.value
     }
 }
 
@@ -202,8 +231,12 @@ class Branch : Instruction() {
 class BranchNeg : Instruction() {
     override val code = 41
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        if(Accumulator.value < 0) InstructionCounter.value = Operand.value
+    override fun execute(cpu: CPU) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+        val instructionCounter = cpu.registers.findRegister<InstructionCounter>()
+
+        if (accumulator.value < 0) instructionCounter.value = operand.value
     }
 }
 
@@ -213,8 +246,12 @@ class BranchNeg : Instruction() {
 class BranchZero : Instruction() {
     override val code = 42
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        if(Accumulator.value == 0f) InstructionCounter.value = Operand.value
+    override fun execute(cpu: CPU) {
+        val operand = cpu.registers.findRegister<Operand>()
+        val accumulator = cpu.registers.findRegister<Accumulator>()
+        val instructionCounter = cpu.registers.findRegister<InstructionCounter>()
+
+        if (accumulator.value == 0f) instructionCounter.value = operand.value
     }
 }
 
@@ -224,8 +261,8 @@ class BranchZero : Instruction() {
 class Halt : Instruction() {
     override val code = 43
 
-    override fun execute(controlUnit: CPU.ControlUnit) {
-        controlUnit.display.show("Simpletron execution terminated${newline()}")
+    override fun execute(cpu: CPU) {
+        cpu.controlUnit.display.show("Simpletron execution terminated${newline()}")
         // TODO: Display dump
     }
 }
