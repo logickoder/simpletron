@@ -26,11 +26,6 @@ fun Memory.dump(display: Display) = with(display) {
     val rowHeaderSpace = log10(size.toDouble()).toInt()
     val horizontalStop = 10
 
-    fun showAddress(value: Float) {
-        val bits = java.lang.Float.floatToIntBits(value)
-        show(" 0x%0${valueLength}x".format(bits))
-    }
-
     show("Memory:${newline()}%${rowHeaderSpace}s".format(" "))
 
     // show the table column headers
@@ -41,7 +36,7 @@ fun Memory.dump(display: Display) = with(display) {
 
     for (i in 0 until size) {
         if (i % horizontalStop == 0) show("${newline()}%${rowHeaderSpace}d".format(i))
-        showAddress(this@dump[i])
+        show(" ${this@dump[i].toHex()}")
     }
     show(newline())
 }

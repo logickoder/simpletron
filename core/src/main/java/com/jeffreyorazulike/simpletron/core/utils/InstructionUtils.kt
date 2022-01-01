@@ -7,20 +7,39 @@ import java.util.regex.Pattern
 import kotlin.math.log10
 
 /**
+ * Converts this float into hex
+ * */
+fun Float.toHex(): String {
+    return "0x%08x".format(java.lang.Float.floatToIntBits(this))
+}
+
+fun String.hexToFloat(): Float {
+    val hex = removePrefix("0x")
+    return java.lang.Float.intBitsToFloat(java.lang.Long.parseLong(hex, 16).toInt())
+}
+
+/**
  *
  * Converts a valid string to an instruction
+ *
+ * A valid string is either a valid integer or hexadecimal
  * */
-fun String.toInstruction(memory: Memory): Int {
+fun String.toInstruction(memory: Memory): Float {
     val operandLength = log10(memory.size.toDouble()).toInt()
-    // remove all non digits from the string
-    return split(Pattern.compile("\\D+")).reduce { acc: String, s: String -> "$acc$s" }.run {
-        when {
-            // return 0 if the string is empty
-            isEmpty() -> 0
-            // return the string with the excess removed if the length is the right length or greater
-            length >= operandLength + 2 -> substring(0, operandLength + 2).toInt()
-            // if the length is lesser, add the correct amount of zeros between the opcode and operand
-            else -> "${substring(0, 2)}%0${operandLength}d".format(substring(2).toInt()).toInt()
+    // determine if the string is a hex value or decimal
+    return if (startsWith(prefix = "0x", ignoreCase = true)) {
+        hexToFloat()
+    } else {
+        // remove all non digits from the string
+        split(Pattern.compile("\\D+")).reduce { acc: String, s: String -> "$acc$s" }.run {
+            when {
+                // return 0 if the string is empty
+                isEmpty() -> 0f
+                // return the string with the excess removed if the length is the right length or greater
+                length >= operandLength + 2 -> substring(0, operandLength + 2).toFloat()
+                // if the length is lesser, add the correct amount of zeros between the opcode and operand
+                else -> "${substring(0, 2)}%0${operandLength}d".format(substring(2).toInt()).toFloat()
+            }
         }
     }
 }

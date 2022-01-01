@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.Memory
+import com.jeffreyorazulike.simpletron.core.utils.toHex
 import com.jeffreyorazulike.simpletron.core.utils.toInstruction
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -24,35 +25,43 @@ class InstructionUtilsTest {
 
     @Test
     fun invalidStringConvertsToZero() {
-        assertEquals(0, "j ju ".toInstruction(memory))
-        assertEquals(0, "-x".toInstruction(memory))
+        assertEquals(0f, "j ju ".toInstruction(memory))
+        assertEquals(0f, "-x".toInstruction(memory))
     }
 
     @Test
-    fun singleIntegerStringConvertsToTheValidInteger() {
-        assertEquals(1099, "01099".toInstruction(memory))
-        assertEquals(1099, "0199".toInstruction(memory))
-        assertEquals(13099, "13099".toInstruction(memory))
-        assertEquals(13099, "1399".toInstruction(memory))
-        assertEquals(13149, "131499".toInstruction(memory))
+    fun singleIntegerStringConvertsToTheValidInstruction() {
+        assertEquals(1099f, "01099".toInstruction(memory))
+        assertEquals(1099f, "0199".toInstruction(memory))
+        assertEquals(13099f, "13099".toInstruction(memory))
+        assertEquals(13099f, "1399".toInstruction(memory))
+        assertEquals(13149f, "131499".toInstruction(memory))
     }
 
     @Test
-    fun twoIntegerSeparatedByCharactersConvertsToASingleInteger() {
-        assertEquals(1099, "01 099".toInstruction(memory))
-        assertEquals(1099, "01 99".toInstruction(memory))
-        assertEquals(13099, "13 099".toInstruction(memory))
-        assertEquals(13099, "13 -99".toInstruction(memory))
-        assertEquals(13001, "13  1".toInstruction(memory))
+    fun twoIntegersSeparatedByCharactersConvertsToASingleInstruction() {
+        assertEquals(1099f, "01 099".toInstruction(memory))
+        assertEquals(1099f, "01 99".toInstruction(memory))
+        assertEquals(13099f, "13 099".toInstruction(memory))
+        assertEquals(13099f, "13 -99".toInstruction(memory))
+        assertEquals(13001f, "13  1".toInstruction(memory))
         memory = memory(10_000)
-        assertEquals(130499, "13_499".toInstruction(memory))
+        assertEquals(130499f, "13_499".toInstruction(memory))
     }
 
     @Test
-    fun multipleIntegersSeparatedByCharactersConvertsToASingleIntegerWithTheRightLength() {
-        assertEquals(13099, "13 099 -023".toInstruction(memory))
-        assertEquals(13099, "13 -99 a".toInstruction(memory))
-        assertEquals(13143, "13  1 436".toInstruction(memory))
+    fun multipleIntegersSeparatedByCharactersConvertsToASingleInstructionWithTheRightLength() {
+        assertEquals(13099f, "13 099 -023".toInstruction(memory))
+        assertEquals(13099f, "13 -99 a".toInstruction(memory))
+        assertEquals(13143f, "13  1 436".toInstruction(memory))
+    }
+
+    @Test
+    fun hexStringConvertsToDigit() {
+        var float = 12.888f
+        assertEquals(float, float.toHex().toInstruction(memory))
+        float = 999.2546f
+        assertEquals(float, float.toHex().toInstruction(memory))
     }
 
     companion object {
