@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.impl
 
 import com.jeffreyorazulike.simpletron.core.components.Input
+import com.jeffreyorazulike.simpletron.core.utils.newline
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -22,7 +23,8 @@ class FileInputTest {
     fun createFile() {
         file = File(FileInputTest::class.java.simpleName).apply{
             val text = StringBuilder()
-            for (i in 1..10) text.append("$i $TEST_MESSAGE\n")
+            val separator = newline()
+            for (i in 1..10) text.append("$i $TEST_MESSAGE$separator")
             writeText(text.toString())
         }
     }

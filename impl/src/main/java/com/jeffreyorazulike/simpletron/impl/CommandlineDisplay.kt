@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.impl
 
 import com.jeffreyorazulike.simpletron.core.components.Display
+import com.jeffreyorazulike.simpletron.core.utils.newline
 import javax.management.remote.JMXConnectionNotification.CLOSED
 
 
@@ -17,12 +18,12 @@ class CommandlineDisplay(stopValue: Int): Display() {
 
     init {
         val welcomeMessage =
-            "*** Welcome to Simpletron!                      ***\n" +
-            "*** Please enter your program one instruction   ***\n" +
-            "*** (or data word) at a time. I will display    ***\n" +
-            "*** the location number and a question mark (?) ***\n" +
-            "*** You then type the word for that location.   ***\n" +
-            "*** Type $stopValue to stop entering your program.  ***\n"
+            "*** Welcome to Simpletron!                      ***${newline()}" +
+                    "*** Please enter your program one instruction   ***${newline()}" +
+                    "*** (or data word) at a time. I will display    ***${newline()}" +
+                    "*** the location number and a question mark (?) ***${newline()}" +
+                    "*** You then type the word for that location.   ***${newline()}" +
+                    "*** Type $stopValue to stop entering your program.  ***${newline()}"
         show(welcomeMessage)
     }
 

@@ -2,6 +2,7 @@ package com.jeffreyorazulike.simpletron.core
 
 import com.jeffreyorazulike.simpletron.core.components.*
 import com.jeffreyorazulike.simpletron.core.utils.code
+import com.jeffreyorazulike.simpletron.core.utils.newline
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -39,9 +40,9 @@ class InstructionsTest {
     @Test
     fun checkThatNewLineOutputsANewLine() {
         instruction<NewLine>(cpu, 0)
-        assertEquals("\n", out.toString())
+        assertEquals(newline(), out.toString())
         instruction<NewLine>(cpu, 1)
-        assertEquals("\n\n", out.toString())
+        assertEquals("${newline()}${newline()}", out.toString())
     }
 
     @Test
@@ -190,7 +191,7 @@ class InstructionsTest {
             memory[MEM_LOCATION] = 0
             instruction<Divide>(cpu, memoryLocation++)
             assertEquals(first, Accumulator.value)
-            assertEquals("Attempt to divide by zero\n", out.toString())
+            assertEquals("Attempt to divide by zero${newline()}", out.toString())
         }
         check(90f, 100f)
         check2(20f)
@@ -231,7 +232,7 @@ class InstructionsTest {
             memory[MEM_LOCATION] = 0
             instruction<Remainder>(cpu, memoryLocation++)
             assertEquals(first, Accumulator.value)
-            assertEquals("Attempt to divide by zero\n", out.toString())
+            assertEquals("Attempt to divide by zero${newline()}", out.toString())
         }
         check(90f, 100f)
         check2(20f)

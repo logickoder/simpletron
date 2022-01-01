@@ -1,5 +1,6 @@
 package com.jeffreyorazulike.simpletron.core.components
 
+import com.jeffreyorazulike.simpletron.core.utils.newLine
 import com.jeffreyorazulike.simpletron.core.utils.overflow
 import kotlin.math.pow
 
@@ -10,7 +11,7 @@ class NewLine : Instruction() {
     override val code = 1
 
     override fun execute(controlUnit: CPU.ControlUnit) {
-        controlUnit.display.show("\n")
+        controlUnit.display.show(newLine())
     }
 }
 
@@ -131,7 +132,7 @@ class Divide : Instruction() {
 
     override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
         if (memory[Operand.value] == 0f)
-            display.show("Attempt to divide by zero\n")
+            display.show("Attempt to divide by zero${newLine()}")
         else
             overflow(Accumulator.value / memory[Operand.value]) {
                 Accumulator.value = it.toFloat()
@@ -161,7 +162,7 @@ class Remainder : Instruction() {
 
     override fun execute(controlUnit: CPU.ControlUnit): Unit = with(controlUnit) {
         if (memory[Operand.value] == 0f)
-            display.show("Attempt to divide by zero\n")
+            display.show("Attempt to divide by zero${newLine()}")
         else {
             overflow(Accumulator.value % memory[Operand.value]) {
                 Accumulator.value = it.toFloat()
@@ -224,7 +225,7 @@ class Halt : Instruction() {
     override val code = 43
 
     override fun execute(controlUnit: CPU.ControlUnit) {
-        controlUnit.display.show("Simpletron execution terminated\n")
+        controlUnit.display.show("Simpletron execution terminated${newLine()}")
         // TODO: Display dump
     }
 }

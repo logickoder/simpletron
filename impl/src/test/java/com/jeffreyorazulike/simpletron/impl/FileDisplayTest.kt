@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.impl
 
 import com.jeffreyorazulike.simpletron.core.components.Display
+import com.jeffreyorazulike.simpletron.core.utils.newLine
 import org.junit.AfterClass
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -31,8 +32,9 @@ class FileDisplayTest {
     @Test
     fun writesMultipleMessagesToFile(){
         val range = 1..10
+        val separator = newLine()
         for(i in range)
-            display.show("$TEST_MESSAGE\n")
+            display.show("$TEST_MESSAGE$separator")
         val lines = Files.readAllLines(file.toPath())
         assertEquals(10, lines.size)
         for (line in lines)

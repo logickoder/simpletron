@@ -13,7 +13,7 @@ inline fun CPU.ControlUnit.overflow(
     action: (Number) -> Unit = {}
 ): Boolean {
     return if (value.toFloat() !in memory.minWord..memory.maxWord) {
-        display.show("Memory Overflow\n")
+        display.show("Memory Overflow${newline()}")
         true
     } else {
         action(value)
