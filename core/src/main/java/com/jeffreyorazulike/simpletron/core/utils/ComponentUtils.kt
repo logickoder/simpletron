@@ -3,6 +3,7 @@ package com.jeffreyorazulike.simpletron.core.utils
 import com.jeffreyorazulike.simpletron.core.components.CPU
 import com.jeffreyorazulike.simpletron.core.components.Register
 import org.reflections.Reflections
+import kotlin.math.log10
 
 /**
  * Returns the instances of the specified types in the package of the class set of classes,
@@ -53,3 +54,23 @@ inline fun <reified T : Register<*>> List<Register<*>>.findRegister(): T {
  * Returns a platform dependent newline character
  * */
 fun newline(): String = System.lineSeparator()
+
+/**
+ * Shows the values of the registers on the display
+ * */
+fun CPU.dump() = with(controlUnit.display) {
+    val registers = this@dump.registers
+    val longestNameLength = registers.maxByOrNull { it.name.length }!!.name.length
+    val integerValueLength = log10(controlUnit.memory.size.toDouble()).toInt()
+
+    show("Registers:${newline()}")
+    registers.forEach { register ->
+        show("%-${longestNameLength}s ".format(register.name))
+        val value = if (register.value is Float)
+            (register.value as Float).toHex()
+        else
+            "%0${integerValueLength}d".format(register.value as Int)
+        show(" %10s${newline()}".format(value))
+    }
+    show(newline())
+}
