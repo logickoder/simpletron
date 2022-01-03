@@ -5,10 +5,7 @@ import com.jeffreyorazulike.simpletron.core.component.Instruction
 import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.Accumulator
 import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.InstructionCounter
 import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.Operand
-import com.jeffreyorazulike.simpletron.core.impl.utils.dump
-import com.jeffreyorazulike.simpletron.core.impl.utils.newline
-import com.jeffreyorazulike.simpletron.core.impl.utils.overflow
-import com.jeffreyorazulike.simpletron.core.impl.utils.register
+import com.jeffreyorazulike.simpletron.core.impl.utils.*
 import kotlin.math.pow
 
 /**
@@ -156,7 +153,7 @@ class Divide : Instruction() {
         val accumulator = cpu.register<Accumulator>()
 
         if (controlUnit.memory[operand.value] == 0f)
-            controlUnit.display.show("Attempt to divide by zero${newline()}")
+            error("Attempt to divide by zero${newline()}")
         else overflow(accumulator.value / controlUnit.memory[operand.value]) {
             accumulator.value = it.toFloat()
         }
@@ -191,11 +188,9 @@ class Remainder : Instruction() {
         val accumulator = cpu.register<Accumulator>()
 
         if (controlUnit.memory[operand.value] == 0f)
-            controlUnit.display.show("Attempt to divide by zero${newline()}")
-        else {
-            overflow(accumulator.value % controlUnit.memory[operand.value]) {
-                accumulator.value = it.toFloat()
-            }
+            error("Attempt to divide by zero${newline()}")
+        else overflow(accumulator.value % controlUnit.memory[operand.value]) {
+            accumulator.value = it.toFloat()
         }
     }
 }
@@ -268,7 +263,7 @@ class Halt : Instruction() {
     override val code = 43
 
     override fun execute(cpu: CPU) = with(cpu.controlUnit) {
-        display.show("Simpletron execution terminated${newline()}")
+        display.show("${newline()}Simpletron execution terminated${newline()}${newline()}")
         cpu.dump()
         memory.dump(display)
     }

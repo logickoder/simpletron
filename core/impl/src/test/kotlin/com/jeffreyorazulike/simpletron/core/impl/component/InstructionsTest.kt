@@ -1,7 +1,6 @@
 package com.jeffreyorazulike.simpletron.core.impl.component
 
 import com.jeffreyorazulike.simpletron.core.component.CPU
-import com.jeffreyorazulike.simpletron.core.component.Display
 import com.jeffreyorazulike.simpletron.core.component.Input
 import com.jeffreyorazulike.simpletron.core.component.Instruction
 import com.jeffreyorazulike.simpletron.core.impl.component.cpu.instructions.*
@@ -11,6 +10,7 @@ import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.Operand
 import com.jeffreyorazulike.simpletron.core.impl.utils.code
 import com.jeffreyorazulike.simpletron.core.impl.utils.newline
 import com.jeffreyorazulike.simpletron.core.impl.utils.register
+import com.jeffreyorazulike.simpletron.core.impl.utils.stopValue
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -41,7 +41,8 @@ class InstructionsTest {
 
     @Before
     fun setUp() {
-        cpu = CPUImpl(MemoryImpl(), TestDisplay(), mockInput())
+        val memory = MemoryImpl()
+        cpu = CPUImpl(memory, CommandlineDisplay(memory.stopValue().toInt()), mockInput())
     }
 
     @Before
@@ -325,14 +326,6 @@ class InstructionsTest {
     }
 
     companion object {
-
-        class TestDisplay: Display() {
-            override val isClosed: Boolean = false
-            override fun show(message: String?) {
-                print(message)
-            }
-            override fun close() {}
-        }
 
         private const val MEM_LOCATION = 10
 

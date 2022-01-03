@@ -1,12 +1,13 @@
 package com.jeffreyorazulike.simpletron.core.impl.component
 
-import com.jeffreyorazulike.simpletron.core.component.*
+import com.jeffreyorazulike.simpletron.core.component.CPU
+import com.jeffreyorazulike.simpletron.core.component.Input
+import com.jeffreyorazulike.simpletron.core.component.Instruction
+import com.jeffreyorazulike.simpletron.core.component.Register
+import com.jeffreyorazulike.simpletron.core.impl.component.cpu.instructions.Halt
 import com.jeffreyorazulike.simpletron.core.impl.component.cpu.instructions.Read
 import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.*
-import com.jeffreyorazulike.simpletron.core.impl.utils.classInstances
-import com.jeffreyorazulike.simpletron.core.impl.utils.code
-import com.jeffreyorazulike.simpletron.core.impl.utils.dump
-import com.jeffreyorazulike.simpletron.core.impl.utils.register
+import com.jeffreyorazulike.simpletron.core.impl.utils.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
@@ -84,8 +85,17 @@ class CPUTest {
         cpu.register<InstructionCounter>().value = 1
         cpu.register<Accumulator>().value = 123f
         cpu.register<InstructionRegister>().value = 1245f
-        cpu.changeComponent(display = TestDisplay())
+        cpu.changeComponent(display = CommandlineDisplay(cpu.controlUnit.memory.stopValue().toInt()))
         cpu.dump()
+    }
+
+    @Test
+    fun testError() = with(cpu.controlUnit) {
+        val ic = cpu.register<InstructionCounter>()
+        cpu.changeComponent(display = CommandlineDisplay(memory.stopValue().toInt()))
+        cpu.error("Test Error")
+        assertEquals(Halt().code(memory, ic.value), memory[ic.value].toInt())
+        assertEquals(Halt(), cpu.execute())
     }
 
     class StubOp : Instruction() {
@@ -116,15 +126,6 @@ class CPUTest {
 
     companion object {
         private const val TEST_VALUE = -99999
-
-        class TestDisplay : Display() {
-            override val isClosed: Boolean = false
-            override fun show(message: String?) {
-                print(message)
-            }
-
-            override fun close() {}
-        }
 
         private fun mockInput() = mock<Input> {
             on { read() } doReturn ""

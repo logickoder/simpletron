@@ -2,6 +2,8 @@ package com.jeffreyorazulike.simpletron.core.impl.utils
 
 import com.jeffreyorazulike.simpletron.core.component.CPU
 import com.jeffreyorazulike.simpletron.core.component.Register
+import com.jeffreyorazulike.simpletron.core.impl.component.cpu.instructions.Halt
+import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.InstructionCounter
 import org.reflections.Reflections
 import kotlin.math.log10
 
@@ -35,12 +37,20 @@ inline fun CPU.overflow(
     action: (Number) -> Unit = {}
 ): Boolean = with(controlUnit) {
     return if (value.toFloat() !in memory.minWord..memory.maxWord) {
-        display.show("Memory Overflow${newline()}")
+        error("Memory Overflow${newline()}")
         true
     } else {
         action(value)
         false
     }
+}
+
+fun CPU.error(message: String) = with(controlUnit) {
+    val ic = register<InstructionCounter>()
+    // show the error message
+    display.show(message)
+    // update the next memory location with the Halt instruction
+    memory[ic.value] = Halt().code(memory, ic.value)
 }
 
 /**
