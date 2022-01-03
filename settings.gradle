@@ -3,3 +3,6 @@ rootProject.name = 'simpletron_core'
 include ':impl'
 include ':core'
 include ':cmd_app'
+include 'core:contract'
+findProject(':core:contract')?.name = 'contract'
+
