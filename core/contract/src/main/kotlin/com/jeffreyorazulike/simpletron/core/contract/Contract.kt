@@ -18,7 +18,7 @@ abstract class Contract {
     /**
      * Executes this contract
      * */
-    abstract fun execute(contractor: Contractor)
+    abstract fun execute(contractor: Contractor<*>)
 
     override fun equals(other: Any?) = other is Contract && other.name == name
 

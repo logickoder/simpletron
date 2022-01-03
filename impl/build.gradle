@@ -1,7 +1,0 @@
-description = 'impl'
-
-project(':impl') {
-    dependencies {
-        implementation project(':core')
-    }
-}

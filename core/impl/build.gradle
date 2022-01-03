@@ -1,10 +1,9 @@
-description = 'cmd_app'
+description = 'impl'
 
-project(':cmd_app') {
+project(':core:impl') {
     dependencies {
-        // core module dependency
         implementation project(':core:component')
         implementation project(':core:contract')
-        implementation project(':core:impl')
+        implementation 'org.reflections:reflections:0.10.2'
     }
 }

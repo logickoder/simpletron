@@ -1,7 +1,4 @@
-/build/
+build
 /out/
 /.gradle/
-/core/build/
-/impl/build/
-/cmd_app/build/
-/.idea
+/.idea/

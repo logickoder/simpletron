@@ -1,8 +1,11 @@
-rootProject.name = 'simpletron_core'
+rootProject.name = 'simpletron-core'
 
-include ':impl'
-include ':core'
-include ':cmd_app'
+include 'core'
+include 'cmd_app'
 include 'core:contract'
+include 'core:component'
+include 'core:impl'
 findProject(':core:contract')?.name = 'contract'
+findProject(':core:component')?.name = 'component'
+findProject(':core:impl')?.name = 'impl'
 
