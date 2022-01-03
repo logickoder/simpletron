@@ -1,5 +1,6 @@
 package com.jeffreyorazulike.simpletron.core.components
 
+import com.jeffreyorazulike.simpletron.core.utils.dump
 import com.jeffreyorazulike.simpletron.core.utils.findRegister
 import com.jeffreyorazulike.simpletron.core.utils.newline
 import com.jeffreyorazulike.simpletron.core.utils.overflow
@@ -261,8 +262,9 @@ class BranchZero : Instruction() {
 class Halt : Instruction() {
     override val code = 43
 
-    override fun execute(cpu: CPU) {
-        cpu.controlUnit.display.show("Simpletron execution terminated${newline()}")
-        // TODO: Display dump
+    override fun execute(cpu: CPU) = with(cpu.controlUnit) {
+        display.show("Simpletron execution terminated${newline()}")
+        cpu.dump()
+        memory.dump(display)
     }
 }
