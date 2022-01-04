@@ -1,0 +1,3 @@
+rootProject.name = 'simpletron-compiler'
+
+include 'infix-postfix'

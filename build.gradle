@@ -1,0 +1,79 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+}
+
+// instructions for all projects
+allprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+
+    group 'com.jeffreyorazulike'
+    version '1.0-SNAPSHOT'
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+// instructions for each sub project
+subprojects {
+
+    // common dependencies
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
+        // For Unit Testing
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    }
+
+    // jar containing subproject source
+    task sourcesJar(type: Jar) {
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+
+    jar.dependsOn sourcesJar
+}
+
+// single library jar containing all sub projects and dependencies
+configurations {
+    childJars
+}
+
+dependencies {
+    subprojects.forEach {
+        childJars project(it.path)
+    }
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    dependsOn configurations.childJars
+    from configurations.childJars.collect {
+        zipTree(it)
+    }
+}
+
+// single jar containing all subproject sources
+task allSourcesJar(type: Jar) {
+    classifier 'sources'
+
+    subprojects.each { subproject ->
+        from subproject.sourceSets.main.allSource
+    }
+}
+
+// clean all buildDir
+clean {
+    allprojects.each { project ->
+        delete project.buildDir
+    }
+    delete rootProject.buildDir
+}
+
+jar.dependsOn allSourcesJar
+classes.dependsOn clean
