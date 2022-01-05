@@ -5,7 +5,6 @@ plugins {
 // instructions for all projects
 allprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
-    apply plugin: 'maven-publish'
 
     group 'com.jeffreyorazulike'
     version '1.0-SNAPSHOT'
@@ -20,6 +19,7 @@ allprojects {
 
 // instructions for each sub project
 subprojects {
+    apply plugin: 'maven-publish'
 
     // common dependencies
     dependencies {
