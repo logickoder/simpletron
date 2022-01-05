@@ -41,14 +41,16 @@ subprojects { subproject ->
         from sourceSets.main.allSource
     }
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                groupId = group_name + '.' + rootProject.name
-                artifactId = subproject.name
-                version = version_name
+    if (subproject.name != 'core' || subproject.name != 'cmd_app') {
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    groupId = group_name
+                    artifactId = rootProject.name + '-' + subproject.name
+                    version = version_name
 
-                from components.java
+                    from components.java
+                }
             }
         }
     }
