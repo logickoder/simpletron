@@ -44,8 +44,8 @@ subprojects { subproject ->
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId = group_name + '.' + rootProject.name
-                artifactId = subproject.name
+                groupId = group_name
+                artifactId = rootProject.name + '-' + subproject.name
                 version = version_name
 
                 from components.java

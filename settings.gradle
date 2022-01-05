@@ -1,7 +1,10 @@
 rootProject.name = 'simpletron-core'
 
-include 'core'
-include 'cmd_app'
+if (!System.env.JITPACK) {
+    include 'core'
+    include 'cmd_app'
+}
+
 include 'core:contract'
 include 'core:component'
 include 'core:impl'
