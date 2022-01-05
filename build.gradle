@@ -5,6 +5,7 @@ plugins {
 // instructions for all projects
 allprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'maven-publish'
 
     group 'com.jeffreyorazulike'
     version '1.0-SNAPSHOT'
@@ -67,13 +68,4 @@ task allSourcesJar(type: Jar) {
     }
 }
 
-// clean all buildDir
-clean {
-    allprojects.each { project ->
-        delete project.buildDir
-    }
-    delete rootProject.buildDir
-}
-
 jar.dependsOn allSourcesJar
-classes.dependsOn clean

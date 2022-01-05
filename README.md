@@ -1,12 +1,16 @@
 # SIMPLETRON: CORE
 
-Based on **Deitel's _How to Program_** books (Java, C++, C#) that contain a couple exercises to emulate the other aspects of the programming environment. 
+[![](https://jitpack.io/v/jeffreyorazulike/simpletron-core.svg)](https://jitpack.io/#jeffreyorazulike/simpletron-core)
+
+Based on **Deitel's _How to Program_** books (Java, C++, C#) that contain a couple exercises to emulate the other
+aspects of the programming environment.
 
 The core part of simpletron contains the building blocks of simpletron that makes it work
 
 ## CORE ISA
 
 #### The default components are:
+
 - A memory of 1,000 blocks
 - CPU
 - A commandline input and display
