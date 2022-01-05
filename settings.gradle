@@ -3,12 +3,11 @@ rootProject.name = 'simpletron-core'
 if (!System.env.JITPACK) {
     include 'core'
     include 'cmd_app'
+    include 'core:contract'
+    include 'core:component'
+    findProject(':core:contract')?.name = 'contract'
+    findProject(':core:component')?.name = 'component'
 }
 
-include 'core:contract'
-include 'core:component'
 include 'core:impl'
-findProject(':core:contract')?.name = 'contract'
-findProject(':core:component')?.name = 'component'
 findProject(':core:impl')?.name = 'impl'
-
