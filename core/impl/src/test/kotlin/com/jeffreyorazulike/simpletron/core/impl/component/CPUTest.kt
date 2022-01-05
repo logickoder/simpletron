@@ -54,24 +54,6 @@ class CPUTest {
     }
 
     @Test
-    fun checkThatAllInstructionsAreExecuted() = with(cpu) {
-        val instructions = instructions.toMutableList().run {
-            // remove all branch instructions
-            removeIf { it.code in 40..49 }
-            toSortedSet(Comparator.comparing { it.code })
-        }.apply{
-            forEachIndexed { index, instruction ->
-                controlUnit.memory[index] = instruction.code(controlUnit.memory, 0)
-            }
-        }
-        val executedInstructions = mutableSetOf<Instruction>()
-        do {
-            execute()?.let { executedInstructions.add(it) }
-        }while (instructions.size != executedInstructions.size)
-        assertEquals(instructions.size, executedInstructions.size)
-    }
-
-    @Test
     fun checkThatNullIsReturnedIfTheInstructionDoesNotExist() {
         cpu.controlUnit.memory[0] = -99 * 100
         val result = cpu.execute()

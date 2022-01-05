@@ -2,6 +2,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 }
 
+apply plugin: 'maven-publish'
+
 ext {
     group_name = 'com.jeffreyorazulike'
     version_name = '1.0-SNAPSHOT'
@@ -24,7 +26,6 @@ allprojects {
 
 // instructions for each sub project
 subprojects { subproject ->
-    apply plugin: 'maven-publish'
 
     // common dependencies
     dependencies {
@@ -39,18 +40,6 @@ subprojects { subproject ->
     task sourcesJar(type: Jar) {
         classifier 'sources'
         from sourceSets.main.allSource
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                groupId = group_name
-                artifactId = rootProject.name + '-' + subproject.name
-                version = version_name
-
-                from components.java
-            }
-        }
     }
 
     jar.dependsOn sourcesJar
@@ -86,3 +75,14 @@ task allSourcesJar(type: Jar) {
 }
 
 jar.dependsOn allSourcesJar
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = group_name
+            artifactId = rootProject.name
+            version = version_name
+            from components.java
+        }
+    }
+}

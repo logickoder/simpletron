@@ -1,10 +1,7 @@
-description = 'cmd_app'
 
-project(':cmd_app') {
-    dependencies {
-        // core module dependency
-        implementation project(':core:component')
-        implementation project(':core:contract')
-        implementation project(':core:impl')
-    }
+dependencies {
+    // core module dependency
+    implementation project(':component')
+    implementation project(':contract')
+    implementation project(':impl')
 }

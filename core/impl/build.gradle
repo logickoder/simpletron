@@ -1,9 +1,9 @@
 description = 'impl'
 
-project(':core:impl') {
+project(':impl') {
     dependencies {
-        implementation project(':core:component')
-        implementation project(':core:contract')
+        implementation project(':component')
+        implementation project(':contract')
         implementation 'org.reflections:reflections:0.10.2'
     }
 }
