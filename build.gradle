@@ -23,7 +23,7 @@ allprojects {
 }
 
 // instructions for each sub project
-subprojects {
+subprojects { subproject ->
     apply plugin: 'maven-publish'
 
     // common dependencies
@@ -44,8 +44,8 @@ subprojects {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId = group_name
-                artifactId = name
+                groupId = group_name + '.' + rootProject.name
+                artifactId = subproject.name
                 version = version_name
 
                 from components.java
