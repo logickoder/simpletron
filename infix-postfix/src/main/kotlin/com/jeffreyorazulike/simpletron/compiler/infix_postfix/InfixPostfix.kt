@@ -1,6 +1,7 @@
 package com.jeffreyorazulike.simpletron.compiler.infix_postfix
 
 import java.util.*
+import kotlin.math.pow
 
 
 const val SPACE = ' '
@@ -12,6 +13,31 @@ const val EXPONENTIATION = '^'
 const val MULTIPLICATION = '*'
 const val O_PARENTHESIS = '('
 const val C_PARENTHESIS = ')'
+
+private val defaultCalculate: (Stack<Float>, Char) -> Float = { stack, operator ->
+    val y = stack.pop()
+    val x = stack.pop()
+
+    when (operator) {
+        PLUS -> x + y
+        MINUS -> x - y
+        MULTIPLICATION -> x * y
+        DIVISION -> x / y
+        REMAINDER -> x % y
+        EXPONENTIATION -> x.toDouble().pow(y.toDouble()).toFloat()
+        else -> 0f
+    }
+}
+
+private val defaultTransform: (String) -> Float = { string ->
+    when (string.length) {
+        1 -> {
+            val char = string.toCharArray()[0]
+            if (char.isDigit()) string.toFloat() else char.code.toFloat()
+        }
+        else -> string.toFloat()
+    }
+}
 
 /**
  * Returns true if this character is an operator, false otherwise
@@ -67,7 +93,7 @@ fun Char.precedence(): Int {
  * Converts an infix expression to postfix
  * */
 fun String.infixToPostfix(): String {
-    val chars = plus(C_PARENTHESIS).replace("\\s+", "").toCharArray().also {
+    val chars = plus(C_PARENTHESIS).replace(Regex("\\s+"), "").toCharArray().also {
         if (it.isEmpty()) return ""
     }
     val postfix = StringBuilder(chars.size)
@@ -96,4 +122,28 @@ fun String.infixToPostfix(): String {
         }
     } while (++i < chars.size)
     return postfix.toString().trim()
+}
+
+/**
+ * Evaluates a postfix expression
+ *
+ * @param transform changes a letter of digit to it corresponding int value
+ * @param calculate evaluates a simple expression between two int values
+ * */
+fun String.postfixEvaluator(
+    transform: (String) -> Float = defaultTransform,
+    calculate: (Stack<Float>, Char) -> Float = defaultCalculate
+): Int {
+    val stack = Stack<Float>()
+    val variables = plus(" $C_PARENTHESIS").split(Regex("\\s+"))
+
+    for (variable in variables) {
+        val char = variable[0]
+        when {
+            char == C_PARENTHESIS -> return stack.pop().toInt()
+            char.isLetterOrDigit() -> stack.push(transform(variable))
+            char.isOperator() -> stack.push(calculate(stack, char))
+        }
+    }
+    return 0
 }

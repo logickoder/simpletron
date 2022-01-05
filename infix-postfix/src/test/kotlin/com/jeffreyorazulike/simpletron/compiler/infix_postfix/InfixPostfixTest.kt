@@ -45,5 +45,17 @@ class InfixPostfixTest {
         }
 
         check("(6 + 2) * 5 - 8 / 4", "6 2 + 5 * 8 4 / -")
+        check("(63 + 24) * 504 - 822 / 42", "63 24 + 504 * 822 42 / -")
+        
+    }
+
+    @Test
+    fun postfixEvaluator() {
+        fun check(equation: String, result: Int) {
+            assertEquals(result, equation.postfixEvaluator())
+        }
+
+        check("6 2 + 5 * 8 4 / -", 38)
+        check("63 24 + 504 * 822 42 / -", 43828)
     }
 }
