@@ -36,6 +36,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifactId = rootProject.name
+            artifact jar
             artifact sourcesJar
         }
     }
