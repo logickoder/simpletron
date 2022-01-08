@@ -25,6 +25,8 @@ allprojects {
     repositories {
         mavenCentral()
     }
+
+//    testClasses.dependsOn publishToMavenLocal
 }
 
 // instructions for each sub project

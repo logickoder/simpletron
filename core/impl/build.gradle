@@ -1,17 +1,24 @@
-def bundledProjects = [project(':component'), project(':contract')]
+// holds the list of projects that are to be also included in this module's jar file
+def bundledProjects = [
+        project(':component'),
+        project(':contract')
+]
 
 configurations {
     bundle
+    // give the bundle configuration the properties of implementation
     implementation.extendsFrom(bundle)
 }
 
 dependencies {
+    // add the projects as dependencies
     bundledProjects.forEach {
         bundle it
     }
     implementation 'org.reflections:reflections:0.10.2'
 }
 
+// single jar containing all the bundled projects compiled code
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
@@ -23,7 +30,7 @@ jar {
     }
 }
 
-// single jar containing all subproject sources
+// single jar containing all bundled project sources
 sourcesJar {
     classifier 'sources'
 
@@ -32,13 +39,5 @@ sourcesJar {
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = "${group_name}.${project_name}"
-            artifactId = "${project_module}"
-            artifact jar
-            artifact sourcesJar
-        }
-    }
-}
+// change the artifact id of the jar produced by this module to the module of this entire project
+publishing.publications.mavenJava.artifactId = project_module
