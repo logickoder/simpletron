@@ -35,7 +35,8 @@ sourcesJar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = rootProject.name
+            groupId = "${group_name}.${project_name}"
+            artifactId = "${project_module}"
             artifact jar
             artifact sourcesJar
         }
