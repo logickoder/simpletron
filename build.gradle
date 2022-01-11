@@ -5,20 +5,32 @@ plugins {
 // instructions for all projects
 allprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java'
 
-    group 'com.jeffreyorazulike'
-    version '1.0-SNAPSHOT'
+    ext {
+        group_name = "com.jeffreyorazulike"
+        version_name = "1.0-SNAPSHOT"
+        def project_info = rootProject.name.split("-")
+        project_name = project_info[0]
+        project_module = project_info[1]
+    }
+
+    group group_name
+    version version_name
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 
     repositories {
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
+
 }
 
 // instructions for each sub project
-subprojects {
+subprojects { subproject ->
 
     // common dependencies
     dependencies {
@@ -36,44 +48,17 @@ subprojects {
     }
 
     jar.dependsOn sourcesJar
-}
 
-// single library jar containing all sub projects and dependencies
-configurations {
-    childJars
-}
-
-dependencies {
-    subprojects.forEach {
-        childJars project(it.path)
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = "${group_name}.${project_name}"
+                artifactId = "${project_module}-${subproject.name}"
+                artifact jar
+                artifact sourcesJar
+            }
+        }
     }
 }
 
-jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    dependsOn configurations.childJars
-    from configurations.childJars.collect {
-        zipTree(it)
-    }
-}
-
-// single jar containing all subproject sources
-task allSourcesJar(type: Jar) {
-    classifier 'sources'
-
-    subprojects.each { subproject ->
-        from subproject.sourceSets.main.allSource
-    }
-}
-
-// clean all buildDir
-clean {
-    allprojects.each { project ->
-        delete project.buildDir
-    }
-    delete rootProject.buildDir
-}
-
-jar.dependsOn allSourcesJar
-classes.dependsOn clean
+jar.enabled = false
