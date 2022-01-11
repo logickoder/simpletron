@@ -3,6 +3,7 @@ package com.logickoder.simpletron.compiler.translator
 import com.logickoder.simpletron.compiler.translator.utils.extractKeyword
 import com.logickoder.simpletron.compiler.translator.utils.findKeyword
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Answers
@@ -39,14 +40,25 @@ class TranslatorTest {
     }
 
     @Test
-    fun testExtractKeyword() {
+    fun testExtractStatement() {
         for ((index, line) in translator.lines.withIndex()) {
             val syntax = translator.extractKeyword(index)
             if (syntax.resolved) {
                 val keyword = translator.findKeyword(line.split(Regex("\\s+"))[1])
                 assertEquals(keyword, syntax.keyword?.javaClass)
-            } else {
-                println(syntax.error?.message)
+            }
+        }
+    }
+
+    @Test
+    fun testThatAnIncompleteStatementFails() {
+        for ((index, statement) in translator.keywords.withIndex()) {
+            val name = statement.simpleName.lowercase()
+            if (name != "end") {
+                val resolve = translator.extractKeyword("${(index + 1) * 10} $name", index + 1)
+                assertEquals(false, resolve.resolved)
+                assertEquals(null, resolve.keyword)
+                assertNotEquals(null, resolve.error)
             }
         }
     }
