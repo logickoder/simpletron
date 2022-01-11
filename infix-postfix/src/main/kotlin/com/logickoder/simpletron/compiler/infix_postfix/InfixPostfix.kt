@@ -1,4 +1,4 @@
-package com.jeffreyorazulike.simpletron.compiler.infix_postfix
+package com.logickoder.simpletron.compiler.infix_postfix
 
 import java.util.*
 import kotlin.math.pow

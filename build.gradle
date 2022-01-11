@@ -9,7 +9,7 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        group_name = "com.jeffreyorazulike"
+        group_name = "com.logickoder"
         version_name = "1.0-SNAPSHOT"
         def project_info = rootProject.name.split("-")
         project_name = project_info[0]

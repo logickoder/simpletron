@@ -1,6 +1,6 @@
-package com.jeffreyorazulike.simpletron.compiler.translator.syntax
+package com.logickoder.simpletron.compiler.translator.syntax
 
-import com.jeffreyorazulike.simpletron.compiler.translator.syntax.keyword.Keyword
+import com.logickoder.simpletron.compiler.translator.syntax.keyword.Keyword
 
 /**
  *

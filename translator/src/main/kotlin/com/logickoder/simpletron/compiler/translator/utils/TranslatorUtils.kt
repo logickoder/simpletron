@@ -1,8 +1,8 @@
-package com.jeffreyorazulike.simpletron.compiler.translator.utils
+package com.logickoder.simpletron.compiler.translator.utils
 
-import com.jeffreyorazulike.simpletron.compiler.translator.Translator
-import com.jeffreyorazulike.simpletron.compiler.translator.syntax.SyntaxResolve
-import com.jeffreyorazulike.simpletron.compiler.translator.syntax.keyword.Keyword
+import com.logickoder.simpletron.compiler.translator.Translator
+import com.logickoder.simpletron.compiler.translator.syntax.SyntaxResolve
+import com.logickoder.simpletron.compiler.translator.syntax.keyword.Keyword
 import org.reflections.Reflections
 import java.util.regex.Pattern
 
