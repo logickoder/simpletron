@@ -1,7 +1,7 @@
-package com.jeffreyorazulike.simpletron.compiler.translator
+package com.logikoder.simpletron.compiler.translator
 
-import com.jeffreyorazulike.simpletron.compiler.translator.utils.extractKeyword
-import com.jeffreyorazulike.simpletron.compiler.translator.utils.findKeyword
+import com.logikoder.simpletron.compiler.translator.utils.extractKeyword
+import com.logikoder.simpletron.compiler.translator.utils.findKeyword
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

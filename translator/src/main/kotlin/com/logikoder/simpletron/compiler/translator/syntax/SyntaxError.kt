@@ -1,4 +1,4 @@
-package com.jeffreyorazulike.simpletron.compiler.translator.syntax
+package com.logikoder.simpletron.compiler.translator.syntax
 
 /**
  *

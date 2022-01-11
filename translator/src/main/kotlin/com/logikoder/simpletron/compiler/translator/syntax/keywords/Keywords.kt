@@ -1,6 +1,6 @@
-package com.jeffreyorazulike.simpletron.compiler.translator.syntax.keywords
+package com.logikoder.simpletron.compiler.translator.syntax.keywords
 
-import com.jeffreyorazulike.simpletron.compiler.translator.syntax.keyword.Keyword
+import com.logikoder.simpletron.compiler.translator.syntax.keyword.Keyword
 
 /**
  * Any text following the command rem is for documentation
