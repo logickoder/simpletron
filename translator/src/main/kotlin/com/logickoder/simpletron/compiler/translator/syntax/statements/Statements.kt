@@ -115,4 +115,4 @@ class Goto(lineNumber: Int, line: String) : Statement(lineNumber, line.lowercase
  *
  * Example: 99 end
  * */
-class End(lineNumber: Int, action: String = "") : Statement(lineNumber, action)
+class End(lineNumber: Int) : Statement(lineNumber, "")

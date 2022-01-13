@@ -6,7 +6,7 @@ package com.logickoder.simpletron.compiler.translator.syntax
  *
  * @property action contains the code to be executed by this keyword
  * @property dependsOn a keyword this keyword depends on to function well
- * @property keyword the name of this keyword, which is the same as the lowercase name of this class
+ * @property keyword the name of this keyword, which is the same as the lowercase name of the class
  * @property lineNumber the line number of this keyword in the source code
  */
 abstract class Statement(

@@ -3,7 +3,6 @@ package com.logickoder.simpletron.compiler.translator
 import com.logickoder.simpletron.compiler.translator.syntax.Statement
 import com.logickoder.simpletron.compiler.translator.syntax.SyntaxError
 import com.logickoder.simpletron.compiler.translator.utils.extractStatement
-import com.logickoder.simpletron.compiler.translator.utils.findStatement
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -45,8 +44,8 @@ class TranslatorTest {
         for ((index, line) in translator.lines.withIndex()) {
             val syntax = translator.extractStatement(index)
             if (syntax is Statement) {
-                val statement = translator.findStatement(line.split(Regex("\\s+"))[1])
-                assertEquals(statement, syntax.javaClass)
+                val statement = translator.statements.find { it.statementName == line.split(Regex("\\s+"))[1] }
+                assertEquals(statement?.statementName, syntax.keyword)
             }
         }
     }
@@ -54,7 +53,7 @@ class TranslatorTest {
     @Test
     fun testThatAnIncompleteStatementFails() {
         for ((index, statement) in translator.statements.withIndex()) {
-            val name = statement.simpleName.lowercase()
+            val name = statement.statementName
             if (name != "end") {
                 val syntax = translator.extractStatement("${(index + 1) * 10} $name", index + 1)
                 assert(syntax is SyntaxError)

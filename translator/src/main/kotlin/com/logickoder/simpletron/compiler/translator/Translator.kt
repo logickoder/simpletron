@@ -1,8 +1,6 @@
 package com.logickoder.simpletron.compiler.translator
 
-import com.logickoder.simpletron.compiler.translator.syntax.Statement
-import com.logickoder.simpletron.compiler.translator.syntax.statements.Rem
-import com.logickoder.simpletron.compiler.translator.utils.classes
+import com.logickoder.simpletron.compiler.translator.syntax.statements.statementFactories
 
 /**
  *
@@ -13,6 +11,6 @@ import com.logickoder.simpletron.compiler.translator.utils.classes
  * @property lines the lines of a program this translator is parsing
  */
 abstract class Translator {
-    open val statements by lazy { classes<Statement>(setOf(Rem::class.java)) }
+    open val statements by lazy { statementFactories() }
     abstract val lines: List<String>
 }
