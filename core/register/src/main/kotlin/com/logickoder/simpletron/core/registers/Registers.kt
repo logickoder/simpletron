@@ -1,30 +1,32 @@
-package com.logickoder.simpletron.core.impl.component.cpu.registers
+package com.logickoder.simpletron.core.registers
+
+import com.logickoder.simpletron.core.component.Register
 
 /**
  * Holds the calculation the CPU is currently processing
  */
-class Accumulator : com.logickoder.simpletron.core.component.Register<Float>() {
+class Accumulator : Register<Float>() {
     override var value = 0f
 }
 
 /**
  * Holds the operation the CPU is to perform
  */
-class OperationCode : com.logickoder.simpletron.core.component.Register<Int>() {
+class OperationCode : Register<Int>() {
     override var value = 0
 }
 
 /**
  * Holds the value the CPU is to use the [OperationCode] and work on
  */
-class Operand : com.logickoder.simpletron.core.component.Register<Int>() {
+class Operand : Register<Int>() {
     override var value = 0
 }
 
 /**
  * Holds the current memory location the CPU should get what to work on
  */
-class InstructionCounter : com.logickoder.simpletron.core.component.Register<Int>() {
+class InstructionCounter : Register<Int>() {
     override var value = 0
 }
 
@@ -32,6 +34,6 @@ class InstructionCounter : com.logickoder.simpletron.core.component.Register<Int
  * Holds the value of the memory location gotten from the [InstructionCounter] to
  * prevent unnecessary reading from the memory
  */
-class InstructionRegister : com.logickoder.simpletron.core.component.Register<Float>() {
+class InstructionRegister : Register<Float>() {
     override var value = 0f
 }
