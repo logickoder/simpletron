@@ -14,10 +14,7 @@ const val MULTIPLICATION = '*'
 const val O_PARENTHESIS = '('
 const val C_PARENTHESIS = ')'
 
-private val defaultCalculate: (Stack<Float>, Char) -> Float = { stack, operator ->
-    val y = stack.pop()
-    val x = stack.pop()
-
+private val defaultCalculate: (Float, Float, Char) -> Float = { y, x, operator ->
     when (operator) {
         PLUS -> x + y
         MINUS -> x - y
@@ -61,10 +58,10 @@ fun Char.isOperator(): Boolean {
  *
  * @param start the position to start looking for a number
  */
-fun CharArray.getNumber(start: Int): Pair<Number, Int> {
-    val number = StringBuilder(size)
+fun StringBuilder.getNumber(start: Int): Pair<Number, Int> {
+    val number = StringBuilder(length)
     var i = start
-    while (i < size) {
+    while (i < length) {
         val c = this[i]
         if (c.isDigit() || c == DECIMAL) {
             number.append(c)
@@ -75,10 +72,58 @@ fun CharArray.getNumber(start: Int): Pair<Number, Int> {
         }
     }
 
-    return if (number.contains(DECIMAL))
-        number.toString().toFloat() to i
-    else
-        number.toString().toInt() to i
+    return when (number.count { it == DECIMAL }) {
+        0 -> number.toString().toInt()
+        1 -> number.toString().toFloat()
+        else -> {
+            val index = number.indexOf(DECIMAL)
+            val decimal = number.substring(index + 1).replace(DECIMAL.toString(), "")
+            number.substring(0..index).plus(decimal).toFloat()
+        }
+    } to i
+}
+
+/**
+ * Remove and return any operator directly after an operator in the equation
+ * */
+@Throws(IllegalArgumentException::class)
+fun StringBuilder.correctOperator(position: Int): Char {
+
+    fun mergeSigns(signs: String): String {
+        return signs.count { it == MINUS }.let {
+            when (it) {
+                1 -> MINUS
+                2 -> PLUS
+                else -> SPACE
+            }
+        }.toString()
+    }
+
+    while (true) {
+        val nextPos = position + 1
+        val thisOp = this[position]
+        val nextOp = this[nextPos]
+        val errorMessage = "this operator '$nextOp' cannot be placed directly after '$thisOp'"
+        // exit the method if either of the values in those positions are not operators
+        if (!nextOp.isOperator() || !thisOp.isOperator()) return SPACE
+        when (thisOp.precedence()) {
+            1 -> {
+                // if this operator is + or -, make sure the next is + or - too
+                require(nextOp.precedence() == 1) { errorMessage }
+                // remove the nextOp from the equation
+                deleteCharAt(nextPos)
+                // merge the 2 operators
+                replace(position, nextPos, mergeSigns("$thisOp$nextOp"))
+            }
+            2, 3 -> {
+                // if this operator is *, /, % or ^, make sure the next is + or -
+                require(nextOp.precedence() == 1) { errorMessage }
+                // check the next characters after this to see if they can be merged
+                correctOperator(nextPos)
+                return this[nextPos]
+            }
+        }
+    }
 }
 
 /**
@@ -94,37 +139,50 @@ fun Char.precedence(): Int {
 }
 
 /**
+ * Evaluates an expression and return it's answer
+ * */
+fun String.evaluateEquation(
+    transform: (String) -> Float = defaultTransform,
+    calculate: (Float, Float, Char) -> Float = defaultCalculate
+) = infixToPostfix().postfixEvaluator(transform, calculate)
+
+/**
  * Converts an infix expression to postfix
  * */
+@Throws(IllegalArgumentException::class)
 fun String.infixToPostfix(): String {
-    val chars = plus(C_PARENTHESIS).replace(Regex("\\s+"), "").toCharArray().also {
-        if (it.isEmpty()) return ""
-    }
-    val postfix = StringBuilder(chars.size)
-    val stack = Stack<Char>().apply { push(O_PARENTHESIS) }
+    // return an empty string if the equation is blank
+    if (isBlank()) return ""
+    // remove all whitespaces from the string and add the closing parenthesis
+    val chars = StringBuilder(replace(Regex("\\s+"), "").plus(C_PARENTHESIS))
+    val postfix = StringBuilder(chars.length)
+    val characters = Stack<Char>().apply { push(O_PARENTHESIS) }
+    val extraOps = Stack<Char>()
 
     var i = 0
     do {
         val char = chars[i]
         when {
             char.isDigit() || char == DECIMAL -> chars.getNumber(i).apply {
-                postfix.append(this.first).append(SPACE)
-                i = this.second
+                val append = if (extraOps.isNotEmpty()) "0$SPACE$first$SPACE${extraOps.pop()}$SPACE" else "$first$SPACE"
+                postfix.append(append)
+                i = second
             }
             char.isLetter() -> postfix.append(char).append(SPACE)
-            char == O_PARENTHESIS -> stack.push(char)
+            char == O_PARENTHESIS -> characters.push(char)
             char.isOperator() -> {
-                while (stack.isNotEmpty() && stack.peek().precedence() >= char.precedence())
-                    postfix.append(stack.pop()).append(SPACE)
-                stack.push(char)
+                chars.correctOperator(i).let { if (it != SPACE) extraOps += it }
+                while (characters.isNotEmpty() && characters.peek().precedence() >= char.precedence())
+                    postfix.append(characters.pop()).append(SPACE)
+                characters.push(chars[i])
             }
             char == C_PARENTHESIS -> {
-                while (stack.peek() != O_PARENTHESIS)
-                    postfix.append(stack.pop()).append(SPACE)
-                stack.pop()
+                while (characters.peek() != O_PARENTHESIS)
+                    postfix.append(characters.pop()).append(SPACE)
+                characters.pop()
             }
         }
-    } while (++i < chars.size)
+    } while (++i < chars.length)
     return postfix.toString().trim()
 }
 
@@ -136,7 +194,7 @@ fun String.infixToPostfix(): String {
  * */
 fun String.postfixEvaluator(
     transform: (String) -> Float = defaultTransform,
-    calculate: (Stack<Float>, Char) -> Float = defaultCalculate
+    calculate: (Float, Float, Char) -> Float = defaultCalculate
 ): Number {
     val stack = Stack<Float>()
     val variables = plus(" $C_PARENTHESIS").split(Regex("\\s+"))
@@ -156,7 +214,7 @@ fun String.postfixEvaluator(
                     "%.2f".format(value).toFloat()
             }
             char.isLetterOrDigit() -> stack.push(transform(variable))
-            char.isOperator() -> stack.push(calculate(stack, char))
+            char.isOperator() -> stack.push(calculate(stack.pop(), stack.pop(), char))
         }
     }
     return 0
