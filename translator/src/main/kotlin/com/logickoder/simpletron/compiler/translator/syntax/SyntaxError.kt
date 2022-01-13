@@ -8,4 +8,9 @@ package com.logickoder.simpletron.compiler.translator.syntax
  */
 data class SyntaxError(
     val message: String
-)
+) : SyntaxElement {
+
+    companion object {
+        const val UNKNOWN_ERROR = "unknown error occurred"
+    }
+}

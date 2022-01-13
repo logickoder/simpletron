@@ -1,9 +1,10 @@
 package com.logickoder.simpletron.compiler.translator
 
-import com.logickoder.simpletron.compiler.translator.utils.extractKeyword
-import com.logickoder.simpletron.compiler.translator.utils.findKeyword
+import com.logickoder.simpletron.compiler.translator.syntax.Statement
+import com.logickoder.simpletron.compiler.translator.syntax.SyntaxError
+import com.logickoder.simpletron.compiler.translator.utils.extractStatement
+import com.logickoder.simpletron.compiler.translator.utils.findStatement
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Answers
@@ -35,30 +36,29 @@ class TranslatorTest {
     }
 
     @Test
-    fun testThatTheDefaultKeywordsAreComplete() {
-        assertEquals(7, translator.keywords.size)
+    fun testThatTheDefaultStatementsAreComplete() {
+        assertEquals(7, translator.statements.size)
     }
 
     @Test
     fun testExtractStatement() {
         for ((index, line) in translator.lines.withIndex()) {
-            val syntax = translator.extractKeyword(index)
-            if (syntax.resolved) {
-                val keyword = translator.findKeyword(line.split(Regex("\\s+"))[1])
-                assertEquals(keyword, syntax.keyword?.javaClass)
+            val syntax = translator.extractStatement(index)
+            if (syntax is Statement) {
+                val statement = translator.findStatement(line.split(Regex("\\s+"))[1])
+                assertEquals(statement, syntax.javaClass)
             }
         }
     }
 
     @Test
     fun testThatAnIncompleteStatementFails() {
-        for ((index, statement) in translator.keywords.withIndex()) {
+        for ((index, statement) in translator.statements.withIndex()) {
             val name = statement.simpleName.lowercase()
             if (name != "end") {
-                val resolve = translator.extractKeyword("${(index + 1) * 10} $name", index + 1)
-                assertEquals(false, resolve.resolved)
-                assertEquals(null, resolve.keyword)
-                assertNotEquals(null, resolve.error)
+                val syntax = translator.extractStatement("${(index + 1) * 10} $name", index + 1)
+                assert(syntax is SyntaxError)
+                println((syntax as SyntaxError).message)
             }
         }
     }

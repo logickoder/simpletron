@@ -1,4 +1,4 @@
-package com.logickoder.simpletron.compiler.translator.syntax.keyword
+package com.logickoder.simpletron.compiler.translator.syntax
 
 /**
  *
@@ -9,11 +9,11 @@ package com.logickoder.simpletron.compiler.translator.syntax.keyword
  * @property keyword the name of this keyword, which is the same as the lowercase name of this class
  * @property lineNumber the line number of this keyword in the source code
  */
-abstract class Keyword(
+abstract class Statement(
     val lineNumber: Int,
     val action: String,
-) {
-    open var dependsOn: Keyword? = null
+) : SyntaxElement {
+    open var dependsOn: Statement? = null
     val keyword: String = this::class.simpleName?.lowercase() ?: ""
 
     init {
