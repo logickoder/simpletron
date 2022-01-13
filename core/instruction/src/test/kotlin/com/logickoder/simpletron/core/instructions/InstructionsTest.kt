@@ -1,13 +1,14 @@
-package com.logickoder.simpletron.core.impl.component
+package com.logickoder.simpletron.core.instructions
 
-import com.jeffreyorazulike.simpletron.core.impl.component.cpu.instructions.*
-import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.Accumulator
-import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.InstructionCounter
-import com.jeffreyorazulike.simpletron.core.impl.component.cpu.registers.Operand
-import com.jeffreyorazulike.simpletron.core.impl.utils.code
-import com.jeffreyorazulike.simpletron.core.impl.utils.newline
-import com.jeffreyorazulike.simpletron.core.impl.utils.register
-import com.jeffreyorazulike.simpletron.core.impl.utils.stopValue
+import com.logickoder.simpletron.core.component.newline
+import com.logickoder.simpletron.core.component.stopValue
+import com.logickoder.simpletron.core.impl.component.CPUImpl
+import com.logickoder.simpletron.core.impl.component.CommandlineDisplay
+import com.logickoder.simpletron.core.impl.component.MemoryImpl
+import com.logickoder.simpletron.core.registers.Accumulator
+import com.logickoder.simpletron.core.registers.InstructionCounter
+import com.logickoder.simpletron.core.registers.Operand
+import com.logickoder.simpletron.core.registers.register
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals

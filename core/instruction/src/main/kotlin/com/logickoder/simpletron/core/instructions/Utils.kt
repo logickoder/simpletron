@@ -1,20 +1,37 @@
-package com.logickoder.simpletron.core.impl.utils
+package com.logickoder.simpletron.core.instructions
 
-import com.logickoder.simpletron.core.component.Instruction
-import com.logickoder.simpletron.core.component.Memory
+import com.logickoder.simpletron.core.component.*
+import com.logickoder.simpletron.core.registers.InstructionCounter
+import com.logickoder.simpletron.core.registers.register
+import com.logickoder.simpletron.core.utils.hexToFloat
 import java.util.regex.Pattern
 import kotlin.math.log10
 
-/**
- * Converts this float into hex
- * */
-fun Float.toHex(): String {
-    return "0x%08x".format(java.lang.Float.floatToIntBits(this))
+fun CPU.error(message: String) = with(controlUnit) {
+    val ic = register<InstructionCounter>()
+    // show the error message
+    display.show(message)
+    // update the next memory location with the Halt instruction
+    memory[ic.value] = Halt().code(memory, ic.value)
 }
 
-fun String.hexToFloat(): Float {
-    val hex = removePrefix("0x")
-    return java.lang.Float.intBitsToFloat(java.lang.Long.parseLong(hex, 16).toInt())
+/**
+ * @param value the number to check for overflow
+ * @param action the action to perform if no overflow occurred
+ *
+ * Checks to see if the given value overflowed the memory
+ * */
+inline fun CPU.overflow(
+    value: Number,
+    action: (Number) -> Unit = {}
+): Boolean = with(controlUnit) {
+    return if (memory.overflow(value.toFloat())) {
+        error("Memory Overflow${newline()}")
+        true
+    } else {
+        action(value)
+        false
+    }
 }
 
 /**
@@ -23,7 +40,7 @@ fun String.hexToFloat(): Float {
  *
  * A valid string is either a valid integer or hexadecimal
  * */
-fun String.toInstruction(memory: com.logickoder.simpletron.core.component.Memory): Float {
+fun String.toInstruction(memory: Memory): Float {
     val operandLength = log10(memory.size.toDouble()).toInt()
     // determine if the string is a hex value or decimal
     return if (startsWith(prefix = "0x", ignoreCase = true)) {
@@ -52,6 +69,6 @@ fun String.toInstruction(memory: com.logickoder.simpletron.core.component.Memory
  * For example calling this function on [Write] with a [Memory] of 1,000 blocks
  * and an address 35 will give you 11035, on a 100 block [Memory] you get 1135
  * */
-fun com.logickoder.simpletron.core.component.Instruction.code(memory: com.logickoder.simpletron.core.component.Memory, address: Int): Int {
+fun Instruction.code(memory: Memory, address: Int): Int {
     return code * memory.separator() + address
 }

@@ -1,7 +1,7 @@
-package com.logickoder.simpletron.core.impl.component
+package com.logickoder.simpletron.core.instructions
 
-import com.jeffreyorazulike.simpletron.core.impl.utils.toHex
-import com.jeffreyorazulike.simpletron.core.impl.utils.toInstruction
+import com.logickoder.simpletron.core.component.Memory
+import com.logickoder.simpletron.core.utils.toHex
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +15,7 @@ import org.mockito.kotlin.mock
  *
  */
 class InstructionsExtrasTest {
-    private lateinit var memory: com.logickoder.simpletron.core.component.Memory
+    private lateinit var memory: Memory
 
     @Before
     fun setupMemory() {
@@ -64,7 +64,7 @@ class InstructionsExtrasTest {
     }
 
     companion object {
-        private fun memory(s: Int = 1_000) = mock<com.logickoder.simpletron.core.component.Memory> {
+        private fun memory(s: Int = 1_000) = mock<Memory> {
             on { size } doReturn s
         }
     }
