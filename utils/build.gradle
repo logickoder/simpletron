@@ -1,4 +1,6 @@
 dependencies {
     implementation project(":component")
     implementation 'org.reflections:reflections:0.10.2'
+
+    testImplementation project(":impl")
 }
