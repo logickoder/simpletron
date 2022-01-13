@@ -15,3 +15,8 @@ abstract class Display : com.logickoder.simpletron.core.component.Closeable {
     @Throws(IllegalStateException::class)
     abstract fun show(message: String?)
 }
+
+/**
+ * Returns a platform dependent newline character
+ * */
+fun newline(): String = System.lineSeparator()

@@ -1,5 +1,7 @@
 package com.logickoder.simpletron.core
 
+import com.logickoder.simpletron.core.component.CPU
+
 /**
  *
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
@@ -7,7 +9,7 @@ package com.logickoder.simpletron.core
  *
  * The simpletron machine
  */
-abstract class Simpletron(val cpu: com.logickoder.simpletron.core.component.CPU) {
+abstract class Simpletron(val cpu: CPU) {
 
     /**
      * This is where all initializations and starting of components should take
