@@ -1,7 +1,5 @@
 
 dependencies {
     // core module dependency
-    implementation project(':component')
-    implementation project(':contract')
     implementation project(':impl')
 }

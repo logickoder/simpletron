@@ -1,10 +1,6 @@
 package com.logickoder.simpletron.core.instructions
 
-import com.logickoder.simpletron.core.component.newline
-import com.logickoder.simpletron.core.component.stopValue
-import com.logickoder.simpletron.core.impl.component.CPUImpl
-import com.logickoder.simpletron.core.impl.component.CommandlineDisplay
-import com.logickoder.simpletron.core.impl.component.MemoryImpl
+import com.logickoder.simpletron.core.component.*
 import com.logickoder.simpletron.core.registers.Accumulator
 import com.logickoder.simpletron.core.registers.InstructionCounter
 import com.logickoder.simpletron.core.registers.Operand

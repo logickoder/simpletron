@@ -1,5 +1,6 @@
 package com.logickoder.simpletron.core.registers
 
+import com.logickoder.simpletron.core.component.CPU
 import com.logickoder.simpletron.core.component.Register
 
 /**
@@ -36,4 +37,11 @@ class InstructionCounter : Register<Int>() {
  */
 class InstructionRegister : Register<Float>() {
     override var value = 0f
+}
+
+/**
+ * Finds and returns the required register
+ **/
+inline fun <reified T : Register<*>> CPU.register(): T {
+    return registers.find { it.name == T::class.simpleName } as T
 }

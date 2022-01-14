@@ -1,9 +1,6 @@
 package com.logickoder.simpletron.core.utils
 
 import com.logickoder.simpletron.core.component.*
-import com.logickoder.simpletron.core.impl.component.CPUImpl
-import com.logickoder.simpletron.core.impl.component.CommandlineDisplay
-import com.logickoder.simpletron.core.impl.component.MemoryImpl
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.doReturn

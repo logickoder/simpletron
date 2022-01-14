@@ -1,0 +1,45 @@
+// holds the list of projects that are to be also included in this module's jar file
+def bundledProjects = [
+        project(':component'),
+        project(':contract'),
+        project(':register'),
+        project(':instruction'),
+        project(':utils'),
+]
+
+configurations {
+    bundle
+    // give the bundle configuration the properties of implementation
+    implementation.extendsFrom(bundle)
+}
+
+dependencies {
+    // add the projects as dependencies
+    bundledProjects.forEach {
+        bundle it
+    }
+}
+
+// single jar containing all the bundled projects compiled code
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        bundledProjects.collect {
+            def jarFile = new File("${it.buildDir}\\libs\\${it.name}-${it.version}.jar")
+            zipTree(jarFile)
+        }
+    }
+}
+
+// single jar containing all bundled project sources
+sourcesJar {
+    classifier 'sources'
+
+    bundledProjects.each {
+        from it.sourceSets.main.allSource
+    }
+}
+
+// change the artifact id of the jar produced by this module to the module of this entire project
+publishing.publications.mavenJava.artifactId = project_module

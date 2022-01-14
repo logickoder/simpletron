@@ -1,18 +1,16 @@
 package com.logickoder.simpletron.cmd_app
 
-
-import com.jeffreyorazulike.simpletron.core.contract.Contract
-import com.jeffreyorazulike.simpletron.core.contract.Contractor
-import com.jeffreyorazulike.simpletron.core.impl.SimpletronImpl
-import com.jeffreyorazulike.simpletron.core.impl.component.*
-import com.jeffreyorazulike.simpletron.core.impl.contract.CPUContractor
-import com.jeffreyorazulike.simpletron.core.impl.contract.contracts.ExecuteInstructionsContract
-import com.jeffreyorazulike.simpletron.core.impl.contract.contracts.InputInstructionsContract
-import com.jeffreyorazulike.simpletron.core.impl.contract.contracts.ProgramLoadedContract
-import com.jeffreyorazulike.simpletron.core.impl.utils.stopValue
+import com.logickoder.simpletron.core.SimpletronImpl
+import com.logickoder.simpletron.core.component.*
+import com.logickoder.simpletron.core.contract.CPUContractor
+import com.logickoder.simpletron.core.contract.Contract
+import com.logickoder.simpletron.core.contract.Contractor
+import com.logickoder.simpletron.core.contract.contracts.ExecuteInstructionsContract
+import com.logickoder.simpletron.core.contract.contracts.InputInstructionsContract
+import com.logickoder.simpletron.core.contract.contracts.ProgramLoadedContract
 
 fun main() {
-    val memory: com.logickoder.simpletron.core.component.Memory = MemoryImpl()
+    val memory: Memory = MemoryImpl()
     SimpletronImpl(
         CPUImpl(
             memory = memory,

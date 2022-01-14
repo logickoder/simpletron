@@ -1,5 +1,7 @@
 package com.logickoder.simpletron.core.component
 
+import java.util.*
+
 /**
  *
  * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
@@ -16,6 +18,10 @@ abstract class Instruction {
     /**
      * Executes this operation
      */
-    abstract fun execute(cpu: com.logickoder.simpletron.core.component.CPU)
+    abstract fun execute(cpu: CPU)
+
+    override fun equals(other: Any?) = other is Instruction && other.code == code
+
+    override fun hashCode() = Objects.hash(code)
 }
 

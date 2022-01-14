@@ -1,12 +1,15 @@
 rootProject.name = 'simpletron-core'
 
-include 'impl'
 include 'contract'
 include 'component'
+include 'register'
+include 'instruction'
 rootProject.children.forEach { project ->
     project.projectDir = new File(settingsDir, "core\\$project.name")
 }
 
+include 'impl'
+include 'utils'
 if (!System.env.JITPACK) {
     include 'cmd_app'
 }

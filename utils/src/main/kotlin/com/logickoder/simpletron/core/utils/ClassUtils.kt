@@ -16,3 +16,10 @@ inline fun <reified T> classes(packages: Set<Class<*>>): Classes<T> {
         // merge all into one set
     }.reduce { acc, otherClasses -> acc.union(otherClasses) }.toList()
 }
+
+/**
+ * Creates instances of classes, only if they are classes without constructors
+ */
+fun <T> Classes<T>.classInstances(): List<T> = map {
+    (it.javaClass.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()) as T
+}
