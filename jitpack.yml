@@ -3,3 +3,6 @@ jdk:
   - openjdk11
 before_install:
   - ./scripts/prepareJitpackEnvironment.sh
+env:
+  GROUP: "com.logickoder"
+  ARTIFACT: "simpletron.core"
