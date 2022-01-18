@@ -14,7 +14,12 @@ const val MULTIPLICATION = '*'
 const val O_PARENTHESIS = '('
 const val C_PARENTHESIS = ')'
 
-private val defaultCalculate: (Float, Float, Char) -> Float = { y, x, operator ->
+typealias Calculate = (Stack<Float>, Char) -> Unit
+typealias Transform = (String) -> Float
+
+private val defaultCalculate: Calculate = { values, operator ->
+    val y = values.pop()
+    val x = values.pop()
     when (operator) {
         PLUS -> x + y
         MINUS -> x - y
@@ -23,10 +28,10 @@ private val defaultCalculate: (Float, Float, Char) -> Float = { y, x, operator -
         REMAINDER -> x % y
         EXPONENTIATION -> x.toDouble().pow(y.toDouble()).toFloat()
         else -> 0f
-    }
+    }.let { values.push(it) }
 }
 
-private val defaultTransform: (String) -> Float = { string ->
+private val defaultTransform: Transform = { string ->
     when (string.length) {
         1 -> {
             val char = string.toCharArray()[0]
@@ -141,9 +146,9 @@ fun Char.precedence(): Int {
 /**
  * Evaluates an expression and return it's answer
  * */
-fun String.evaluateEquation(
-    transform: (String) -> Float = defaultTransform,
-    calculate: (Float, Float, Char) -> Float = defaultCalculate
+fun String.evaluateExpression(
+    transform: Transform = defaultTransform,
+    calculate: Calculate = defaultCalculate
 ) = infixToPostfix().postfixEvaluator(transform, calculate)
 
 /**
@@ -193,8 +198,8 @@ fun String.infixToPostfix(): String {
  * @param calculate evaluates a simple expression between two int values
  * */
 fun String.postfixEvaluator(
-    transform: (String) -> Float = defaultTransform,
-    calculate: (Float, Float, Char) -> Float = defaultCalculate
+    transform: Transform = defaultTransform,
+    calculate: Calculate = defaultCalculate
 ): Number {
     val stack = Stack<Float>()
     val variables = plus(" $C_PARENTHESIS").split(Regex("\\s+"))
@@ -203,7 +208,7 @@ fun String.postfixEvaluator(
         val char = variable[0]
         when {
             char == C_PARENTHESIS -> {
-                val value = stack.pop()
+                val value = if (stack.isNotEmpty()) stack.pop() else 0f
                 val valueInt = value.toInt()
                 // if the value after the decimal point of the float is only zero
                 return if (valueInt.toFloat() == value)
@@ -214,7 +219,7 @@ fun String.postfixEvaluator(
                     "%.2f".format(value).toFloat()
             }
             char.isLetterOrDigit() -> stack.push(transform(variable))
-            char.isOperator() -> stack.push(calculate(stack.pop(), stack.pop(), char))
+            char.isOperator() -> calculate(stack, char)
         }
     }
     return 0

@@ -67,7 +67,7 @@ class InfixPostfixTest {
     fun calculationFailsWithExtraIllegalOperators() {
         fun check(equation: String) {
             assertThrows(IllegalArgumentException::class.java) {
-                equation.evaluateEquation()
+                equation.evaluateExpression()
             }
         }
 
