@@ -5,10 +5,6 @@ import kotlin.math.log10
 import kotlin.math.pow
 
 /**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 21 at 3:54 AM
- *
  * A component that stores data gotten from the [Input] and results execution of [Instruction]s
  *
  * @property maxWord the largest word that can be stored in a memory location

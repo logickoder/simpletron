@@ -3,13 +3,13 @@ package com.logickoder.simpletron.core
 import com.logickoder.simpletron.core.component.CPU
 
 /**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 21 at 5:40 PM
- *
  * The simpletron machine
+ *
+ * @property isRunning true if the machine is running
  */
 abstract class Simpletron(val cpu: CPU) {
+
+    abstract val isRunning: Boolean
 
     /**
      * This is where all initializations and starting of components should take

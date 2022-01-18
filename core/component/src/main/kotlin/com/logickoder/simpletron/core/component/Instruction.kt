@@ -3,10 +3,6 @@ package com.logickoder.simpletron.core.component
 import java.util.*
 
 /**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 21 at 4:13 AM
- *
  * Defines an action in simpletron
  *
  * @property code the integer representation of this instruction

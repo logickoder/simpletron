@@ -3,10 +3,6 @@ package com.logickoder.simpletron.core.component
 import com.logickoder.simpletron.core.component.CPU.ControlUnit
 
 /**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 21 at 3:30 AM
- *
  * The core part of simpletron that handles execution of instruction
  *
  * @property registers a list of registers that this [CPU] contains

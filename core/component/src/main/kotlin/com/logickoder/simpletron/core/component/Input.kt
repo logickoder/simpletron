@@ -1,16 +1,13 @@
 package com.logickoder.simpletron.core.component
 
 /**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 21 at 3:53 AM
- *
  * Defines components that act as input for all commands received from the user
  *
  * @property eofMessage A simple message showing that the component can't return an more input
+ * @property hasNext true if there is any more input to be produced
  */
-abstract class Input : com.logickoder.simpletron.core.component.Closeable {
-
+abstract class Input : Closeable {
+    abstract val hasNext: Boolean
     val eofMessage = "${this::class.simpleName} doesn't have any more input"
 
     /**
