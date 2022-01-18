@@ -1,4 +1,4 @@
-package com.logickoder.simpletron.compiler.translator.syntax
+package com.logickoder.simpletron.translator.core.syntax
 
 /**
  *
@@ -13,4 +13,11 @@ data class SyntaxError(
     companion object {
         const val UNKNOWN_ERROR = "unknown error occurred"
     }
+}
+
+/**
+ * Converts a string to a syntax error with a simple string appended to it
+ * */
+fun String.syntaxError(index: Int): SyntaxError {
+    return SyntaxError("Syntax Error on line ${index + 1}, ${this.trim()}")
 }
