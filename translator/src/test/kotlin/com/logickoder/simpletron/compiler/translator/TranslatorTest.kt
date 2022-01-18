@@ -1,8 +1,8 @@
 package com.logickoder.simpletron.compiler.translator
 
-import com.logickoder.simpletron.compiler.translator.syntax.Statement
-import com.logickoder.simpletron.compiler.translator.syntax.SyntaxError
 import com.logickoder.simpletron.compiler.translator.utils.extractStatement
+import com.logickoder.simpletron.translator.core.syntax.SyntaxError
+import com.logickoder.simpletron.translator.statement.Statement
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

@@ -1,5 +1,6 @@
 dependencies {
     implementation 'org.reflections:reflections:0.10.2'
-    implementation 'com.github.jeffreyorazulike.simpletron-core:core:c6c595b2f8'
-    implementation project(':infix-postfix')
+    implementation "com.github.jeffreyorazulike.simpletron-core:core:$core_version"
+    implementation project(":core")
+    implementation project(":statement")
 }

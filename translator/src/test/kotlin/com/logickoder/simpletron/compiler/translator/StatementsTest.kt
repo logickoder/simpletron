@@ -1,7 +1,6 @@
 package com.logickoder.simpletron.compiler.translator
 
-import com.logickoder.simpletron.compiler.translator.syntax.SyntaxError
-import com.logickoder.simpletron.compiler.translator.utils.extractStatement
+import com.logickoder.simpletron.translator.core.syntax.SyntaxError
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Answers
