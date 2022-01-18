@@ -2,3 +2,13 @@ rootProject.name = 'simpletron-compiler'
 
 include 'infix-postfix'
 include 'translator'
+
+['statement', 'core'].forEach { name ->
+    include name
+
+    rootProject.children.stream().filter {
+        it.name == name
+    }.findFirst().ifPresent { project ->
+        project.projectDir = new File(settingsDir, "translator\\$project.name")
+    }
+}
