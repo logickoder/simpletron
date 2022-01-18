@@ -8,12 +8,6 @@ import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
-/**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 29 at 4:54 PM
- *
- */
 class InstructionsExtrasTest {
     private lateinit var memory: Memory
 

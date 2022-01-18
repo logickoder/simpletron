@@ -7,12 +7,6 @@ def bundledProjects = [
         project(':utils'),
 ]
 
-configurations {
-    bundle
-    // give the bundle configuration the properties of implementation
-    implementation.extendsFrom(bundle)
-}
-
 dependencies {
     // add the projects as dependencies
     bundledProjects.forEach {

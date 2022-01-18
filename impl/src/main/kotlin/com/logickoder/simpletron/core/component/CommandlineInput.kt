@@ -7,6 +7,8 @@ import java.util.*
  */
 class CommandlineInput : Input() {
     override var isClosed = false
+    override val hasNext: Boolean
+        get() = if (isClosed) false else scanner.hasNext()
     private val scanner = Scanner(System.`in`)
 
     override fun read(): String {

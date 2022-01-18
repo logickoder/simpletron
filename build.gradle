@@ -16,6 +16,12 @@ allprojects {
         project_module = project_info[1]
     }
 
+    configurations {
+        bundle
+        // give the bundle configuration the properties of implementation
+        implementation.extendsFrom(bundle)
+    }
+
     group group_name
     version version_name
 

@@ -9,6 +9,8 @@ import java.nio.file.Path
  */
 class FileInput(path: String) : Input() {
     override var isClosed = false
+    override val hasNext: Boolean
+        get() = index < lines.lastIndex
     private val lines: List<String>
     private var index = 0
 

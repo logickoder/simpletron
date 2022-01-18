@@ -16,12 +16,6 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import kotlin.math.pow
 
-/**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 27 at 12:30 PM
- *
- */
 class InstructionsTest {
 
     private lateinit var cpu: com.logickoder.simpletron.core.component.CPU

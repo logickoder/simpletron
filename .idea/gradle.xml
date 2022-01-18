@@ -8,13 +8,17 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Program Files (x86)/Gradle/gradle-7.1.1" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../Program Files (x86)/Gradle/gradle-7.1.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/cmd_app" />
-            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/component" />
+            <option value="$PROJECT_DIR$/core/contract" />
+            <option value="$PROJECT_DIR$/core/instruction" />
+            <option value="$PROJECT_DIR$/core/register" />
             <option value="$PROJECT_DIR$/impl" />
+            <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>
       </GradleProjectSettings>

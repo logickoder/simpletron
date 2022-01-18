@@ -3,10 +3,6 @@ package com.logickoder.simpletron.core.contract
 import java.util.*
 
 /**
- *
- * @author Jeffrey Orazulike [chukwudumebiorazulike@gmail.com]
- * Created on 26 at 9:27 PM
- *
  * Defines a contract that should be executed
  *
  * @property name the name of this contract, it should be unique as that is how contracts are differentiated, default is the fully qualified name of the class

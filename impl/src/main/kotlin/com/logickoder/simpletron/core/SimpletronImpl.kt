@@ -7,7 +7,7 @@ import com.logickoder.simpletron.core.contract.contracts.InputInstructionsContra
 import com.logickoder.simpletron.core.contract.contracts.ProgramLoadedContract
 
 class SimpletronImpl(cpu: CPU) : Simpletron(cpu) {
-    var isRunning: Boolean = false
+    override var isRunning: Boolean = false
 
     var contracts = listOf(
         InputInstructionsContract(),
