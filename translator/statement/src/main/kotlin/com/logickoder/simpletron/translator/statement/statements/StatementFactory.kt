@@ -1,6 +1,6 @@
-package com.logickoder.simpletron.compiler.translator.syntax.statements
+package com.logickoder.simpletron.translator.statement.statements
 
-import com.logickoder.simpletron.compiler.translator.syntax.Statement
+import com.logickoder.simpletron.translator.statement.Statement
 
 /**
  * A factory for creating statements, any statement must have its factory class,
@@ -21,5 +21,5 @@ abstract class StatementFactory {
      * @param lineNumber the line number of this statement
      * @param line the action this statement is to perform
      * */
-    abstract fun create(lineNumber: Int, line: String): Statement
+    abstract fun create(line: String): Statement
 }
