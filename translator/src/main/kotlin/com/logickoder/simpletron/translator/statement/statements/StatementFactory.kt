@@ -10,12 +10,7 @@ import com.logickoder.simpletron.translator.statement.Statement
  * the default statement name is the name of the overriding class without the factory
  * in lowercase letters
  */
-abstract class StatementFactory<T : Statement>(val clazz: Class<T>) {
-
-    open val keyword = this::class.simpleName?.lowercase()?.let {
-        it.substring(0, it.indexOf("factory"))
-    } ?: ""
-
+abstract class StatementFactory<out T : Statement>(val keyword: String) {
 
     /**
      * Creates a statement
