@@ -1,7 +1,5 @@
 package com.logickoder.simpletron.translator.statement
 
-import com.logickoder.simpletron.translator.syntax.SyntaxElement
-
 /**
  *
  */
@@ -16,7 +14,7 @@ import com.logickoder.simpletron.translator.syntax.SyntaxElement
 abstract class Statement(
     val lineNumber: Int,
     val action: String
-) : SyntaxElement {
+) {
 
     val keyword: String = this::class.simpleName?.lowercase() ?: ""
 

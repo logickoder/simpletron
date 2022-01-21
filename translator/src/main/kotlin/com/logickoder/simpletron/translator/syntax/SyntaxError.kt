@@ -6,10 +6,7 @@ package com.logickoder.simpletron.translator.syntax
  *
  * @property message what this error is all about
  */
-data class SyntaxError(
-    val message: String
-) : SyntaxElement {
-
+class SyntaxError(message: String) : RuntimeException(message) {
     companion object {
         const val UNKNOWN_ERROR = "unknown error occurred"
     }
@@ -18,6 +15,4 @@ data class SyntaxError(
 /**
  * Converts a string to a syntax error with a simple string appended to it
  * */
-fun String.syntaxError(index: Int): SyntaxError {
-    return SyntaxError("Syntax Error on line ${index + 1}, ${this.trim()}")
-}
+fun String.syntaxError(index: Int) = SyntaxError("Syntax Error on line ${index + 1}, ${this.trim()}")

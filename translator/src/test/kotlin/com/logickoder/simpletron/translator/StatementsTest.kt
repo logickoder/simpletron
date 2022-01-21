@@ -1,6 +1,7 @@
 package com.logickoder.simpletron.translator
 
 import com.logickoder.simpletron.translator.syntax.SyntaxError
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Answers
@@ -20,14 +21,15 @@ class StatementsTest {
 
     @Test
     fun testThatSyntaxErrorIsThrownOnAnIfWithoutAGoto() {
-        val syntax = translator.extractStatement("20 if i == 2", 20)
-        assert(syntax is SyntaxError)
+        assertThrows(SyntaxError::class.java) {
+            translator.extractStatement("20 if i == 2", 20)
+        }
     }
 
     @Test
     fun testLetFailsWithInvalidEquation() {
-        val syntax = translator.extractStatement("80 let u = 4 ** (*j - 56)", 20)
-        assert(syntax is SyntaxError)
-        println((syntax as SyntaxError).message)
+        assertThrows(SyntaxError::class.java) {
+            translator.extractStatement("80 let u = 4 ** (*j - 56)", 20)
+        }
     }
 }
