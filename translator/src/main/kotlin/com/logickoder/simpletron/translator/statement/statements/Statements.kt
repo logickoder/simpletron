@@ -5,16 +5,15 @@ import com.logickoder.simpletron.core.instructions.Halt
 import com.logickoder.simpletron.translator.statement.Statement
 import java.util.regex.Pattern
 
-
 /**
  * Any text following the command rem is for documentation
  * purposes only and is ignored by the translator.
  *
  * Example: 50 rem this is a remark
  * */
-abstract class Rem(lineNumber: Int, comment: String) : Statement(lineNumber, comment) {
+abstract class Rem(lineNumber: Int, comment: String) : Statement(lineNumber, comment, "rem") {
     init {
-        require(comment.isNotBlank()) { "a comment must come after a $keyword statement" }
+        // require(comment.isNotBlank()) { "a comment must come after a $keyword statement" }
     }
 }
 
@@ -26,7 +25,7 @@ abstract class Rem(lineNumber: Int, comment: String) : Statement(lineNumber, com
  *
  * @property variables the variables to store the input received from the user
  * */
-abstract class Input(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
+abstract class Input(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "input") {
     protected val variables: List<String>
 
     init {
@@ -52,7 +51,7 @@ abstract class Input(lineNumber: Int, expression: String) : Statement(lineNumber
  * @property variable the variable to store the final answer of the equation
  * @property expression the right-hand side of the equation
  * */
-abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, equation) {
+abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, equation, "let") {
     protected val variable: String
     protected val expression: String
 
@@ -63,8 +62,8 @@ abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, eq
         action.split("=").toMutableList().apply {
             removeIf { it.isBlank() }
             require(size == 2) { "the equation was not written properly" }
-            variable = this[0]
-            expression = this[1]
+            variable = this[0].trim()
+            expression = this[1].trim()
             // validate the expression, this method with exit with an error if something is wrong with it
             expression.evaluateExpression()
         }
@@ -78,7 +77,7 @@ abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, eq
  *
  * @property symbols the alphanumeric values to print on the screen
  * */
-abstract class Print(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
+abstract class Print(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "print") {
     protected val symbols: List<String>
 
     init {
@@ -105,7 +104,7 @@ abstract class Print(lineNumber: Int, expression: String) : Statement(lineNumber
  * @property operator the logical operator used in the expression
  * @property gotoLocation the location to goto if the expression evaluates to true
  * */
-abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
+abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "if") {
     protected val symbols: List<String>
     protected val operator: String
     protected val gotoLocation: String
@@ -123,7 +122,7 @@ abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, e
     }
 
     companion object {
-        private const val symbol = "([a-z]+|[0-9]+)"
+        private const val symbol = "([a-z]+|[-]?[0-9]+)"
         private val ifPattern = Pattern.compile("$symbol\\s*(==|<=|>=|<|>)\\s*$symbol")
         private val gotoPattern = Pattern.compile("\\s+goto\\s+(\\d+)")
     }
@@ -136,7 +135,7 @@ abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, e
  *
  * @property line the number of the line to goto
  * */
-abstract class Goto(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
+abstract class Goto(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "goto") {
     protected val line: Int
 
     init {
@@ -150,8 +149,8 @@ abstract class Goto(lineNumber: Int, expression: String) : Statement(lineNumber,
  *
  * Example: 99 end
  * */
-abstract class End(lineNumber: Int) : Statement(lineNumber, "") {
+abstract class End(lineNumber: Int) : Statement(lineNumber, "", "end") {
     companion object {
-        private val instruction = Halt()
+        val instruction = Halt()
     }
 }

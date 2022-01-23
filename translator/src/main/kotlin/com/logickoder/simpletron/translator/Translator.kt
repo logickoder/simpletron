@@ -15,7 +15,7 @@ import java.util.regex.Pattern
  * @property statements the list of statements this translator can parse
  */
 abstract class Translator(
-    private val simpletron: Simpletron
+    val simpletron: Simpletron
 ) {
     abstract val statements: List<StatementFactory<Statement>>
 
@@ -23,7 +23,7 @@ abstract class Translator(
      * Converts a simpletron basic language program line to a statement or
      * throws a syntax error if a problem arises while parsing the lines
      */
-    open fun extractStatement(line: String, index: Int): Statement {
+    open fun extractStatement(index: Int, line: String): Statement {
         // parse the line to make sure it looks like a correct statement
         return PATTERN.matcher(line.lowercase()).run {
             if (matches()) {
@@ -42,10 +42,17 @@ abstract class Translator(
                 }
             } else {
                 // throw a syntax error if the line wasn't constructed correctly
-                throw "unable to parse \"$line\"".syntaxError(index)
+                throw "unable to parse \"$index\"".syntaxError(index)
             }
         }
     }
+
+    /**
+     * Executes the program in the file specified
+     *
+     * @param pathToFile path to the file
+     */
+    abstract fun run(pathToFile: String)
 
     companion object {
         private val PATTERN: Pattern = Pattern.compile("(\\d+)\\s+([a-z]+)(\\s+[!-~\\s+]+)?")

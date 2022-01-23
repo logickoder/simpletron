@@ -1,37 +1,38 @@
 package com.logickoder.simpletron.translator.symbol
 
-
-/**
- * Resolves a string encountered during translation to a symbol
- */
-typealias SymbolResolver = (String) -> Symbol
+import com.logickoder.simpletron.translator.syntax.SyntaxError
 
 /**
  * Represents symbols used by the translator during code translation
- *
- * @property location the location of the symbol in the memory during runtime
  */
-sealed class Symbol(val location: Int) {
+sealed class Symbol {
     /**
      * The number at the start of every line of code in the program
      * */
-    class LineNumber(lineNumber: Int, location: Int) : Symbol(location) {
-        companion object {
-            fun Int.toLineNumber() = "${this}L"
-            fun String.toLineNumber() = "${this}L"
-        }
-    }
+    data class LineNumber(val lineNumber: Int) : Symbol()
 
     /**
      * A variable that stores values at runtime
      *
      * @property name the name of the variable
      */
-    class Variable(val name: String, location: Int) : Symbol(location)
+    data class Variable(val name: String) : Symbol() {
+        init {
+            if (name.any { it.isDigit() })
+                throw SyntaxError("\"$this\" is not a valid variable name")
+        }
+    }
 
     /**
      * A constant value set at compile time
      */
-    class Constant(value: Float, location: Int) : Symbol(location)
+    data class Constant(val value: Float) : Symbol()
 }
 
+/**
+ * Creates either a [Symbol.Constant] or [Symbol.Variable] from the given string
+ */
+fun String.toSymbol() = when {
+    toFloatOrNull() != null -> Symbol.Constant(toFloat())
+    else -> Symbol.Variable(this)
+}
