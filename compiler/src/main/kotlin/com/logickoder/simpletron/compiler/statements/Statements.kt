@@ -1,10 +1,15 @@
 package com.logickoder.simpletron.compiler.statements
 
+import com.logickoder.simpletron.compiler.MachineCode
+import com.logickoder.simpletron.compiler.SymbolTable
+import com.logickoder.simpletron.compiler.SymbolTable.Companion.DOES_NOT_EXIST
 import com.logickoder.simpletron.compiler.infix_postfix.*
 import com.logickoder.simpletron.core.component.Instruction
 import com.logickoder.simpletron.core.instructions.*
 import com.logickoder.simpletron.translator.statement.statements.*
-import com.logickoder.simpletron.translator.symbol.Symbol.LineNumber.Companion.toLineNumber
+import com.logickoder.simpletron.translator.symbol.Symbol
+import com.logickoder.simpletron.translator.symbol.toSymbol
+import com.logickoder.simpletron.translator.syntax.syntaxError
 
 /**
  * Tells that a class can be compiled to machine code
@@ -13,20 +18,30 @@ interface Compilable {
     /**
      * Compiles this statement to machine code which may span lines
      *
-     * @param config the configuration used by this statement during translation
+     * @param table the configuration used by this statement during translation
      */
-    fun compile(config: StatementConfig): MachineCode
+    fun compile(table: SymbolTable, index: Int): MachineCode
+}
+
+fun Symbol.check(table: SymbolTable, index: Int) = when (this) {
+    is Symbol.Constant -> table.add(this)
+    is Symbol.Variable -> table[this].also { location ->
+        if (location == DOES_NOT_EXIST) {
+            throw "This variable \"${this.name}\", has not been defined".syntaxError(index)
+        }
+    }
+    else -> throw AssertionError("Only variables or constants valid for this check")
 }
 
 class RemImpl(lineNumber: Int, comment: String) : Rem(lineNumber, comment), Compilable {
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf()
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf()
 }
 
 class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variables), Compilable {
 
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf<String>().apply {
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf<Int>().apply {
         for (variable in variables) {
-            add(config.format(instruction, variable))
+            add(table.format(instruction, table.add(Symbol.Variable(variable))))
         }
     }
 
@@ -37,25 +52,25 @@ class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variable
 
 class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation), Compilable {
 
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf<String>().apply {
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf<Int>().apply {
         // transforms variables and constants to their respective memory locations
-        val transform: Transform = { config.resolver(it).location.toFloat() }
+        val transform: Transform = { it.toSymbol().check(table, index).toFloat() }
         // find out if the initial value has been loaded
         var loaded = false
         val calculate: Calculate = { values, operator ->
             val y = values.pop().toInt()
             if (!loaded) {
                 // load the initial value from memory
-                add(config.format(Instructions.Load.instruction, values.pop().toInt()))
+                add(table.format(Instructions.Load.instruction, values.pop().toInt()))
                 loaded = true
             }
             // perform the operation on y
-            add(config.format(instruction(operator), y))
+            add(table.format(instruction(operator), y))
         }
         // convert the expression to machine code
         expression.evaluateExpression(transform = transform, calculate = calculate)
         // store the final value into the memory
-        add(config.format(Instructions.Store.instruction, variable))
+        add(table.format(Instructions.Store.instruction, table.add(Symbol.Variable(variable))))
     }
 
     private fun instruction(operator: Char) = when (operator) {
@@ -81,9 +96,9 @@ class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation), Co
 
 class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols), Compilable {
 
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf<String>().apply {
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf<Int>().apply {
         for (symbol in symbols) {
-            add(config.format(instruction, symbol))
+            add(table.format(instruction, symbol.toSymbol().check(table, index)))
         }
     }
 
@@ -94,30 +109,41 @@ class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols), 
 
 class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression), Compilable {
 
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf<String>().apply {
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf<Int>().apply {
         val subtract: (Int, Int) -> Unit = { x, y ->
             // load x from the memory
-            add(config.format(Instructions.Load.instruction, x))
+            add(table.format(Instructions.Load.instruction, x))
             // subtract y from it
-            add(config.format(Instructions.Minus.instruction, y))
+            add(table.format(Instructions.Minus.instruction, y))
         }
 
-        val (x, y) = config.resolver(symbols[0]).location to config.resolver(symbols[1]).location
+        val x = symbols[0].toSymbol().check(table, index)
+        val y = symbols[1].toSymbol().check(table, index)
         when (operator) {
             "==", "<", "<=" -> subtract(x, y)
             ">", ">=" -> subtract(y, x)
         }
-        val location = gotoLocation.toLineNumber()
+        val lineNumber = Symbol.LineNumber(gotoLocation.toInt())
+        val flag: Boolean
+        val location = table[lineNumber].let {
+            flag = it == DOES_NOT_EXIST
+            if (flag) {
+                table.flag(lineNumber)
+                0
+            } else it
+        }
+
         when (operator) {
             "==" -> {
-                add(config.format(Instructions.BranchZero.instruction, location))
+                add(table.format(Instructions.BranchZero.instruction, location))
             }
             ">=", "<=" -> {
-                add(config.format(Instructions.BranchZero.instruction, location))
-                add(config.format(Instructions.BranchNeg.instruction, location))
+                add(table.format(Instructions.BranchZero.instruction, location))
+                if (flag) table.flag(lineNumber)
+                add(table.format(Instructions.BranchNeg.instruction, location))
             }
             ">", "<" -> {
-                add(config.format(Instructions.BranchNeg.instruction, location))
+                add(table.format(Instructions.BranchNeg.instruction, location))
             }
         }
     }
@@ -132,8 +158,15 @@ class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression), 
 
 class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expression), Compilable {
 
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf<String>().apply {
-        add(config.format(instruction, line.toLineNumber()))
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf<Int>().apply {
+        val lineNum = Symbol.LineNumber(line)
+        val location = table[lineNum].let {
+            if (it == DOES_NOT_EXIST) {
+                table.flag(lineNum)
+                0
+            } else it
+        }
+        add(table.format(instruction, location))
     }
 
     companion object {
@@ -142,12 +175,8 @@ class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expressio
 }
 
 class EndImpl(lineNumber: Int) : End(lineNumber), Compilable {
-    override fun compile(config: StatementConfig): MachineCode = mutableListOf<String>().apply {
-        add("${instruction.code}${config.format(0)}")
-    }
-
-    companion object {
-        private val instruction = Halt()
+    override fun compile(table: SymbolTable, index: Int): MachineCode = mutableListOf<Int>().apply {
+        add(table.format(instruction, 0))
     }
 }
 
