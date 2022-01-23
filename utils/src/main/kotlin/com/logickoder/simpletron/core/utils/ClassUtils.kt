@@ -21,5 +21,5 @@ inline fun <reified T> classes(packages: Set<Class<*>>): Classes<T> {
  * Creates instances of classes, only if they are classes without constructors
  */
 fun <T> Classes<T>.classInstances(): List<T> = map {
-    (it.javaClass.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()) as T
+    (it.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()) as T
 }
