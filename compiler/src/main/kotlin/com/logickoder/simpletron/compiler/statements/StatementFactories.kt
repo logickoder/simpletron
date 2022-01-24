@@ -1,5 +1,6 @@
 package com.logickoder.simpletron.compiler.statements
 
+import com.logickoder.simpletron.core.utils.classInstances
 import com.logickoder.simpletron.core.utils.classes
 import com.logickoder.simpletron.translator.statement.Statement
 import com.logickoder.simpletron.translator.statement.statements.StatementFactory
@@ -43,6 +44,4 @@ object EndFactoryImpl : Factory(statementName<EndImpl>()) {
 /**
  * Returns the factories of the default statements
  */
-fun statementFactories() = classes<Factory>(setOf(RemFactoryImpl::class.java)).map {
-    (it.kotlin.objectInstance ?: it.getDeclaredConstructor().newInstance()) as Factory
-}
+fun statementFactories() = classes<Factory>(setOf(RemFactoryImpl::class.java)).classInstances()
