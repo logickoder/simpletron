@@ -7,13 +7,13 @@ import java.util.*
  */
 class CommandlineInput : Input() {
     override var isClosed = false
-    override val hasNext: Boolean
-        get() = if (isClosed) false else scanner.hasNext()
-    private val scanner = Scanner(System.`in`)
+    override val source: Scanner = Scanner(System.`in`)
+
+    override fun hasNext() = if (isClosed) false else source.hasNext()
 
     override fun read(): String {
         check(!isClosed) { closedMessage }
-        return scanner.nextLine()
+        return source.nextLine()
     }
 
     override fun close() {

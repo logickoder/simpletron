@@ -10,15 +10,14 @@ import java.nio.file.Files
 
 class FileInputTest {
 
-    private lateinit var input: com.logickoder.simpletron.core.component.Input
+    private lateinit var input: Input
     private lateinit var file: File
 
     @Before
     fun createFile() {
         file = File(FileInputTest::class.java.simpleName).apply{
             val text = StringBuilder()
-            val separator = newline()
-            for (i in 1..10) text.append("$i $TEST_MESSAGE$separator")
+            for (i in 1..10) text.append("$i $TEST_MESSAGE${newline()}")
             writeText(text.toString())
         }
     }
@@ -34,20 +33,29 @@ class FileInputTest {
     }
 
     @Test
-    fun readMessagesFromFile(){
+    fun readMessagesFromFile() {
         Files.readAllLines(file.toPath()).forEach { line ->
             assertEquals(line, input.read())
         }
     }
 
     @Test
-    fun throwsAnExceptionWhenReachingEOF(){
-        for(i in 1..10) input.read()
+    fun hasNext() {
+        var count = 1
+        while (input.hasNext()) {
+            assert(input.read().startsWith(count++.toString()))
+        }
+        assertEquals(10, count)
+    }
+
+    @Test
+    fun throwsAnExceptionWhenReachingEOF() {
+        for (i in 1..10) input.read()
         assertThrows(IllegalStateException::class.java) { input.read() }
     }
 
     @Test
-    fun throwsAnExceptionWhenClosingInputAfterItHasBeenClosedAlready(){
+    fun throwsAnExceptionWhenClosingInputAfterItHasBeenClosedAlready() {
         input.close()
         assertThrows(IllegalStateException::class.java) { input.close() }
     }

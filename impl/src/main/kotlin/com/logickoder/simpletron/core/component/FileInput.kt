@@ -9,14 +9,11 @@ import java.nio.file.Path
  */
 class FileInput(path: String) : Input() {
     override var isClosed = false
-    override val hasNext: Boolean
-        get() = index < lines.lastIndex
-    private val lines: List<String>
+    override val source: String = path
+    private val lines: List<String> = Files.readAllLines(Path.of(source))
     private var index = 0
 
-    init {
-        lines = Files.readAllLines(Path.of(path))
-    }
+    override fun hasNext() = index < lines.size
 
     @Throws(IllegalStateException::class)
     override fun read(): String {
