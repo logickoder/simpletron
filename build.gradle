@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
 }
 
 // instructions for all projects
@@ -14,7 +14,7 @@ allprojects {
         def project_info = rootProject.name.split("-")
         project_name = project_info[0]
         project_module = project_info[1]
-        core_version = "accb7ebee3"
+        core_version = "949b4c584e"
     }
 
     group group_name
@@ -35,8 +35,8 @@ subprojects { subproject ->
 
     // common dependencies
     dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.31"
-        implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+        implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
         // For Unit Testing
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'

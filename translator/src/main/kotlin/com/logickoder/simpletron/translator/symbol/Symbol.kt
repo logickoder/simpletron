@@ -1,5 +1,6 @@
 package com.logickoder.simpletron.translator.symbol
 
+import com.logickoder.simpletron.translator.Subroutine
 import com.logickoder.simpletron.translator.syntax.SyntaxError
 
 /**
@@ -9,14 +10,14 @@ sealed class Symbol {
     /**
      * The number at the start of every line of code in the program
      * */
-    data class LineNumber(val lineNumber: Int) : Symbol()
+    data class LineNumber(val lineNumber: Int, val subroutine: Subroutine) : Symbol()
 
     /**
      * A variable that stores values at runtime
      *
      * @property name the name of the variable
      */
-    data class Variable(val name: String) : Symbol() {
+    data class Variable(val name: String, val subroutine: Subroutine) : Symbol() {
         init {
             if (name.any { it.isDigit() })
                 throw SyntaxError("\"$this\" is not a valid variable name")
@@ -32,7 +33,7 @@ sealed class Symbol {
 /**
  * Creates either a [Symbol.Constant] or [Symbol.Variable] from the given string
  */
-fun String.toSymbol() = when {
+fun String.toSymbol(subroutine: Subroutine) = when {
     toFloatOrNull() != null -> Symbol.Constant(toFloat())
-    else -> Symbol.Variable(this)
+    else -> Symbol.Variable(this, subroutine)
 }

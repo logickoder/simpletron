@@ -11,11 +11,7 @@ import java.util.regex.Pattern
  *
  * Example: 50 rem this is a remark
  * */
-abstract class Rem(lineNumber: Int, comment: String) : Statement(lineNumber, comment, "rem") {
-    init {
-        // require(comment.isNotBlank()) { "a comment must come after a $keyword statement" }
-    }
-}
+abstract class Rem(lineNumber: Int, comment: String) : Statement(lineNumber, comment)
 
 /**
  * Prompt the user to enter an integer.
@@ -25,13 +21,11 @@ abstract class Rem(lineNumber: Int, comment: String) : Statement(lineNumber, com
  *
  * @property variables the variables to store the input received from the user
  * */
-abstract class Input(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "input") {
+abstract class Input(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
     protected val variables: List<String>
 
     init {
-        pattern.matcher(action).also { matcher ->
-            require(matcher.matches()) { "malformed $keyword statement." }
-        }
+        pattern.matcher(action).also { matcher -> require(matcher.matches()) }
         variables = action.split(Regex("\\s*,"))
     }
 
@@ -51,7 +45,7 @@ abstract class Input(lineNumber: Int, expression: String) : Statement(lineNumber
  * @property variable the variable to store the final answer of the equation
  * @property expression the right-hand side of the equation
  * */
-abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, equation, "let") {
+abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, equation) {
     protected val variable: String
     protected val expression: String
 
@@ -77,13 +71,11 @@ abstract class Let(lineNumber: Int, equation: String) : Statement(lineNumber, eq
  *
  * @property symbols the alphanumeric values to print on the screen
  * */
-abstract class Print(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "print") {
+abstract class Print(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
     protected val symbols: List<String>
 
     init {
-        pattern.matcher(action).also { matcher ->
-            require(matcher.matches()) { "malformed $keyword statement." }
-        }
+        pattern.matcher(action).also { matcher -> require(matcher.matches()) }
         symbols = action.split(Regex("\\s*,"))
     }
 
@@ -104,14 +96,14 @@ abstract class Print(lineNumber: Int, expression: String) : Statement(lineNumber
  * @property operator the logical operator used in the expression
  * @property gotoLocation the location to goto if the expression evaluates to true
  * */
-abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "if") {
+abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
     protected val symbols: List<String>
     protected val operator: String
     protected val gotoLocation: String
 
     init {
         val ifMatcher = ifPattern.matcher(action).also { matcher ->
-            require(matcher.find(0)) { "invalid $keyword expression" }
+            require(matcher.find(0))
             symbols = listOf(matcher.group(1), matcher.group(3))
             operator = matcher.group(2)
         }
@@ -135,7 +127,7 @@ abstract class If(lineNumber: Int, expression: String) : Statement(lineNumber, e
  *
  * @property line the number of the line to goto
  * */
-abstract class Goto(lineNumber: Int, expression: String) : Statement(lineNumber, expression, "goto") {
+abstract class Goto(lineNumber: Int, expression: String) : Statement(lineNumber, expression) {
     protected val line: Int
 
     init {
@@ -145,11 +137,36 @@ abstract class Goto(lineNumber: Int, expression: String) : Statement(lineNumber,
 }
 
 /**
+ * Calls a subroutine, which is similar to a function call in most programming languages
+ *
+ * Example: 20 gosub repeat
+ *
+ * @param subroutineName the name of the subroutine
+ */
+abstract class Gosub(lineNumber: Int, subroutineName: String) : Statement(lineNumber, subroutineName) {
+    protected val name: String = pattern.matcher(action).let { matcher ->
+        require(matcher.matches()) { "invalid name for a subroutine" }
+        matcher.group(0)
+    }
+
+    companion object {
+        private val pattern = Pattern.compile("[a-z]+")
+    }
+}
+
+/**
+ * Ends a subroutine and returns the program back to where the subroutine was called from
+ *
+ * Example: 80 return
+ */
+abstract class Return(lineNumber: Int) : Statement(lineNumber, "")
+
+/**
  * Terminates program execution.
  *
  * Example: 99 end
  * */
-abstract class End(lineNumber: Int) : Statement(lineNumber, "", "end") {
+abstract class End(lineNumber: Int) : Statement(lineNumber, "") {
     companion object {
         val instruction = Halt()
     }

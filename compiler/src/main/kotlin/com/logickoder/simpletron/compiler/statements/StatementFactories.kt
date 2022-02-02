@@ -7,37 +7,45 @@ import com.logickoder.simpletron.translator.statement.statements.StatementFactor
 
 private typealias Factory = StatementFactory<Statement>
 
-private inline fun <reified T : Statement> statementName(): String {
+private inline fun <reified T : Statement> name(): String {
     return T::class.simpleName?.lowercase()?.run {
         substring(0, indexOf("impl"))
     } ?: ""
 }
 
-object RemFactoryImpl : Factory(statementName<RemImpl>()) {
+object RemFactoryImpl : Factory(name<RemImpl>()) {
     override fun create(lineNumber: Int, line: String) = RemImpl(lineNumber, line)
 }
 
-object InputFactoryImpl : Factory(statementName<InputImpl>()) {
+object InputFactoryImpl : Factory(name<InputImpl>()) {
     override fun create(lineNumber: Int, line: String) = InputImpl(lineNumber, line)
 }
 
-object PrintFactoryImpl : Factory(statementName<PrintImpl>()) {
+object PrintFactoryImpl : Factory(name<PrintImpl>()) {
     override fun create(lineNumber: Int, line: String) = PrintImpl(lineNumber, line)
 }
 
-object LetFactoryImpl : Factory(statementName<LetImpl>()) {
+object LetFactoryImpl : Factory(name<LetImpl>()) {
     override fun create(lineNumber: Int, line: String) = LetImpl(lineNumber, line)
 }
 
-object IfFactoryImpl : Factory(statementName<IfImpl>()) {
+object IfFactoryImpl : Factory(name<IfImpl>()) {
     override fun create(lineNumber: Int, line: String) = IfImpl(lineNumber, line)
 }
 
-object GotoFactoryImpl : Factory(statementName<GotoImpl>()) {
+object GotoFactoryImpl : Factory(name<GotoImpl>()) {
     override fun create(lineNumber: Int, line: String) = GotoImpl(lineNumber, line)
 }
 
-object EndFactoryImpl : Factory(statementName<EndImpl>()) {
+object GosubFactoryImpl : Factory(name<GosubImpl>()) {
+    override fun create(lineNumber: Int, line: String) = GosubImpl(lineNumber, line)
+}
+
+object ReturnFactoryImpl : Factory(name<ReturnImpl>()) {
+    override fun create(lineNumber: Int, line: String) = ReturnImpl(lineNumber)
+}
+
+object EndFactoryImpl : Factory(name<EndImpl>()) {
     override fun create(lineNumber: Int, line: String) = EndImpl(lineNumber)
 }
 

@@ -19,7 +19,7 @@ class CompilerTest {
                 CPUImpl(
                     MemoryImpl(),
                     CommandlineDisplay(memory.stopValue().toInt()),
-                    CommandlineInput()
+                    FileInput("E:\\compile.txt")
                 )
             )
         )
@@ -27,6 +27,6 @@ class CompilerTest {
 
     @Test
     fun run() {
-        compiler.run("E:\\compile.txt")
+        compiler.run()
     }
 }

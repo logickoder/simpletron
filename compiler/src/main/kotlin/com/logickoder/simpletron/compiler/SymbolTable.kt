@@ -2,6 +2,7 @@ package com.logickoder.simpletron.compiler
 
 import com.logickoder.simpletron.compiler.SymbolTable.Companion.DOES_NOT_EXIST
 import com.logickoder.simpletron.core.component.Instruction
+import com.logickoder.simpletron.translator.Subroutine
 import com.logickoder.simpletron.translator.symbol.Symbol
 import kotlin.math.log10
 
@@ -33,6 +34,11 @@ interface SymbolTable {
     fun add(symbol: Symbol): Location
 
     /**
+     * Clear all symbols relating to a subroutine from the symbol table
+     */
+    fun clear(subroutine: Subroutine)
+
+    /**
      * Flags a line number as being unresolved
      *
      * If a line number is to be flagged, it should be done before the instruction is added to the instructions list
@@ -55,6 +61,7 @@ private class SymbolTableImpl(max: Location /* = kotlin.Int */) : SymbolTable {
     private val symbols = mutableMapOf<Symbol, Location>()
 
     val symbolLocation: SymbolLocation = SymbolLocation(max)
+
     override val flags: MutableList<Pair<Symbol.LineNumber, Location>> = mutableListOf()
 
     override fun get(symbol: Symbol): Location {
@@ -69,6 +76,16 @@ private class SymbolTableImpl(max: Location /* = kotlin.Int */) : SymbolTable {
                     else -> --symbolLocation.storage
                 }.also { symbols[symbol] = it }
             } else location
+        }
+    }
+
+    override fun clear(subroutine: Subroutine) {
+        symbols.keys.removeIf {
+            when (it) {
+                is Symbol.LineNumber -> it.subroutine == subroutine
+                is Symbol.Variable -> it.subroutine == subroutine
+                else -> false
+            }
         }
     }
 
