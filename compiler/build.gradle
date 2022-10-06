@@ -1,5 +1,65 @@
-dependencies {
-    implementation "com.github.jeffreyorazulike.simpletron-core:core:$core_version"
-    implementation project(':infix-postfix')
-    implementation project(':translator')
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
 }
+
+// instructions for all projects
+allprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java'
+
+    ext {
+        group_name = "com.logickoder"
+        version_name = "1.0-SNAPSHOT"
+        def project_info = rootProject.name.split("-")
+        project_name = project_info[0]
+        project_module = project_info[1]
+        core_version = "949b4c584e"
+    }
+
+    group group_name
+    version version_name
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+
+}
+
+// instructions for each sub project
+subprojects { subproject ->
+
+    // common dependencies
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
+        implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.20"
+        // For Unit Testing
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    }
+
+    // jar containing subproject source
+    task sourcesJar(type: Jar) {
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+
+    jar.dependsOn sourcesJar
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = "${group_name}.${project_name}"
+                artifactId = "${project_module}-${subproject.name}"
+                artifact jar
+                artifact sourcesJar
+            }
+        }
+    }
+}
+
+jar.enabled = false
