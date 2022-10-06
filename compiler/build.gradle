@@ -1,0 +1,5 @@
+dependencies {
+    implementation "com.github.jeffreyorazulike.simpletron-core:core:$core_version"
+    implementation project(':infix-postfix')
+    implementation project(':translator')
+}
