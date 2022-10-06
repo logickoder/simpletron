@@ -1,30 +1,29 @@
 // holds the list of projects that are to be also included in this module's jar file
-def bundledProjects = [project(':component')]
+val bundledProjects = arrayOf(project(":component"))
 
 dependencies {
     // add the projects as dependencies
     bundledProjects.forEach {
-        bundle it
+        implementation(it)
     }
 }
 
 // single jar containing all the bundled projects compiled code
-jar {
+tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    from {
-        bundledProjects.collect {
-            def jarFile = new File("${it.buildDir}\\libs\\${it.name}-${it.version}.jar")
+    from({
+        bundledProjects.map {
+            val jarFile = File ("${it.buildDir}\\libs\\${it.name}-${it.version}.jar")
             zipTree(jarFile)
         }
-    }
+    })
 }
 
 // single jar containing all bundled project sources
-sourcesJar {
-    classifier 'sources'
-
-    bundledProjects.each {
-        from it.sourceSets.main.allSource
-    }
+tasks.sourcesJar {
+    classifier = "sources"
+    bundledProjects.forEach {
+        from(it.sourceSets["main"].allSource)
+    } // error here
 }
