@@ -1,10 +1,10 @@
 // holds the list of projects that are to be also included in this module's jar file
 val bundledProjects = arrayOf(
-    project(":component"),
-    project(":contract"),
-    project(":register"),
-    project(":instruction"),
-    project(":utils"),
+    project(":core:component"),
+    project(":core:contract"),
+    project(":core:register"),
+    project(":core:instruction"),
+    project(":core:utils"),
 )
 
 dependencies {
@@ -38,7 +38,7 @@ tasks.sourcesJar {
 the<PublishingExtension>().apply {
     publications {
         maybeCreate("mavenJava", MavenPublication::class).apply {
-            artifactId = extra["project_module"].toString()
+            artifactId = "simpletron-core"
         }
     }
 }

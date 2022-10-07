@@ -1,8 +1,8 @@
 // holds the list of projects that are to be also included in this module's jar file
 val bundledProjects = arrayOf(
-    project(":component"),
-    project(":register"),
-    project(":utils")
+    project(":core:component"),
+    project(":core:register"),
+    project(":core:utils")
 )
 
 dependencies {
@@ -11,7 +11,7 @@ dependencies {
         implementation(it)
     }
 
-    testImplementation(project(":impl"))
+    testImplementation(project(":core:impl"))
 }
 
 // single jar containing all the bundled projects compiled code

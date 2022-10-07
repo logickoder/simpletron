@@ -1,4 +1,4 @@
 dependencies {
     // core module dependency
-    implementation(project(":impl"))
+    implementation(project(":core:impl"))
 }
