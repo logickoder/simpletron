@@ -16,13 +16,11 @@
             <option value="$PROJECT_DIR$/compiler/infix-postfix" />
             <option value="$PROJECT_DIR$/compiler/translator" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/core/cmd_app" />
-            <option value="$PROJECT_DIR$/core/component" />
-            <option value="$PROJECT_DIR$/core/contract" />
-            <option value="$PROJECT_DIR$/core/impl" />
-            <option value="$PROJECT_DIR$/core/instruction" />
-            <option value="$PROJECT_DIR$/core/register" />
-            <option value="$PROJECT_DIR$/core/utils" />
+            <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/cpu" />
+            <option value="$PROJECT_DIR$/core/display" />
+            <option value="$PROJECT_DIR$/core/input" />
+            <option value="$PROJECT_DIR$/core/memory" />
           </set>
         </option>
       </GradleProjectSettings>

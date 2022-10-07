@@ -19,7 +19,7 @@ allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "java")
 
-    group = "dev.logickoder"
+    group = "dev.logickoder.simpletron.${name}"
     version = "1.0-SNAPSHOT"
 
     val bundle by configurations.creating {
@@ -58,17 +58,6 @@ subprojects {
 
     tasks.jar {
         dependsOn(sourcesJar)
-    }
-
-    configure<PublishingExtension> {
-        publications {
-            register("mavenJava", MavenPublication::class) {
-                groupId = "$group.${project.name}"
-                artifactId = "simpletron-${project.name}"
-                artifact(tasks.jar.get())
-                artifact(sourcesJar.get())
-            }
-        }
     }
 }
 
