@@ -6,6 +6,5 @@ include("core:display")
 include("core:input")
 include("core:memory")
 
-include(":compiler:infix-postfix")
-include(":compiler:translator")
-include(":compiler:compiler")
+include(":translator:infix-postfix")
+include(":translator:compiler")

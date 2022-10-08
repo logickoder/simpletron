@@ -10,7 +10,7 @@ val bundledProjects = arrayOf(
 dependencies {
     // add the projects as dependencies
     bundledProjects.forEach {
-        implementation(it)
+        api(it)
     }
 }
 

@@ -12,6 +12,8 @@ interface Input : Component, Closeable {
     val eofMessage: String
         get() = "${this::class.simpleName} doesn't have any more input"
 
+    val source: Any
+
     /**
      * true if there is any more input to be produced
      */

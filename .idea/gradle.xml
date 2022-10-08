@@ -11,16 +11,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/compiler" />
-            <option value="$PROJECT_DIR$/compiler/compiler" />
-            <option value="$PROJECT_DIR$/compiler/infix-postfix" />
-            <option value="$PROJECT_DIR$/compiler/translator" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/cpu" />
             <option value="$PROJECT_DIR$/core/display" />
             <option value="$PROJECT_DIR$/core/input" />
             <option value="$PROJECT_DIR$/core/memory" />
+            <option value="$PROJECT_DIR$/translator" />
+            <option value="$PROJECT_DIR$/translator/compiler" />
+            <option value="$PROJECT_DIR$/translator/infix-postfix" />
           </set>
         </option>
       </GradleProjectSettings>
