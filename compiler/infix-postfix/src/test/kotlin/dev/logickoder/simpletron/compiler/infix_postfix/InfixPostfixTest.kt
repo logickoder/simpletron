@@ -1,4 +1,4 @@
-package com.logickoder.simpletron.compiler.infix_postfix
+package dev.logickoder.simpletron.compiler.infix_postfix
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows

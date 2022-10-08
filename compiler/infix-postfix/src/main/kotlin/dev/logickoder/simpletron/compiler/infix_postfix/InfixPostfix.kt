@@ -1,4 +1,4 @@
-package com.logickoder.simpletron.compiler.infix_postfix
+package dev.logickoder.simpletron.compiler.infix_postfix
 
 import java.util.*
 import kotlin.math.pow
@@ -144,7 +144,7 @@ fun Char.precedence(): Int {
 }
 
 /**
- * Evaluates an expression and return it's answer
+ * Evaluates an expression and return its answer
  * */
 fun String.evaluateExpression(
     transform: Transform = defaultTransform,
