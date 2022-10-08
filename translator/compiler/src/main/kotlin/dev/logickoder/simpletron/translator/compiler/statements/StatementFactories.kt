@@ -13,39 +13,39 @@ private inline fun <reified T : Statement> name(): String {
     } ?: ""
 }
 
-object RemFactoryImpl : Factory(name<RemImpl>()) {
+internal object RemFactoryImpl : Factory(name<RemImpl>()) {
     override fun create(lineNumber: Int, line: String) = RemImpl(lineNumber, line)
 }
 
-object InputFactoryImpl : Factory(name<InputImpl>()) {
+internal object InputFactoryImpl : Factory(name<InputImpl>()) {
     override fun create(lineNumber: Int, line: String) = InputImpl(lineNumber, line)
 }
 
-object PrintFactoryImpl : Factory(name<PrintImpl>()) {
+internal object PrintFactoryImpl : Factory(name<PrintImpl>()) {
     override fun create(lineNumber: Int, line: String) = PrintImpl(lineNumber, line)
 }
 
-object LetFactoryImpl : Factory(name<LetImpl>()) {
+internal object LetFactoryImpl : Factory(name<LetImpl>()) {
     override fun create(lineNumber: Int, line: String) = LetImpl(lineNumber, line)
 }
 
-object IfFactoryImpl : Factory(name<IfImpl>()) {
+internal object IfFactoryImpl : Factory(name<IfImpl>()) {
     override fun create(lineNumber: Int, line: String) = IfImpl(lineNumber, line)
 }
 
-object GotoFactoryImpl : Factory(name<GotoImpl>()) {
+internal object GotoFactoryImpl : Factory(name<GotoImpl>()) {
     override fun create(lineNumber: Int, line: String) = GotoImpl(lineNumber, line)
 }
 
-object GosubFactoryImpl : Factory(name<GosubImpl>()) {
+internal object GosubFactoryImpl : Factory(name<GosubImpl>()) {
     override fun create(lineNumber: Int, line: String) = GosubImpl(lineNumber, line)
 }
 
-object ReturnFactoryImpl : Factory(name<ReturnImpl>()) {
+internal object ReturnFactoryImpl : Factory(name<ReturnImpl>()) {
     override fun create(lineNumber: Int, line: String) = ReturnImpl(lineNumber)
 }
 
-object EndFactoryImpl : Factory(name<EndImpl>()) {
+internal object EndFactoryImpl : Factory(name<EndImpl>()) {
     override fun create(lineNumber: Int, line: String) = EndImpl(lineNumber)
 }
 

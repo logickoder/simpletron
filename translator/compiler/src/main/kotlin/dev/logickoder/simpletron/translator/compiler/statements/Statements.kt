@@ -20,13 +20,13 @@ private fun Symbol.check(config: CompilerConfig, lineNumber: Location) = when (t
     else -> throw AssertionError("Only variables or constants are valid for this check")
 }
 
-class RemImpl(lineNumber: Int, comment: String) : Rem(lineNumber, comment), CompilableStatement {
+internal class RemImpl(lineNumber: Int, comment: String) : Rem(lineNumber, comment), CompilableStatement {
     override fun compile(config: CompilerConfig) = buildList<Int> {
         config.table.add(Symbol.LineNumber(lineNumber, config.subroutine))
     }
 }
 
-class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variables), CompilableStatement {
+internal class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variables), CompilableStatement {
 
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
@@ -42,7 +42,7 @@ class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variable
     }
 }
 
-class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation), CompilableStatement {
+internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation), CompilableStatement {
 
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
@@ -89,7 +89,7 @@ class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation), Co
     }
 }
 
-class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols), CompilableStatement {
+internal class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols), CompilableStatement {
 
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
@@ -105,7 +105,7 @@ class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols), 
     }
 }
 
-class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression), CompilableStatement {
+internal class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression), CompilableStatement {
 
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
@@ -157,7 +157,7 @@ class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression), 
     }
 }
 
-class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expression), CompilableStatement {
+internal class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expression), CompilableStatement {
 
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
@@ -178,7 +178,8 @@ class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expressio
     }
 }
 
-class GosubImpl(lineNumber: Int, subroutineName: String) : Gosub(lineNumber, subroutineName), CompilableStatement {
+internal class GosubImpl(lineNumber: Int, subroutineName: String) : Gosub(lineNumber, subroutineName),
+    CompilableStatement {
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
             // execute the statements in the subroutine to be called
@@ -193,13 +194,13 @@ class GosubImpl(lineNumber: Int, subroutineName: String) : Gosub(lineNumber, sub
     }
 }
 
-class ReturnImpl(lineNumber: Int) : Return(lineNumber), CompilableStatement {
+internal class ReturnImpl(lineNumber: Int) : Return(lineNumber), CompilableStatement {
     override fun compile(config: CompilerConfig) = buildList<Int> {
         config.table.add(Symbol.LineNumber(lineNumber, config.subroutine))
     }
 }
 
-class EndImpl(lineNumber: Int) : End(lineNumber), CompilableStatement {
+internal class EndImpl(lineNumber: Int) : End(lineNumber), CompilableStatement {
     override fun compile(config: CompilerConfig) = buildList {
         with(config) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
