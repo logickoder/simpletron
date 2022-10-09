@@ -11,9 +11,14 @@ class Subroutine(val name: String, val statements: List<Statement>) {
     override fun hashCode() = name.hashCode()
 
     companion object {
-        val PATTERN: Pattern = Pattern.compile("([a-z]+):")
+        private val PATTERN: Pattern = Pattern.compile("([a-z]+):")
         const val DEFAULT = "main"
 
-        fun isSubroutine(line: String) = PATTERN.matcher(line).matches()
+        val String.subroutine: String?
+            get() = Subroutine.PATTERN.matcher(this).run {
+                if (matches()) {
+                    group(1)
+                } else null
+            }
     }
 }

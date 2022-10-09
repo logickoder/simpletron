@@ -7,7 +7,6 @@ import dev.logickoder.simpletron.core.display.DisplayType
 import dev.logickoder.simpletron.core.memory.stopValue
 import dev.logickoder.simpletron.translator.Subroutine
 import dev.logickoder.simpletron.translator.Translator
-import dev.logickoder.simpletron.translator.compiler.statements.CompilableStatement
 import dev.logickoder.simpletron.translator.compiler.statements.CompilerConfig
 import dev.logickoder.simpletron.translator.compiler.statements.RemImpl
 import dev.logickoder.simpletron.translator.statement.Statement
@@ -42,7 +41,7 @@ class Compiler(simpletron: Simpletron) : Translator(simpletron) {
         // convert only the main subroutine since that is where the execution of the program is
         val machineCode = subroutines.first { it.name == Subroutine.DEFAULT }.let { main ->
             main.statements.flatMap {
-                (it as CompilableStatement).compile(CompilerConfig(table, main, subroutines))
+                it.translate(CompilerConfig(table, main, subroutines))
             }
         }.toMutableList()
         // resolve all flags

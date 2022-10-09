@@ -3,6 +3,7 @@ package dev.logickoder.simpletron.translator.compiler.statements
 import dev.logickoder.simpletron.core.cpu.*
 import dev.logickoder.simpletron.translator.compiler.Location
 import dev.logickoder.simpletron.translator.compiler.SymbolTable.Companion.DOES_NOT_EXIST
+import dev.logickoder.simpletron.translator.config.Config
 import dev.logickoder.simpletron.translator.infix_postfix.*
 import dev.logickoder.simpletron.translator.statement.*
 import dev.logickoder.simpletron.translator.symbol.Symbol
@@ -20,16 +21,18 @@ private fun Symbol.check(config: CompilerConfig, lineNumber: Location) = when (t
     else -> throw AssertionError("Only variables or constants are valid for this check")
 }
 
-internal class RemImpl(lineNumber: Int, comment: String) : Rem(lineNumber, comment), CompilableStatement {
-    override fun compile(config: CompilerConfig) = buildList<Int> {
-        config.table.add(Symbol.LineNumber(lineNumber, config.subroutine))
+internal class RemImpl(lineNumber: Int, comment: String) : Rem(lineNumber, comment) {
+    override fun <T : Config> translate(config: T) = buildList<Int> {
+        with(config as CompilerConfig) {
+            table.add(Symbol.LineNumber(lineNumber, subroutine))
+        }
     }
 }
 
-internal class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variables), CompilableStatement {
+internal class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber, variables) {
 
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             for (variable in variables) {
                 add(table.format(instruction, table.add(Symbol.Variable(variable, subroutine))))
@@ -42,10 +45,10 @@ internal class InputImpl(lineNumber: Int, variables: String) : Input(lineNumber,
     }
 }
 
-internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation), CompilableStatement {
+internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equation) {
 
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             // transforms variables and constants to their respective memory locations
             val transform: Transform = { it.toSymbol(subroutine).check(config, lineNumber).toFloat() }
@@ -89,10 +92,10 @@ internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equa
     }
 }
 
-internal class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols), CompilableStatement {
+internal class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, symbols) {
 
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             for (symbol in symbols) {
                 add(table.format(instruction, symbol.toSymbol(subroutine).check(config, lineNumber)))
@@ -105,10 +108,11 @@ internal class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, s
     }
 }
 
-internal class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression), CompilableStatement {
+internal class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expression) {
 
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             val subtract: (Int, Int) -> Unit = { x, y ->
                 // load x from the memory
@@ -157,10 +161,10 @@ internal class IfImpl(lineNumber: Int, expression: String) : If(lineNumber, expr
     }
 }
 
-internal class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expression), CompilableStatement {
+internal class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, expression) {
 
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             val lineNum = Symbol.LineNumber(line, subroutine)
             val location = table[lineNum].let {
@@ -176,17 +180,18 @@ internal class GotoImpl(lineNumber: Int, expression: String) : Goto(lineNumber, 
     companion object {
         private val instruction = Branch()
     }
+
 }
 
-internal class GosubImpl(lineNumber: Int, subroutineName: String) : Gosub(lineNumber, subroutineName),
-    CompilableStatement {
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+internal class GosubImpl(lineNumber: Int, subroutineName: String) : Gosub(lineNumber, subroutineName) {
+
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             // execute the statements in the subroutine to be called
             val subroutine = subroutines.find { it.name == name }!!
             val newConfig = config.copy(subroutine = subroutine)
             subroutine.statements.forEach {
-                addAll((it as CompilableStatement).compile(newConfig))
+                addAll((it).translate(newConfig))
             }
             // clear the symbols of this subroutine from the table
             table.clear(subroutine)
@@ -194,15 +199,19 @@ internal class GosubImpl(lineNumber: Int, subroutineName: String) : Gosub(lineNu
     }
 }
 
-internal class ReturnImpl(lineNumber: Int) : Return(lineNumber), CompilableStatement {
-    override fun compile(config: CompilerConfig) = buildList<Int> {
-        config.table.add(Symbol.LineNumber(lineNumber, config.subroutine))
+internal class ReturnImpl(lineNumber: Int) : Return(lineNumber) {
+
+    override fun <T : Config> translate(config: T) = buildList<Int> {
+        with(config as CompilerConfig) {
+            table.add(Symbol.LineNumber(lineNumber, subroutine))
+        }
     }
 }
 
-internal class EndImpl(lineNumber: Int) : End(lineNumber), CompilableStatement {
-    override fun compile(config: CompilerConfig) = buildList {
-        with(config) {
+internal class EndImpl(lineNumber: Int) : End(lineNumber) {
+
+    override fun <T : Config> translate(config: T) = buildList {
+        with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             add(table.format(instruction, 0))
         }

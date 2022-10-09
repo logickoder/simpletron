@@ -1,7 +1,7 @@
 package dev.logickoder.simpletron.translator
 
 import dev.logickoder.simpletron.core.Simpletron
-import dev.logickoder.simpletron.translator.Subroutine.Companion.isSubroutine
+import dev.logickoder.simpletron.translator.Subroutine.Companion.subroutine
 import dev.logickoder.simpletron.translator.statement.End
 import dev.logickoder.simpletron.translator.statement.Return
 import dev.logickoder.simpletron.translator.statement.Statement
@@ -87,20 +87,16 @@ abstract class Translator(
             statements = mutableListOf()
         }
         lines.forEachIndexed { index, line ->
-            if (isSubroutine(line)) {
+            line.subroutine?.let { subName ->
                 // tries to submit the subroutine even though this should fail if a subroutine is present to be submitted
                 // because the subroutine does not have a return or end statement
                 submit()
-                // get the name of this new subroutine
-                subroutine = Subroutine.PATTERN.matcher(line).let {
-                    it.matches()
-                    it.group(1)
-                }
+                subroutine = subName
                 // check if this new subroutine was named after an old one
                 if (subroutines.any { it.name == subroutine }) {
                     throw "subroutine \"$subroutine\" already exists".syntaxError(index)
                 }
-            } else {
+            } ?: run {
                 // make sure every statement is contained in a subroutine
                 if (subroutine == null) {
                     throw "every statement must be placed in a subroutine".syntaxError(index)
