@@ -1,6 +1,7 @@
 package dev.logickoder.simpletron.translator.compiler
 
 import dev.logickoder.simpletron.core.Simpletron
+import dev.logickoder.simpletron.core.common.classes
 import dev.logickoder.simpletron.core.display.Display
 import dev.logickoder.simpletron.core.display.DisplayType
 import dev.logickoder.simpletron.core.memory.stopValue
@@ -8,16 +9,15 @@ import dev.logickoder.simpletron.translator.Subroutine
 import dev.logickoder.simpletron.translator.Translator
 import dev.logickoder.simpletron.translator.compiler.statements.CompilableStatement
 import dev.logickoder.simpletron.translator.compiler.statements.CompilerConfig
-import dev.logickoder.simpletron.translator.compiler.statements.statementFactories
+import dev.logickoder.simpletron.translator.compiler.statements.RemImpl
 import dev.logickoder.simpletron.translator.statement.Statement
-import dev.logickoder.simpletron.translator.statement.StatementFactory
 import java.io.File
 
 /**
  * Compiles the program to simpletron machine language
  */
 class Compiler(simpletron: Simpletron) : Translator(simpletron) {
-    override val statementFactories: List<StatementFactory<Statement>> = statementFactories()
+    override val statements = classes<Statement>(setOf(RemImpl::class.java))
     override val subroutines = mutableListOf<Subroutine>()
 
     override fun run(): Unit = with(simpletron.cpu) {
