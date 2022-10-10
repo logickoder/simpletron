@@ -20,7 +20,7 @@ sealed interface Symbol {
     data class Variable(val name: String, val subroutine: Subroutine) : Symbol {
         init {
             if (name.any { it.isDigit() })
-                throw SyntaxError("\"$this\" is not a valid variable name")
+                throw SyntaxError("\"$name\" is not a valid variable name")
         }
     }
 

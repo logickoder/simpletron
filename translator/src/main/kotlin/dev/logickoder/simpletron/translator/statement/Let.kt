@@ -25,7 +25,7 @@ abstract class Let(override val lineNumber: Int, final override val action: Stri
             require(size == 2) { "the equation was not written properly" }
             variable = this[0].trim()
             expression = this[1].trim()
-            // validate the expression, this method with exit with an error if something is wrong with it
+            // validate the expression, this method will exit with an error if something is wrong with it
             expression.evaluateExpression()
         }
     }
