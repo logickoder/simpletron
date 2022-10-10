@@ -21,7 +21,7 @@ fun CPU.error(message: String) {
     // show the error message
     display.show(message)
     // update the next memory location with the Halt instruction
-    memory[ic.value] = Halt().code(memory, ic.value)
+    memory[ic.value] = Halt.code(memory, ic.value)
 }
 
 /**

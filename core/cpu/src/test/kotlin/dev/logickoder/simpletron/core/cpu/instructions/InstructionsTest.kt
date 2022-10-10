@@ -41,9 +41,9 @@ class InstructionsTest {
 
     @Test
     fun checkThatNewLineOutputsANewLine() {
-        instruction<NewLine>(cpu, 0)
+        NewLine.execute(cpu, 0)
         assertEquals(cpu.display.newline, out.toString())
-        instruction<NewLine>(cpu, 1)
+        NewLine.execute(cpu, 1)
         assertEquals("${cpu.display.newline}${cpu.display.newline}", out.toString())
     }
 
@@ -51,7 +51,7 @@ class InstructionsTest {
     fun checkThatReadProducesIntegers() = with(cpu) {
         fun check(value: Int) {
             swap(mockInput("$value"))
-            instruction<Read>(cpu, memoryLocation++)
+            Read.execute(cpu, memoryLocation++)
             assertEquals(value.toFloat(), memory[operand().value])
         }
         check(0)
@@ -63,7 +63,7 @@ class InstructionsTest {
     fun checkThatReadCanHandleFloats() = with(cpu) {
         fun check(value: Float) {
             swap(mockInput("$value"))
-            instruction<Read>(cpu, memoryLocation++)
+            Read.execute(cpu, memoryLocation++)
             assertEquals(value, memory[operand().value])
         }
         check(11.2f)
@@ -75,7 +75,7 @@ class InstructionsTest {
         var string = ""
         fun check(value: Float) {
             memory[MEM_LOCATION] = value
-            instruction<Write>(cpu, memoryLocation++)
+            Write.execute(cpu, memoryLocation++)
             string += value
             assertEquals(string, out.toString())
         }
@@ -87,7 +87,7 @@ class InstructionsTest {
     fun checkThatReadStringWorks() = with(cpu) {
         fun check(string: String, operand: Int) {
             swap(mockInput(string))
-            instruction<ReadString>(cpu, memoryLocation++, operand)
+            ReadString.execute(cpu, memoryLocation++, operand)
             for (i in string.indices) {
                 assertEquals(string[i].code.toFloat(), memory[operand().value + i + 1])
             }
@@ -105,7 +105,7 @@ class InstructionsTest {
             for (i in 1..string.length)
                 memory[operand + i] = string[i - 1].code
 
-            instruction<WriteString>(cpu, memoryLocation++, operand)
+            WriteString.execute(cpu, memoryLocation++, operand)
             strings += string
             assertEquals(strings, out.toString())
         }
@@ -117,7 +117,7 @@ class InstructionsTest {
     fun checkThatLoadWorks() = with(cpu) {
         fun check(value: Float) {
             memory[MEM_LOCATION] = value
-            instruction<Load>(cpu, memoryLocation++)
+            Load.execute(cpu, memoryLocation++)
             assertEquals(value, accumulator().value)
         }
         check(5895f)
@@ -129,7 +129,7 @@ class InstructionsTest {
     fun checkThatStoreWorks() = with(cpu) {
         fun check(value: Float) {
             accumulator().value = value
-            instruction<Store>(cpu, memoryLocation++)
+            Store.execute(cpu, memoryLocation++)
             assertEquals(value, memory[MEM_LOCATION])
         }
         check(5895f)
@@ -143,7 +143,7 @@ class InstructionsTest {
             accumulator().value = first
             memory[MEM_LOCATION] = second
             val result = first + second
-            instruction<Add>(cpu, memoryLocation++)
+            Add.execute(cpu, memoryLocation++)
             assertEquals(result, accumulator().value)
         }
 
@@ -151,7 +151,7 @@ class InstructionsTest {
         fun check2(first: Float, second: Float) {
             accumulator().value = first
             memory[MEM_LOCATION] = second
-            instruction<Add>(cpu, memoryLocation++)
+            Add.execute(cpu, memoryLocation++)
             assertEquals(first, accumulator().value)
         }
         check(5895f, 589f)
@@ -164,7 +164,7 @@ class InstructionsTest {
             accumulator().value = first
             memory[MEM_LOCATION] = second
             val result = first - second
-            instruction<Subtract>(cpu, memoryLocation++)
+            Subtract.execute(cpu, memoryLocation++)
             assertEquals(result, accumulator().value)
         }
 
@@ -172,7 +172,7 @@ class InstructionsTest {
         fun check2(first: Float, second: Float) {
             accumulator().value = first
             memory[MEM_LOCATION] = second
-            instruction<Subtract>(cpu, memoryLocation++)
+            Subtract.execute(cpu, memoryLocation++)
             assertEquals(first, accumulator().value)
         }
         check(5895f, 589f)
@@ -186,7 +186,7 @@ class InstructionsTest {
             accumulator().value = first
             memory[MEM_LOCATION] = second
             val result = first / second
-            instruction<Divide>(cpu, memoryLocation++)
+            Divide.execute(cpu, memoryLocation++)
             assertEquals(result, accumulator().value)
         }
 
@@ -194,7 +194,7 @@ class InstructionsTest {
         fun check2(first: Float) {
             accumulator().value = first
             memory[MEM_LOCATION] = 0
-            instruction<Divide>(cpu, memoryLocation++)
+            Divide.execute(cpu, memoryLocation++)
             assertEquals(first, accumulator().value)
             assertEquals("Attempt to divide by zero${cpu.display.newline}", out.toString())
         }
@@ -208,7 +208,7 @@ class InstructionsTest {
             accumulator().value = first
             memory[MEM_LOCATION] = second
             val result = first * second
-            instruction<Multiply>(cpu, memoryLocation++)
+            Multiply.execute(cpu, memoryLocation++)
             assertEquals(result, accumulator().value)
         }
 
@@ -216,7 +216,7 @@ class InstructionsTest {
         fun check2(first: Float, second: Float) {
             accumulator().value = first
             memory[MEM_LOCATION] = second
-            instruction<Multiply>(cpu, memoryLocation++)
+            Multiply.execute(cpu, memoryLocation++)
             assertEquals(first, accumulator().value)
         }
         check(90f, 100f)
@@ -229,7 +229,7 @@ class InstructionsTest {
             accumulator().value = first
             memory[MEM_LOCATION] = second
             val result = first % second
-            instruction<Remainder>(cpu, memoryLocation++)
+            Remainder.execute(cpu, memoryLocation++)
             assertEquals(result, accumulator().value)
         }
 
@@ -237,7 +237,7 @@ class InstructionsTest {
         fun check2(first: Float) {
             accumulator().value = first
             memory[MEM_LOCATION] = 0
-            instruction<Remainder>(cpu, memoryLocation++)
+            Remainder.execute(cpu, memoryLocation++)
             assertEquals(first, accumulator().value)
             assertEquals("Attempt to divide by zero${cpu.display.newline}", out.toString())
         }
@@ -251,7 +251,7 @@ class InstructionsTest {
             accumulator().value = second
             memory[MEM_LOCATION] = first
             val result = first.toDouble().pow(second.toDouble()).toFloat()
-            instruction<Exponent>(cpu, memoryLocation++)
+            Exponent.execute(cpu, memoryLocation++)
             assertEquals(result, accumulator().value)
         }
 
@@ -259,7 +259,7 @@ class InstructionsTest {
         fun check2(first: Float, second: Float) {
             accumulator().value = second
             memory[MEM_LOCATION] = first
-            instruction<Exponent>(cpu, memoryLocation++)
+            Exponent.execute(cpu, memoryLocation++)
             assertEquals(second, accumulator().value)
         }
         check(22f, 2f)
@@ -269,7 +269,7 @@ class InstructionsTest {
     @Test
     fun checkThatBranchWorks() = with(cpu) {
         fun check(operand: Int) {
-            instruction<Branch>(cpu, memoryLocation++, operand)
+            Branch.execute(cpu, memoryLocation++, operand)
             assertEquals(operand, instructionCounter().value)
         }
         check(22)
@@ -279,7 +279,7 @@ class InstructionsTest {
     fun checkThatBranchNegWorks() = with(cpu) {
         fun check(operand: Int) {
             accumulator().value = (-operand).toFloat()
-            instruction<BranchNeg>(cpu, memoryLocation++, operand)
+            BranchNeg.execute(cpu, memoryLocation++, operand)
             assertEquals(operand, instructionCounter().value)
         }
         check(22)
@@ -289,7 +289,7 @@ class InstructionsTest {
     fun checkThatBranchNegDoesNotWorkIfAccumulatorIsPositive() = with(cpu) {
         fun check(operand: Int) {
             accumulator().value = operand.toFloat()
-            instruction<BranchNeg>(cpu, memoryLocation++, operand)
+            BranchNeg.execute(cpu, memoryLocation++, operand)
             assertNotEquals(operand, instructionCounter().value)
         }
         check(22)
@@ -299,7 +299,7 @@ class InstructionsTest {
     fun checkThatBranchZeroWorks() = with(cpu) {
         fun check(operand: Int) {
             accumulator().value = 0f
-            instruction<BranchZero>(cpu, memoryLocation++, operand)
+            BranchZero.execute(cpu, memoryLocation++, operand)
             assertEquals(operand, instructionCounter().value)
         }
         check(22)
@@ -309,7 +309,7 @@ class InstructionsTest {
     fun checkThatBranchZeroDoesNotWorkIfAccumulatorIsNotZero() = with(cpu) {
         fun check(operand: Int) {
             accumulator().value = operand.toFloat()
-            instruction<BranchZero>(cpu, memoryLocation++, operand)
+            BranchZero.execute(cpu, memoryLocation++, operand)
             assertNotEquals(operand, instructionCounter().value)
         }
         check(22)
@@ -328,14 +328,13 @@ class InstructionsTest {
             on { read() } doReturn input
         }
 
-        private inline fun <reified T : Instruction> instruction(
+        private fun Instruction.execute(
             cpu: CPU,
             memLocation: Int,
             operand: Int = MEM_LOCATION
         ) {
-            val instruction = cpu.instructions.filterIsInstance<T>().first()
-            cpu.memory[memLocation] = instruction.code(cpu.memory, operand)
-            assert(cpu.execute() is T)
+            cpu.memory[memLocation] = code(cpu.memory, operand)
+            assertEquals(cpu.execute(), this)
         }
     }
 }

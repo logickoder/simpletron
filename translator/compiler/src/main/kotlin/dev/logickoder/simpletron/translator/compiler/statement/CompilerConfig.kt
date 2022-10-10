@@ -1,4 +1,4 @@
-package dev.logickoder.simpletron.translator.compiler.statements
+package dev.logickoder.simpletron.translator.compiler.statement
 
 import dev.logickoder.simpletron.translator.Subroutine
 import dev.logickoder.simpletron.translator.compiler.SymbolTable
@@ -9,7 +9,7 @@ import dev.logickoder.simpletron.translator.config.Config
  *
  * @property table used to store symbols during compilation
  */
-data class CompilerConfig(
+internal data class CompilerConfig(
     val table: SymbolTable,
     val subroutine: Subroutine,
     val subroutines: List<Subroutine>

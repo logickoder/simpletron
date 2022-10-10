@@ -58,8 +58,8 @@ class CPUTest {
         with(CPU(memory, Display(DisplayType.CommandLine(memory.stopValue.toInt())), mockInput())) {
             val ic = register<InstructionCounter>()
             error("Test Error")
-            assertEquals(Halt().code(memory, ic.value), memory[ic.value].toInt())
-            assertEquals(Halt(), execute())
+            assertEquals(Halt.code(memory, ic.value), memory[ic.value].toInt())
+            assertEquals(Halt, execute())
         }
     }
 

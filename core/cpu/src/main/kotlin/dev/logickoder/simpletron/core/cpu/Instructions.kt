@@ -5,7 +5,7 @@ import kotlin.math.pow
 /**
  * Outputs a new line on Simpletron
  */
-class NewLine : Instruction() {
+object NewLine : Instruction() {
     override val code = 1
 
     override fun execute(cpu: CPU) = with(cpu.display) {
@@ -16,7 +16,7 @@ class NewLine : Instruction() {
 /**
  * Read a word from the keyboard into a specific location in memory.
  */
-class Read : Instruction() {
+object Read : Instruction() {
     override val code = 10
 
     override fun execute(cpu: CPU) = with(cpu) {
@@ -30,7 +30,7 @@ class Read : Instruction() {
 /**
  * Write a word from a specific location in memory to the screen.
  */
-class Write : Instruction() {
+object Write : Instruction() {
     override val code = 11
 
     override fun execute(cpu: CPU) = with(cpu) {
@@ -42,7 +42,7 @@ class Write : Instruction() {
 /**
  * Read a string from the keyboard and store it in memory.
  */
-class ReadString : Instruction() {
+object ReadString : Instruction() {
     override val code = 12
 
     override fun execute(cpu: CPU) = with(cpu) {
@@ -59,7 +59,7 @@ class ReadString : Instruction() {
 /**
  * Write a string from a specific location in memory to the screen.
  */
-class WriteString : Instruction() {
+object WriteString : Instruction() {
     override val code = 13
 
     override fun execute(cpu: CPU) = with(cpu) {
@@ -76,7 +76,7 @@ class WriteString : Instruction() {
 /**
  * Load a word from a specific location in memory into the accumulator.
  */
-class Load : Instruction() {
+object Load : Instruction() {
     override val code = 20
 
     override fun execute(cpu: CPU) {
@@ -90,7 +90,7 @@ class Load : Instruction() {
 /**
  * Store a word from the accumulator into a specific location in memory.
  */
-class Store : Instruction() {
+object Store : Instruction() {
     override val code = 21
 
     override fun execute(cpu: CPU) {
@@ -105,7 +105,7 @@ class Store : Instruction() {
  * Adds a word from a specific location in memory to the word in the
  * accumulator
  */
-class Add : Instruction() {
+object Add : Instruction() {
     override val code = 30
 
     override fun execute(cpu: CPU): Unit = with(cpu) {
@@ -122,7 +122,7 @@ class Add : Instruction() {
  * Subtract a word from a specific location in memory from the word in the
  * accumulator
  */
-class Subtract : Instruction() {
+object Subtract : Instruction() {
     override val code = 31
 
     override fun execute(cpu: CPU): Unit = with(cpu) {
@@ -139,7 +139,7 @@ class Subtract : Instruction() {
  * Divide a word from a specific location in memory from the word in the
  * accumulator
  */
-class Divide : Instruction() {
+object Divide : Instruction() {
     override val code = 32
 
     override fun execute(cpu: CPU): Unit = with(cpu) {
@@ -158,7 +158,7 @@ class Divide : Instruction() {
  * Multiply a word from a specific location in memory by the word in the
  * accumulator
  */
-class Multiply : Instruction() {
+object Multiply : Instruction() {
     override val code = 33
 
     override fun execute(cpu: CPU): Unit = with(cpu) {
@@ -174,7 +174,7 @@ class Multiply : Instruction() {
 /**
  * Finds the remainder when dividing the value in the accumulator by a word
  */
-class Remainder : Instruction() {
+object Remainder : Instruction() {
     override val code = 34
 
     override fun execute(cpu: CPU): Unit = with(cpu) {
@@ -193,7 +193,7 @@ class Remainder : Instruction() {
  * Finds the accumulator raised to the power of the word in the specific
  * location
  */
-class Exponent : Instruction() {
+object Exponent : Instruction() {
     override val code = 35
 
     override fun execute(cpu: CPU): Unit = with(cpu) {
@@ -209,7 +209,7 @@ class Exponent : Instruction() {
 /**
  * Branch to a specific location in memory
  */
-class Branch : Instruction() {
+object Branch : Instruction() {
     override val code = 40
 
     override fun execute(cpu: CPU) {
@@ -223,7 +223,7 @@ class Branch : Instruction() {
 /**
  * Branch to a specific location in memory if the accumulator is negative
  */
-class BranchNeg : Instruction() {
+object BranchNeg : Instruction() {
     override val code = 41
 
     override fun execute(cpu: CPU) {
@@ -238,7 +238,7 @@ class BranchNeg : Instruction() {
 /**
  * Branch to a specific location in memory if the accumulator is zero
  */
-class BranchZero : Instruction() {
+object BranchZero : Instruction() {
     override val code = 42
 
     override fun execute(cpu: CPU) {
@@ -253,7 +253,7 @@ class BranchZero : Instruction() {
 /**
  * Halt. The program has completed its task
  */
-class Halt : Instruction() {
+object Halt : Instruction() {
     override val code = 43
 
     override fun execute(cpu: CPU) = with(cpu) {

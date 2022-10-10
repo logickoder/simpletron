@@ -6,11 +6,6 @@ import dev.logickoder.simpletron.translator.compiler.SymbolTable.Companion.DOES_
 import dev.logickoder.simpletron.translator.symbol.Symbol
 import kotlin.math.log10
 
-/**
- * Lines of machine code generated during translation
- */
-typealias MachineCode = List<Int>
-
 typealias Location = Int
 
 typealias Flag = Pair<Symbol.LineNumber, Location>
@@ -18,7 +13,7 @@ typealias Flag = Pair<Symbol.LineNumber, Location>
 /**
  * Holds the symbols used by the compiler during compilation
  */
-interface SymbolTable {
+internal interface SymbolTable {
 
     /**
      * Holds the flags to be processed later by the compiler

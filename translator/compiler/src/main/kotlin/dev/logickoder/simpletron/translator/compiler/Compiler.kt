@@ -7,8 +7,8 @@ import dev.logickoder.simpletron.core.display.DisplayType
 import dev.logickoder.simpletron.core.memory.stopValue
 import dev.logickoder.simpletron.translator.Subroutine
 import dev.logickoder.simpletron.translator.Translator
-import dev.logickoder.simpletron.translator.compiler.statements.CompilerConfig
-import dev.logickoder.simpletron.translator.compiler.statements.RemImpl
+import dev.logickoder.simpletron.translator.compiler.statement.CompilerConfig
+import dev.logickoder.simpletron.translator.compiler.statement.RemImpl
 import dev.logickoder.simpletron.translator.statement.Statement
 import java.io.File
 
