@@ -21,10 +21,8 @@ class SymbolTest {
         assertEquals("\"Hello\"".toDataType(), DataType.String("Hello"))
         assertEquals("10".toDataType(), DataType.Number(10))
         assertEquals("10 + 2".toDataType(), DataType.Number(12))
-        val array = "[10, 20, 'Hello', [50, '50', ['10', [],],],]".toDataType()
-        println(array)
         assertEquals(
-            array, DataType.Array(
+            "[10, 20, 'Hello', [50, '50', ['10', [],],],]".toDataType(), DataType.Array(
                 listOf(
                     DataType.Number(10),
                     DataType.Number(20),
