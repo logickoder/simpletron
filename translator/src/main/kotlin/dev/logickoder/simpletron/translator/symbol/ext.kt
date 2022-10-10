@@ -8,9 +8,9 @@ import dev.logickoder.simpletron.translator.syntax.SyntaxError
  * Creates either a [Symbol.Constant] or [Symbol.Variable] from the given string
  */
 fun String.toSymbol(subroutine: Subroutine): Symbol {
-    return toFloatOrNull()?.let {
-        Symbol.Constant(it)
-    } ?: Symbol.Variable(this, subroutine)
+    return if (Symbol.Variable.isInvalidName(this)) {
+        Symbol.Constant(toDataType())
+    } else Symbol.Variable(this, subroutine)
 }
 
 /**
@@ -73,7 +73,6 @@ fun String.toDataType(): DataType {
             }
             DataType.Array(entries)
         }
-
         isExpression(this) -> DataType.Number(evaluateExpression())
         else -> throw SyntaxError("$this is not a valid data type")
     }

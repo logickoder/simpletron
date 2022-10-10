@@ -7,7 +7,9 @@ sealed interface DataType {
     /**
      * Represents a number value
      */
-    data class Number(val value: kotlin.Number) : DataType
+    data class Number(val value: Float) : DataType {
+        constructor(value: kotlin.Number) : this(value.toFloat())
+    }
 
     /**
      * Represents a string text

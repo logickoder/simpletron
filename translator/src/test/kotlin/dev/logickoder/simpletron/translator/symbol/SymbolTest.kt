@@ -9,8 +9,8 @@ class SymbolTest {
     @Test
     fun stringToSymbol() {
         val subroutine = Subroutine(Subroutine.DEFAULT, emptyList())
-        assertEquals("10".toSymbol(subroutine), Symbol.Constant(10f))
-        assertEquals("10.23".toSymbol(subroutine), Symbol.Constant(10.23f))
+        assertEquals("10".toSymbol(subroutine), Symbol.Constant(DataType.Number(10f)))
+        assertEquals("10.23".toSymbol(subroutine), Symbol.Constant(DataType.Number(10.23f)))
         assertEquals("v".toSymbol(subroutine), Symbol.Variable("v", subroutine))
         assertEquals("hE".toSymbol(subroutine), Symbol.Variable("hE", subroutine))
     }

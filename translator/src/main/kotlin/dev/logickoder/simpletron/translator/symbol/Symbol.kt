@@ -19,13 +19,17 @@ sealed interface Symbol {
      */
     data class Variable(val name: String, val subroutine: Subroutine) : Symbol {
         init {
-            if (name.any { it.isDigit() })
+            if (isInvalidName(name))
                 throw SyntaxError("\"$name\" is not a valid variable name")
+        }
+
+        companion object {
+            fun isInvalidName(name: String) = name.any { it.isDigit() }
         }
     }
 
     /**
      * A constant value set at compile time
      */
-    data class Constant(val value: Float) : Symbol
+    data class Constant(val value: DataType) : Symbol
 }
