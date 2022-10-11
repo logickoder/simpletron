@@ -3,17 +3,6 @@ package dev.logickoder.simpletron.core.cpu
 import kotlin.math.pow
 
 /**
- * Outputs a new line on Simpletron
- */
-object NewLine : Instruction() {
-    override val code = 1
-
-    override fun execute(cpu: CPU) = with(cpu.display) {
-        show(newline)
-    }
-}
-
-/**
  * Read a word from the keyboard into a specific location in memory.
  */
 object Read : Instruction() {
@@ -70,6 +59,17 @@ object WriteString : Instruction() {
             output.append(memory[++address].toInt().toChar())
         }
         display.show("$output")
+    }
+}
+
+/**
+ * Outputs a new line on Simpletron
+ */
+object NewLine : Instruction() {
+    override val code = 14
+
+    override fun execute(cpu: CPU) = with(cpu.display) {
+        show(newline)
     }
 }
 

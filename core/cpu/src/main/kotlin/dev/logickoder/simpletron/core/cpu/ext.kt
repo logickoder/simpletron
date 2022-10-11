@@ -43,6 +43,7 @@ inline fun CPU.overflow(
     }
 }
 
+private val nonDigitRegex = Pattern.compile("\\D+").toRegex()
 /**
  *
  * Converts a valid string to an instruction
@@ -55,17 +56,28 @@ fun String.toInstruction(memory: Memory): Float {
     return if (startsWith(prefix = "0x", ignoreCase = true)) {
         float
     } else {
-        // remove all non digits from the string
-        split(Pattern.compile("\\D+")).reduce { acc: String, s: String -> "$acc$s" }.run {
-            when {
-                // return 0 if the string is empty
-                isEmpty() -> 0f
-                // return the string with the excess removed if the length is the right length or greater
-                length >= operandLength + 2 -> substring(0, operandLength + 2).toFloat()
-                // if the length is lesser, add the correct amount of zeros between the opcode and operand
-                else -> "${substring(0, 2)}%0${operandLength}d".format(substring(2).toInt()).toFloat()
-            }
+        val decimal = kotlin.run {
+            val index = lastIndexOf('.')
+            if (index != -1) {
+                substring(index..lastIndex)
+            } else ""
         }
+
+        removeSuffix(decimal)
+            // remove all non digits from string
+            .replace(nonDigitRegex, "")
+            .run {
+                when {
+                    // return the string with the excess removed if the length is the right length or greater
+                    length >= operandLength + 2 -> substring(0, operandLength + 2)
+                    // if the length is lesser, add the correct amount of zeros between the opcode and operand
+                    else -> try {
+                        "${substring(0, 2)}%0${operandLength}d".format(substring(2).toInt())
+                    } catch (e: Exception) {
+                        ""
+                    } + decimal
+                }.toFloatOrNull() ?: 0f
+            }
     }
 }
 

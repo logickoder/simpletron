@@ -1,7 +1,7 @@
 package dev.logickoder.simpletron.translator.compiler.statement
 
 import dev.logickoder.simpletron.core.cpu.Branch
-import dev.logickoder.simpletron.translator.compiler.SymbolTable
+import dev.logickoder.simpletron.translator.compiler.symbol.SymbolTable
 import dev.logickoder.simpletron.translator.config.Config
 import dev.logickoder.simpletron.translator.statement.Goto
 import dev.logickoder.simpletron.translator.symbol.Symbol

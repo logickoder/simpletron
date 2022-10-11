@@ -44,6 +44,17 @@ class InstructionsExtrasTest {
     }
 
     @Test
+    fun floatStringConvertsCorrectly() {
+        assertEquals(1009.9f, "01 09.9".toInstruction(memory))
+        assertEquals(1000.99f, "010.99".toInstruction(memory))
+        assertEquals(13099f, "13 099".toInstruction(memory))
+        assertEquals(13099f, "13 -99".toInstruction(memory))
+        assertEquals(13001f, "13  1".toInstruction(memory))
+        memory = memory(10_000)
+        assertEquals(130499f, "13_499".toInstruction(memory))
+    }
+
+    @Test
     fun multipleIntegersSeparatedByCharactersConvertsToASingleInstructionWithTheRightLength() {
         assertEquals(13099f, "13 099 -023".toInstruction(memory))
         assertEquals(13099f, "13 -99 a".toInstruction(memory))

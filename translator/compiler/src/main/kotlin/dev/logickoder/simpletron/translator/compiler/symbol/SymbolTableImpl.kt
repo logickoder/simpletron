@@ -65,18 +65,15 @@ internal class SymbolTableImpl(max: Location /* = kotlin.Int */) : SymbolTable {
                 }
             }
 
-            is DataType.Number -> {
-                constants.add(value)
-                ++symbolLocation.counter
-            }
+            is DataType.Number -> constants.add(value)
 
             is DataType.String -> {
                 value.forEach { constants.add(it.code.toFloat()) }
                 constants.add(value.length.toFloat())
-                symbolLocation.counter += value.length + 1
+                symbolLocation.counter += value.length
             }
         }
-        return symbolLocation.counter
+        return symbolLocation.counter++
     }
 
     /**

@@ -2,6 +2,7 @@ package dev.logickoder.simpletron.translator.compiler
 
 import dev.logickoder.simpletron.core.Simpletron
 import dev.logickoder.simpletron.core.common.classes
+import dev.logickoder.simpletron.core.common.hex
 import dev.logickoder.simpletron.core.display.Display
 import dev.logickoder.simpletron.core.display.DisplayType
 import dev.logickoder.simpletron.core.memory.stopValue
@@ -40,7 +41,7 @@ class Compiler(simpletron: Simpletron) : Translator(simpletron) {
             }
         }
         // convert only the main subroutine since that is where the execution of the program is
-        val machineCode = buildList {
+        val machineCode = buildList<Float> {
             subroutines.first { it.name == Subroutine.DEFAULT }.let { main ->
                 addAll(
                     main.statements.flatMap { statement ->
@@ -48,15 +49,24 @@ class Compiler(simpletron: Simpletron) : Translator(simpletron) {
                     }
                 )
             }
-            addAll(table.constants)
-        }.toMutableList()
-        // resolve all flags
-        table.flags.forEach { (line, location) ->
-            machineCode[location] += table[line]
+            // resolve all flags
+            table.flags.forEach { (line, location) ->
+                if (table[line] == SymbolTable.DOES_NOT_EXIST) {
+                    table.add(line)
+                }
+                set(location, get(location) + table[line])
+            }
         }
+
         // output the code to the connected display
-        machineCode.forEach { display.show("$it${display.newline}") }
-        display.show(memory.stopValue.toInt().toString())
-        display.close()
+        display.run {
+            machineCode.forEach { show("$it$newline") }
+            table.constants.forEach {
+                // convert each constant to hex, so that they won't be tampered by the system
+                show("${it.hex}$newline")
+            }
+            show(memory.stopValue.toInt().toString())
+            close()
+        }
     }
 }

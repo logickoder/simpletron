@@ -7,7 +7,7 @@ import dev.logickoder.simpletron.translator.syntax.syntaxError
 
 internal fun Symbol.check(config: CompilerConfig, lineNumber: Location) = when (this) {
     // Don't initialize constants as that should be done after the compilation of the program
-    is Symbol.Constant -> 0
+    is Symbol.Constant -> DOES_NOT_EXIST
     is Symbol.Variable -> config.table[this].also { location ->
         if (location == DOES_NOT_EXIST) {
             throw "This variable \"${this.name}\", has not been defined".syntaxError(lineNumber, true)
