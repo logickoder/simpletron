@@ -9,6 +9,7 @@ import dev.logickoder.simpletron.translator.Subroutine
 import dev.logickoder.simpletron.translator.Translator
 import dev.logickoder.simpletron.translator.compiler.statement.CompilerConfig
 import dev.logickoder.simpletron.translator.compiler.statement.RemImpl
+import dev.logickoder.simpletron.translator.compiler.symbol.SymbolTable
 import dev.logickoder.simpletron.translator.statement.Statement
 import java.io.File
 
@@ -39,14 +40,19 @@ class Compiler(simpletron: Simpletron) : Translator(simpletron) {
             }
         }
         // convert only the main subroutine since that is where the execution of the program is
-        val machineCode = subroutines.first { it.name == Subroutine.DEFAULT }.let { main ->
-            main.statements.flatMap {
-                it.translate(CompilerConfig(table, main, subroutines))
+        val machineCode = buildList {
+            subroutines.first { it.name == Subroutine.DEFAULT }.let { main ->
+                addAll(
+                    main.statements.flatMap { statement ->
+                        statement.translate(CompilerConfig(table, main, subroutines)).map { it.toFloat() }
+                    }
+                )
             }
+            addAll(table.constants)
         }.toMutableList()
         // resolve all flags
-        table.flags.forEach { flag ->
-            machineCode[flag.second] += table[flag.first]
+        table.flags.forEach { (line, location) ->
+            machineCode[location] += table[line]
         }
         // output the code to the connected display
         machineCode.forEach { display.show("$it${display.newline}") }

@@ -11,9 +11,13 @@ internal class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, s
     override fun <T : Config> translate(config: T) = buildList {
         with(config as CompilerConfig) {
             table.add(Symbol.LineNumber(lineNumber, subroutine))
-            for (symbol in symbols) {
-                add(table.format(Write, symbol.toSymbol(subroutine).check(config, lineNumber)))
-            }
+            addAll(
+                symbols.map {
+                    val symbol = it.toSymbol(subroutine)
+                    if (symbol is Symbol.Constant) table.flag(symbol)
+                    table.format(Write, symbol.check(config, lineNumber))
+                }
+            )
         }
     }
 }

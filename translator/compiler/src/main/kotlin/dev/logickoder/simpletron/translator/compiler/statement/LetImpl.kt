@@ -1,6 +1,7 @@
 package dev.logickoder.simpletron.translator.compiler.statement
 
 import dev.logickoder.simpletron.core.cpu.*
+import dev.logickoder.simpletron.translator.compiler.symbol.Flag
 import dev.logickoder.simpletron.translator.config.Config
 import dev.logickoder.simpletron.translator.infix_postfix.*
 import dev.logickoder.simpletron.translator.statement.Let
@@ -11,9 +12,15 @@ internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equa
 
     override fun <T : Config> translate(config: T) = buildList {
         with(config as CompilerConfig) {
+            val constants = mutableListOf<Flag>()
             table.add(Symbol.LineNumber(lineNumber, subroutine))
             // transforms variables and constants to their respective memory locations
-            val transform: Transform = { it.toSymbol(subroutine).check(config, lineNumber).toFloat() }
+            val transform: Transform = {
+                val symbol = it.toSymbol(subroutine)
+                val location = symbol.check(config, lineNumber)
+                if (symbol is Symbol.Constant) constants.add(Flag(symbol, location))
+                location.toFloat()
+            }
             // find out if the initial value has been loaded
             var loaded = false
             val calculate: Calculate = { values, operator ->
@@ -24,6 +31,7 @@ internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equa
                     loaded = true
                 }
                 // perform the operation on y
+                constants.firstOrNull { it.location == y }?.let { table.flag(it.symbol) }
                 add(table.format(instruction(operator), y))
             }
             // convert the expression to machine code
