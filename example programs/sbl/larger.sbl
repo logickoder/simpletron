@@ -6,6 +6,8 @@ main:
     35 rem test if s >= t
     40 if s >= t goto 90
     45 rem
+    46 let u = 1000
+    47 print 33, u
     50 rem t is greater than s, so print t
     60 print t
     70 goto 99

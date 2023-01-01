@@ -15,11 +15,11 @@ abstract class Input(override val lineNumber: Int, final override val action: St
 
     init {
         pattern.matcher(action).also { matcher -> require(matcher.matches()) }
-        variables = action.split(Regex("\\s*,"))
+        variables = action.split(Regex("\\s*,")).map { it.trim() }
     }
 
     companion object {
         private const val variable = "[a-z]+"
-        private val pattern: Pattern = Pattern.compile("$variable(\\s*[,]\\s*$variable)*")
+        private val pattern: Pattern = Pattern.compile("$variable(\\s*,\\s*$variable)*")
     }
 }

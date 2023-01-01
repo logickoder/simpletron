@@ -17,7 +17,7 @@ fun main() {
         cpu = CPU(
             memory = memory,
             display = Display(DisplayType.CommandLine(memory.stopValue.toInt())),
-            input = Input(InputType.File("example programs\\sml\\test.sml")),
+            input = Input(InputType.File("example programs\\sbl\\larger.sbl.sml")),
         ),
         contracts = listOf(
             InputInstructionsContract,

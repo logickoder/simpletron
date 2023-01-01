@@ -14,11 +14,11 @@ abstract class Print(override val lineNumber: Int, final override val action: St
 
     init {
         pattern.matcher(action).also { matcher -> require(matcher.matches()) }
-        symbols = action.split(Regex("\\s*,"))
+        symbols = action.split(Regex("\\s*,")).map { it.trim() }
     }
 
     companion object {
         private const val variable = "([a-z]+|[0-9]+)"
-        val pattern: Pattern = Pattern.compile("$variable(\\s*[,]\\s*$variable)*")
+        val pattern: Pattern = Pattern.compile("$variable(\\s*,\\s*$variable)*")
     }
 }

@@ -15,7 +15,8 @@ internal class PrintImpl(lineNumber: Int, symbols: String) : Print(lineNumber, s
             symbols.forEach {
                 val symbol = it.toSymbol(subroutine)
                 if (symbol is Symbol.Constant) table.flag(symbol)
-                add(table.format(Write, symbol.check(config, lineNumber)))
+                val check = symbol.check(config, lineNumber)
+                add(table.format(Write, if (check != -1) check else 0))
                 add(table.format(NewLine, 0))
             }
         }
