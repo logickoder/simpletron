@@ -48,7 +48,16 @@ internal class LetImpl(lineNumber: Int, equation: String) : Let(lineNumber, equa
                 add(table.format(instruction(operator), y))
             }
             // convert the expression to machine code
-            expression.evaluateExpression(transform = transform, calculate = calculate)
+            val unhandledValue = expression.evaluateExpression(transform = transform, calculate = calculate)
+            // normally only happens when the let statement includes only a single variable or constant, e.g
+            // let u = 1000 or let u = s
+            if (unhandledValue != 0) {
+                val value = if (constants.isNotEmpty()) {
+                    table.flag(constants.pop())
+                    0
+                } else unhandledValue.toInt()
+                add(table.format(Load, value))
+            }
             // store the final value into the memory
             add(table.format(Store, table.add(Symbol.Variable(variable, subroutine))))
         }
