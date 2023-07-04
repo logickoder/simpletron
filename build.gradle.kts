@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.8.22"
 }
 
 repositories {
@@ -13,7 +13,6 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-// instructions for all projects
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "maven-publish")
@@ -22,25 +21,21 @@ allprojects {
     group = "dev.logickoder.simpletron.${name}"
     version = "1.0-SNAPSHOT"
 
-    val bundle by configurations.creating {
-        extendsFrom(configurations["implementation"])
-    }
-
-    configure<JavaPluginConvention> {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
     repositories {
         mavenCentral()
     }
 
-//    testClasses.dependsOn publishToMavenLocal
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }
 
-// instructions for each subproject
 subprojects {
-
+    tasks.register("sources", Jar::class) {
+        archiveClassifier.set("sources")
+        from(sourceSets.main.get().allSource)
+    }
     // common dependencies
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
@@ -49,26 +44,14 @@ subprojects {
         testImplementation("junit:junit:4.13.2")
         testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     }
+}
 
-    // jar containing subproject source
-    val sourcesJar by tasks.registering(Jar::class) {
-        classifier = "sources"
-        from(project.sourceSets["main"].allSource) // error here
+tasks.apply {
+    test {
+        useJUnitPlatform()
     }
 
-    tasks.jar {
-        dependsOn(sourcesJar)
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "17"
     }
-}
-
-tasks.jar {
-    isEnabled = false
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
 }

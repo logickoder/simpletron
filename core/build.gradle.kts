@@ -14,24 +14,37 @@ dependencies {
     }
 }
 
-// single jar containing all the bundled projects compiled code
-tasks.jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+tasks.apply {
+    // single jar containing all the bundled projects compiled code
+    jar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    from({
-        bundledProjects.map {
-            val jarFile = File("${it.buildDir}\\libs\\${it.name}-${it.version}.jar")
-            zipTree(jarFile)
-        }
-    })
-}
+        val bundledJars = bundledProjects.map {
+            zipTree(File("${it.buildDir}\\libs\\${it.name}-${it.version}.jar"))
+        }.toTypedArray()
 
-// single jar containing all bundled project sources
-tasks.sourcesJar {
-    classifier = "sources"
-    bundledProjects.forEach {
-        from(it.sourceSets["main"].allSource)
-    } // error here
+        from (*bundledJars)
+    }
+
+    // single jar containing all bundled project sources
+    val sources = named("sources", Jar::class) {
+        dependsOn.addAll(
+            bundledProjects.map {
+                it.tasks.named("sources").get()
+            }
+        )
+
+        val bundledSources = bundledProjects.map {
+            zipTree(File("${it.buildDir}\\libs\\${it.name}-${it.version}-sources.jar"))
+        }.toTypedArray()
+
+        from(*bundledSources)
+    }
+
+    artifacts {
+        archives(jar)
+        archives(sources)
+    }
 }
 
 // change the artifact id of the jar produced by this module to the module of this entire project
@@ -41,7 +54,7 @@ configure<PublishingExtension> {
             groupId = "dev.logickoder.simpletron"
             artifactId = "core"
             artifact(tasks.jar.get())
-            artifact(tasks.sourcesJar.get())
+            artifact(tasks.named("sources").get())
         }
     }
 }
