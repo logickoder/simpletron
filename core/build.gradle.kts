@@ -20,7 +20,7 @@ tasks.apply {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
         val bundledJars = bundledProjects.map {
-            zipTree(File("${it.buildDir}\\libs\\${it.name}-${it.version}.jar"))
+            zipTree(File("${it.layout.buildDirectory}\\libs\\${it.name}-${it.version}.jar"))
         }.toTypedArray()
 
         from (*bundledJars)
@@ -35,7 +35,7 @@ tasks.apply {
         )
 
         val bundledSources = bundledProjects.map {
-            zipTree(File("${it.buildDir}\\libs\\${it.name}-${it.version}-sources.jar"))
+            zipTree(File("${it.layout.buildDirectory}\\libs\\${it.name}-${it.version}-sources.jar"))
         }.toTypedArray()
 
         from(*bundledSources)
