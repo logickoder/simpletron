@@ -55,6 +55,7 @@ fun String.toInstruction(memory: Memory): Float {
     val operandLength = log10(memory.size.toDouble()).toInt()
     // determine if the string is a hex value or decimal
     return if (startsWith(prefix = "0x", ignoreCase = true)) {
+        // if it is hex, it is most likely a constant, so just return the float value
         float
     } else {
         val decimal = kotlin.run {

@@ -18,6 +18,7 @@ internal object InputInstructionsContract : CpuContract() {
         val padding = log10(memory.size.toDouble()).toInt()
         var address = 0
         var userInput: String
+        // read all instructions from the input
         do {
             display.show("%0${padding}d ? ".format(address))
             userInput = input.read()
@@ -38,14 +39,15 @@ internal object ProgramLoadedContract : DisplayContract() {
 
 /**
  *
- * Executes all instructions in memory
+ * Executes all instructions in memory until halt is reached
  */
 internal object ExecuteInstructionsContract : CpuContract() {
 
     override fun execute(contractor: CPU) {
-        // executes all the instructions until halt is reached
         while (true) {
-            if (contractor.execute() is Halt) break
+            if (contractor.execute() is Halt) {
+                break
+            }
         }
     }
 }

@@ -1,11 +1,16 @@
 main:
     10 rem determine and print the larger of two integers
     20 input s, t
+    21 let a = 100
+    22 let b = 50
+    23 let c = a + b
     30 rem test if s >= t
     40 if s >= t goto 90
     50 rem t is greater than s, so print t
     60 print t
-    70 goto 99
+    70 goto 97
     80 rem s is greater than or equal to t, so print s
     90 print s
+    97 rem show addition
+    98 print c
     99 end

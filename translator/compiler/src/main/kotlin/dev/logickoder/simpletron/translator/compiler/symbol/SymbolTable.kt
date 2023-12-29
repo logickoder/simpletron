@@ -11,6 +11,9 @@ typealias Location = Int
  */
 internal interface SymbolTable {
 
+    /**
+     * Holds the constants to be processed later by the compiler
+     */
     val constants: List<Float>
 
     /**

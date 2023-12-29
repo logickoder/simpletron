@@ -1,6 +1,5 @@
 package dev.logickoder.simpletron.translator
 
-import dev.logickoder.simpletron.core.Simpletron
 import dev.logickoder.simpletron.translator.Subroutine.Companion.subroutine
 import dev.logickoder.simpletron.translator.statement.End
 import dev.logickoder.simpletron.translator.statement.Return
@@ -18,9 +17,7 @@ import java.util.regex.Pattern
  * @property statements the list of statements this translator can parse
  * @property subroutines the subroutines contained in this program
  */
-abstract class Translator(
-    val simpletron: Simpletron
-) {
+abstract class Translator {
     abstract val statements: List<Class<out Statement>>
     abstract val subroutines: List<Subroutine>
 

@@ -1,8 +1,8 @@
 package dev.logickoder.simpletron.translator.compiler
 
-import dev.logickoder.simpletron.core.Simpletron
 import dev.logickoder.simpletron.core.common.classes
 import dev.logickoder.simpletron.core.common.hex
+import dev.logickoder.simpletron.core.cpu.CPU
 import dev.logickoder.simpletron.core.display.Display
 import dev.logickoder.simpletron.core.display.DisplayType
 import dev.logickoder.simpletron.core.memory.stopValue
@@ -17,33 +17,35 @@ import java.io.File
 /**
  * Compiles the program to simpletron machine language
  */
-class Compiler(simpletron: Simpletron) : Translator(simpletron) {
+class Compiler(private val cpu: CPU) : Translator() {
     override val statements = classes<Statement>(setOf(RemImpl::class.java))
     override val subroutines = mutableListOf<Subroutine>()
 
-    override fun run(): Unit = with(simpletron.cpu) {
-        val output = File(input.source.toString().plus(".sml"))
+    override fun run() {
+        val output = File(cpu.input.source.toString().plus(".sml"))
         // change the display to a file ending with sml
-        swap(Display(DisplayType.File(output.path)))
+        cpu.swap(Display(DisplayType.File(output.path)))
         // initialize the compiler configuration
         val table = SymbolTable(100)//controlUnit.memory.size)
         // inflate the input
-        try {
-            subroutines += inflateStatements(buildList {
-                while (input.hasNext()) add(input.read())
-            })
-        } catch (e: Exception) {
-            input.close()
-            // delete the output file if an error occurs
-            output.delete()
-            throw e
+        cpu.input.run {
+            try {
+                subroutines += inflateStatements(buildList {
+                    while (hasNext()) add(read())
+                })
+            } catch (e: Exception) {
+                close()
+                // delete the output file if an error occurs
+                output.delete()
+                throw e
+            }
         }
         // convert only the main subroutine since that is where the execution of the program is
-        val machineCode = buildList<Float> {
+        val machineCode = buildList<Int> {
             subroutines.first { it.name == Subroutine.DEFAULT }.let { main ->
                 addAll(
                     main.statements.flatMap { statement ->
-                        statement.translate(CompilerConfig(table, main, subroutines)).map { it.toFloat() }
+                        statement.translate(CompilerConfig(table, main, subroutines))
                     }
                 )
             }
@@ -57,13 +59,13 @@ class Compiler(simpletron: Simpletron) : Translator(simpletron) {
         }
 
         // output the code to the connected display
-        display.run {
+        cpu.display.run {
             machineCode.forEach { show("$it$newline") }
             table.constants.forEach {
                 // convert each constant to hex, so that they won't be tampered by the system
                 show("${it.hex}$newline")
             }
-            show(memory.stopValue.toInt().toString())
+            show(cpu.memory.stopValue.toInt().toString())
             close()
         }
     }

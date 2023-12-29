@@ -1,6 +1,5 @@
 package dev.logickoder.simpletron.translator.compiler
 
-import dev.logickoder.simpletron.core.Simpletron
 import dev.logickoder.simpletron.core.cpu.CPU
 import dev.logickoder.simpletron.core.display.Display
 import dev.logickoder.simpletron.core.display.DisplayType
@@ -18,12 +17,10 @@ class CompilerTest {
     fun setup() {
         val memory = Memory()
         compiler = Compiler(
-            Simpletron(
-                CPU(
-                    memory,
-                    Display(DisplayType.CommandLine(memory.stopValue.toInt())),
-                    Input(InputType.File("..\\..\\example programs\\sbl\\larger.sbl"))
-                )
+            CPU(
+                memory,
+                Display(DisplayType.CommandLine(memory.stopValue.toInt())),
+                Input(InputType.File("..\\..\\example programs\\sbl\\larger.sbl"))
             )
         )
     }
