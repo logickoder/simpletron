@@ -1,6 +1,9 @@
 package dev.logickoder.simpletron.core
 
-import dev.logickoder.simpletron.core.contract.*
+import dev.logickoder.simpletron.core.contract.CpuContract
+import dev.logickoder.simpletron.core.contract.ExecuteInstructionsContract
+import dev.logickoder.simpletron.core.contract.InputInstructionsContract
+import dev.logickoder.simpletron.core.contract.ProgramLoadedContract
 import dev.logickoder.simpletron.core.cpu.CPU
 import dev.logickoder.simpletron.core.display.Display
 import dev.logickoder.simpletron.core.display.DisplayType
@@ -19,7 +22,7 @@ fun main() {
             display = Display(DisplayType.CommandLine(memory.stopValue.toInt())),
             input = Input(InputType.File("example programs\\sbl\\larger.sbl.sml")),
         ),
-        contracts = listOf(
+        contracts = linkedSetOf(
             InputInstructionsContract,
             ProgramLoadedContract,
             ChangeInputContract,
@@ -29,10 +32,8 @@ fun main() {
     simpletron.run()
 }
 
-private object ChangeInputContract : Contract() {
-    override fun execute(contractor: Contractor<*>) {
-        with((contractor as? CPUContractor)?.executor ?: return) {
-            swap(Input(InputType.CommandLine))
-        }
+private object ChangeInputContract : CpuContract() {
+    override fun execute(contractor: CPU) {
+        contractor.swap(Input(InputType.CommandLine))
     }
 }

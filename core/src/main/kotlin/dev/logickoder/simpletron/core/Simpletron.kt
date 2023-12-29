@@ -10,7 +10,9 @@ import dev.logickoder.simpletron.core.cpu.CPU
 /**
  * The simpletron machine
  *
+ * @property cpu the cpu of the machine
  * @property isRunning true if the machine is running
+ * @property contracts the contracts that will be executed in sequence
  */
 interface Simpletron {
 
@@ -18,7 +20,7 @@ interface Simpletron {
 
     val isRunning: Boolean
 
-    val contracts: List<Contract>
+    val contracts: LinkedHashSet<Contract<*>>
 
     /**
      * This is where all initializations and starting of components should take
@@ -40,7 +42,7 @@ interface Simpletron {
     companion object {
         operator fun invoke(
             cpu: CPU,
-            contracts: List<Contract> = listOf(
+            contracts: LinkedHashSet<Contract<*>> = linkedSetOf(
                 InputInstructionsContract,
                 ProgramLoadedContract,
                 ExecuteInstructionsContract

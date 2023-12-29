@@ -5,21 +5,25 @@ import dev.logickoder.simpletron.core.cpu.CPU
 
 internal class SimpletronImpl(
     override val cpu: CPU,
-    override val contracts: List<Contract>
+    override val contracts: LinkedHashSet<Contract<*>>
 ) : Simpletron {
 
     override var isRunning: Boolean = false
 
     @Throws(IllegalStateException::class)
-    override fun run(): Unit = with(cpu) {
+    override fun run() {
         check(!isRunning) { "Simpletron is already started" }
         isRunning = true
-        val cpuContractor = CPUContractor(cpu)
-        contracts.distinctBy { it.name }.forEach { it.execute(cpuContractor) }
+        contracts.forEach { contract ->
+            when (contract) {
+                is CpuContract -> contract.execute(cpu)
+                is DisplayContract -> contract.execute(cpu.display)
+            }
+        }
     }
 
     @Throws(IllegalStateException::class)
-    override fun shutdown() = with(cpu) {
+    override fun shutdown() {
         check(isRunning) { "Simpletron is already shutdown" }
         isRunning = false
     }
