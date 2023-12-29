@@ -44,6 +44,7 @@ inline fun CPU.overflow(
 }
 
 private val nonDigitRegex = Pattern.compile("\\D+").toRegex()
+
 /**
  *
  * Converts a valid string to an instruction

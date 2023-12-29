@@ -1,5 +1,7 @@
 package dev.logickoder.simpletron.core.display
 
+import dev.logickoder.simpletron.core.common.status
+
 /**
  * @param stopValue the value used to stop entering input
  */

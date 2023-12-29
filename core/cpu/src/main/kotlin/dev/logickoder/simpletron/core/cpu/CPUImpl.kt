@@ -41,14 +41,14 @@ internal class CPUImpl(
         // store the value from the current memory address to the instruction register
         instructionRegister.value = memory[instructionCounter.value]
         // update the instruction counter
-        instructionCounter.value = instructionCounter.value + 1
+        instructionCounter.value += 1
         // store the operation code
         operationCode.value = (instructionRegister.value / memory.separator).toInt()
         // store the operand
         operand.value = (instructionRegister.value % memory.separator).toInt()
         // execute and return the instruction
-        return instructions.find { op -> op.code == operationCode.value }?.apply {
-            execute(this@CPUImpl)
+        return instructions.find { op -> op.code == operationCode.value }?.also {
+            it.execute(this)
         }
     }
 }

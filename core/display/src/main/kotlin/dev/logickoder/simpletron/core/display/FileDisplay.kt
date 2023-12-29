@@ -1,5 +1,6 @@
 package dev.logickoder.simpletron.core.display
 
+import dev.logickoder.simpletron.core.common.status
 import java.io.BufferedWriter
 import java.io.FileWriter
 import java.io.IOException
@@ -14,11 +15,7 @@ internal class FileDisplay(path: String) : Display {
 
     override val newline: String = System.lineSeparator()
 
-    private val writer: BufferedWriter
-
-    init {
-        writer = BufferedWriter(FileWriter(path))
-    }
+    private val writer: BufferedWriter = BufferedWriter(FileWriter(path))
 
     @Throws(IllegalStateException::class, IOException::class)
     override fun show(message: String?) {

@@ -28,17 +28,15 @@ class Compiler(simpletron: Simpletron) : Translator(simpletron) {
         // initialize the compiler configuration
         val table = SymbolTable(100)//controlUnit.memory.size)
         // inflate the input
-        kotlin.runCatching {
+        try {
             subroutines += inflateStatements(buildList {
                 while (input.hasNext()) add(input.read())
             })
-        }.let {
-            // delete the output file
-            if (it.isFailure) {
-                input.close()
-                output.delete()
-                throw (it.exceptionOrNull()!!)
-            }
+        } catch (e: Exception) {
+            input.close()
+            // delete the output file if an error occurs
+            output.delete()
+            throw e
         }
         // convert only the main subroutine since that is where the execution of the program is
         val machineCode = buildList<Float> {

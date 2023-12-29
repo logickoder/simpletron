@@ -18,6 +18,9 @@ interface CPU : Component {
     val registers: List<Register<*>>
     val instructions: List<Instruction>
 
+    /**
+     * Swaps the current component with the new one
+     */
     fun <T : Component> swap(component: T)
 
     /**

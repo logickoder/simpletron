@@ -15,10 +15,7 @@ class Subroutine(val name: String, val statements: List<Statement>) {
         const val DEFAULT = "main"
 
         val String.subroutine: String?
-            get() = Subroutine.PATTERN.matcher(this).run {
-                if (matches()) {
-                    group(1)
-                } else null
-            }
+            get() = PATTERN.matcher(this).takeIf { it.matches() }?.group(1)
+
     }
 }

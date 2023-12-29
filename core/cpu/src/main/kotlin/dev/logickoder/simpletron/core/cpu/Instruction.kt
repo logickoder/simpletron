@@ -7,9 +7,7 @@ import java.util.*
  *
  * @property code the integer representation of this instruction
  */
-abstract class Instruction {
-
-    abstract val code: Int
+abstract class Instruction(val code: Int) {
 
     /**
      * Executes this operation

@@ -32,7 +32,7 @@ abstract class Translator(
     @Throws(SyntaxError::class)
     open fun extractStatement(index: Int, line: String): Statement {
         // parse the line to make sure it looks like a correct statement
-        return PATTERN.matcher(line.trim().lowercase()).run {
+        return LINE_PATTERN.matcher(line.trim().lowercase()).run {
             if (matches()) {
                 val lineNumber = group(1).toInt()
                 val keyword = group(2)
@@ -133,6 +133,6 @@ abstract class Translator(
     abstract fun run()
 
     companion object {
-        private val PATTERN: Pattern = Pattern.compile("(\\d+)\\s+([a-z]+)(\\s+[!-~\\s+]+)?")
+        private val LINE_PATTERN: Pattern = Pattern.compile("(\\d+)\\s+([a-z]+)(\\s+[!-~\\s+]+)?")
     }
 }
